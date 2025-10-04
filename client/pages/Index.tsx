@@ -80,7 +80,7 @@ export default function Index() {
         <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" />
         <div className="pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[120px]" />
         <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl sm:block" />
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-black tracking-tight md:text-6xl">
               Check if your data has been leaked

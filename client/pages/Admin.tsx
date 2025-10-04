@@ -413,7 +413,7 @@ function AdjustModal({
     setLoading(true);
     try {
       const db = getDbInstance();
-      const ref = doc(db, "users", user.uid);
+      const ref = doc(db, "users", user.id);
       if (mode === "add") {
         const newRemaining = (user.totalSearchesRemaining ?? 0) + amount;
         await updateDoc(ref, {

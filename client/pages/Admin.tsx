@@ -51,7 +51,10 @@ export default function Admin() {
     const db = getDbInstance();
     const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (snap) => {
-      const arr = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) })) as AdminUser[];
+      const arr = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as any),
+      })) as AdminUser[];
       setUsers(arr);
     });
     return () => unsub();

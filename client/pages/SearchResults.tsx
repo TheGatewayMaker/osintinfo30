@@ -88,8 +88,12 @@ export default function SearchResults() {
         <div className="container mx-auto">
           <div className="mx-auto max-w-4xl">
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-black tracking-tight">Search Results</h1>
-              <p className="mt-2 text-foreground/70">Clean, readable results with your site’s styling.</p>
+              <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+                Search Results
+              </h1>
+              <p className="mt-2 text-foreground/70">
+                Clean, readable results with your site’s styling.
+              </p>
             </div>
 
             <div className="mt-6 grid gap-3">
@@ -105,7 +109,10 @@ export default function SearchResults() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-sm text-foreground/60">
-                  Remaining: <span className="font-semibold text-amber-600 dark:text-amber-400">{remaining}</span>
+                  Remaining:{" "}
+                  <span className="font-semibold text-amber-600 dark:text-amber-400">
+                    {remaining}
+                  </span>
                 </div>
                 <Button onClick={onSearch} disabled={loading} className="h-10">
                   {loading ? "Searching…" : "Search"}

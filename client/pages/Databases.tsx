@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { consumeSearchCredit } from "@/lib/user";
+import { consumeSearchCredit, computeRemaining } from "@/lib/user";
 import { toast } from "sonner";
 
 export default function Databases() {
@@ -20,7 +20,7 @@ export default function Databases() {
     setQuery(initialQ);
   }, [initialQ]);
 
-  const remaining = profile?.totalSearchesRemaining ?? 0;
+  const remaining = computeRemaining(profile);
 
   async function onSearch() {
     if (!query.trim()) return;

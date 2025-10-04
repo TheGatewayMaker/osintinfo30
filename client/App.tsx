@@ -47,4 +47,14 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Prevent multiple createRoot calls during HMR or double-bundling
+const rootEl = document.getElementById("root");
+if (rootEl) {
+  // @ts-ignore
+  if (!(window as any).__fusion_root) {
+    // @ts-ignore
+    (window as any).__fusion_root = createRoot(rootEl);
+  }
+  // @ts-ignore
+  (window as any).__fusion_root.render(<App />);
+}

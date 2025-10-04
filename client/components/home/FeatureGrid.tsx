@@ -72,15 +72,15 @@ function FeatureCard({ feature }: FeatureCardProps) {
     const inputX = pointer.x - rect.left;
     const inputY = pointer.y - rect.top;
 
-    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -7;
-    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 7;
+    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -10;
+    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 10;
 
     element.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
     element.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    element.style.setProperty("--tz", "16px");
+    element.style.setProperty("--tz", "24px");
     element.style.setProperty(
       "--glow-opacity",
-      `${Math.min(0.7, 0.28 + Math.abs(rotateX + rotateY) * 0.01)}`,
+      `${Math.min(0.85, 0.34 + Math.abs(rotateX + rotateY) * 0.012)}`,
     );
 
     frameRef.current = null;
@@ -116,15 +116,15 @@ function FeatureCard({ feature }: FeatureCardProps) {
         onPointerEnter={(event) => handlePointerMove(event)}
         className={cn(
           "relative h-full overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/14 via-white/8 to-white/4 px-7 py-9 text-left",
-          "shadow-[0_12px_24px_-14px_rgba(64,48,196,0.46)] transition-[transform,box-shadow] duration-150 ease-out will-change-transform backdrop-blur-[18px]",
-          "hover:shadow-[0_16px_32px_-18px_rgba(86,64,255,0.58)]",
+          "shadow-[0_20px_44px_-22px_rgba(64,48,196,0.55)] transition-[transform,box-shadow] duration-100 ease-out will-change-transform backdrop-blur-[18px]",
+          "hover:shadow-[0_28px_60px_-26px_rgba(86,64,255,0.7)]",
           "dark:border-white/10 dark:from-white/8 dark:via-white/4 dark:to-white/10",
         )}
         style={
           {
             transform:
               "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
-            "--glow-opacity": 0.28,
+            "--glow-opacity": 0.34,
           } as CSSProperties
         }
       >
@@ -142,12 +142,12 @@ function FeatureCard({ feature }: FeatureCardProps) {
           <h3 className="mt-4 text-2xl font-semibold tracking-tight text-foreground">
             {feature.title}
           </h3>
-          <p className="mt-4 text-sm leading-relaxed text-foreground/75">
+          <p className="mt-4 text-sm leading-relaxed text-foreground/90 font-medium">
             {feature.description}
           </p>
           <div className="mt-8 h-px w-20 bg-gradient-to-r from-brand-400/85 via-brand-300/40 to-transparent" />
         </div>
-        <div className="pointer-events-none absolute inset-x-5 -bottom-4 h-14 rounded-full bg-brand-500/20 blur-2xl opacity-80 transition-all duration-200 group-hover:-bottom-3 group-hover:opacity-95 dark:bg-brand-400/18" />
+        <div className="pointer-events-none absolute inset-x-5 -bottom-4 h-14 rounded-full bg-brand-500/30 blur-2xl opacity-90 transition-all duration-150 group-hover:-bottom-2 group-hover:opacity-100 dark:bg-brand-400/24" />
       </div>
     </div>
   );

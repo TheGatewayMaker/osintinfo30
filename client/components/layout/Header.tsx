@@ -43,7 +43,7 @@ export function Header() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `text-sm font-medium transition-colors hover:text-foreground/80 ${isActive ? "text-foreground" : "text-foreground/60"}`
+                `relative text-sm font-semibold tracking-tight transition-all ${isActive ? "text-foreground" : "text-foreground/70"} hover:text-foreground after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-amber-400/70 after:transition-transform hover:after:scale-x-100`
               }
             >
               {item.label}
@@ -123,7 +123,7 @@ export function Header() {
           )}
 
           <button
-            className="md:hidden ml-2 inline-flex items-center justify-center rounded-md p-2 hover:bg-accent"
+            className="md:hidden ml-2 inline-flex items-center justify-center rounded-md p-2 transition-colors hover:bg-accent"
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle navigation"
           >

@@ -65,12 +65,12 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
     const inputX = event.clientX - rect.left;
     const inputY = event.clientY - rect.top;
 
-    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -4;
-    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 4;
+    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -8;
+    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 8;
 
     element.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
     element.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    element.style.setProperty("--tz", "12px");
+    element.style.setProperty("--tz", "20px");
   };
 
   const resetTilt = () => {
@@ -87,14 +87,14 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
         ref={cardRef}
         onPointerMove={handlePointerMove}
         onPointerEnter={(event) => handlePointerMove(event)}
-        className="relative h-full transform-gpu transition-transform duration-200 ease-out"
+        className="relative h-full transform-gpu transition-transform duration-100 ease-out"
         style={{
           transform:
             "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
         }}
       >
-        <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-amber-500/22 blur-2xl transition-all duration-300 group-hover:translate-y-1 dark:bg-amber-400/18" />
-        <Card className="relative h-full rounded-2xl border border-white/10 bg-white/12 px-2 pb-6 pt-4 shadow-[0_18px_32px_-18px_rgba(72,54,218,0.45)] backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:bg-white/8">
+        <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-amber-500/30 blur-2xl transition-all duration-200 group-hover:translate-y-0.5 dark:bg-amber-400/24" />
+        <Card className="relative h-full rounded-2xl border border-white/10 bg-white/12 px-2 pb-6 pt-4 shadow-[0_28px_60px_-26px_rgba(72,54,218,0.65)] hover:shadow-[0_36px_80px_-30px_rgba(86,64,255,0.75)] backdrop-blur-xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/8">
           <div className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/25 via-transparent to-brand-500/10" />
           </div>
@@ -109,7 +109,7 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="relative">
-            <div className="grid gap-2 text-center text-foreground/80">
+            <div className="grid gap-2 text-center text-foreground">
               <div className="text-lg">
                 <span className="font-semibold text-foreground">
                   {plan.prices.inr}

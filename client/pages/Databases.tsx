@@ -86,11 +86,17 @@ export default function Databases() {
       <section className="container mx-auto py-8">
         <div className="text-center">
           <h1 className="text-3xl font-black">Databases</h1>
-          <p className="mt-2 text-foreground/70">Search leaked data sources.</p>
+          <p className="mt-2 text-foreground/80">
+            Search leaked data sources and Dark Web datasets in real time.
+          </p>
+          <p className="mt-2 text-sm text-foreground/70 max-w-3xl mx-auto">
+            Monitor dumps, marketplaces, and breach chatter for exposed emails,
+            phone numbers, usernames, IPs, and domains linked to your assets.
+          </p>
         </div>
 
         <div className="mt-6 mx-auto max-w-3xl grid gap-3">
-          <div className="rounded-2xl border border-border bg-card/80 p-3 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
+          <div className="rounded-2xl border border-border bg-card/80 p-3 shadow-xl shadow-brand-500/20 ring-1 ring-brand-500/20 backdrop-blur">
             <Input
               placeholder="Enter an email, phone, IP, domain, keyword…"
               value={query}

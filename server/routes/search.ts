@@ -41,16 +41,25 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
   } as const;
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
     const r = await fetch("https://leakosintapi.com/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timeout));
 
     const contentType = r.headers.get("content-type") || "";
+
     if (!r.ok) {
+      // Normalize upstream errors (e.g., 502/503) to JSON for the client
       const text = await r.text();
-      res.status(r.status).send(text);
+      const message = text || `Upstream error (${r.status}).`;
+      res
+        .status(r.status)
+        .json({ error: message, status: r.status, upstream: true });
       return;
     }
 
@@ -62,6 +71,11 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
       res.type(contentType).send(text);
     }
   } catch (e: any) {
-    res.status(500).json({ error: e?.message || "Search failed" });
+    const isAbort = e?.name === "AbortError";
+    res.status(502).json({
+      error: isAbort
+        ? "Search provider timed out. Please retry."
+        : e?.message || "Search failed",
+    });
   }
 };

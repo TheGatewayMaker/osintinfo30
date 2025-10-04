@@ -55,7 +55,9 @@ export default function Index() {
         await consumeSearchCredit(user.uid, 1);
       }
 
-      navigate(`/search?q=${encodeURIComponent(q)}` , { state: { result: data } });
+      navigate(`/search?q=${encodeURIComponent(q)}`, {
+        state: { result: data },
+      });
     } catch (e: any) {
       toast.error(e?.message || "Search error.");
     } finally {

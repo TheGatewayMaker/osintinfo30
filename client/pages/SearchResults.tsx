@@ -25,7 +25,10 @@ export default function SearchResults() {
 
   useEffect(() => {
     if (!initialQ.trim()) return;
-    if ((location as any).state && (location as any).state.result !== undefined) {
+    if (
+      (location as any).state &&
+      (location as any).state.result !== undefined
+    ) {
       setResult((location as any).state.result);
       return;
     }

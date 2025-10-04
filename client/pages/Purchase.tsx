@@ -13,7 +13,9 @@ export default function Purchase() {
     <Layout>
       <section className="container mx-auto py-12 text-center">
         <h1 className="text-3xl md:text-4xl font-black">Purchase</h1>
-        <p className="mt-2 text-foreground/70">Complete your purchase request below.</p>
+        <p className="mt-2 text-foreground/70">
+          Complete your purchase request below.
+        </p>
 
         <form
           action="https://formspree.io/f/mnngvokw"
@@ -22,7 +24,9 @@ export default function Purchase() {
         >
           <input type="hidden" name="formType" value="purchase" />
           <div className="grid gap-2">
-            <label htmlFor="searches" className="text-sm font-medium">Number of Searches</label>
+            <label htmlFor="searches" className="text-sm font-medium">
+              Number of Searches
+            </label>
             <input
               id="searches"
               name="searches"
@@ -34,7 +38,9 @@ export default function Purchase() {
             />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="accountEmail" className="text-sm font-medium">Your Account Email address</label>
+            <label htmlFor="accountEmail" className="text-sm font-medium">
+              Your Account Email address
+            </label>
             <input
               id="accountEmail"
               name="accountEmail"
@@ -45,7 +51,9 @@ export default function Purchase() {
             />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="contactEmail" className="text-sm font-medium">Your contact Email address (leave if same)</label>
+            <label htmlFor="contactEmail" className="text-sm font-medium">
+              Your contact Email address (leave if same)
+            </label>
             <input
               id="contactEmail"
               name="contactEmail"
@@ -55,7 +63,9 @@ export default function Purchase() {
             />
           </div>
           <div className="grid gap-2">
-            <label htmlFor="paymentMethod" className="text-sm font-medium">Select Payment Method</label>
+            <label htmlFor="paymentMethod" className="text-sm font-medium">
+              Select Payment Method
+            </label>
             <select
               id="paymentMethod"
               name="paymentMethod"
@@ -63,7 +73,9 @@ export default function Purchase() {
               className="rounded-md border border-input bg-background px-3 py-2"
               defaultValue=""
             >
-              <option value="" disabled>Select a method</option>
+              <option value="" disabled>
+                Select a method
+              </option>
               <option>Crypto (LTC)</option>
               <option>Crypto (BTC)</option>
               <option>Crypto (XRP)</option>
@@ -73,7 +85,9 @@ export default function Purchase() {
             </select>
           </div>
           <div className="grid gap-2">
-            <label htmlFor="note" className="text-sm font-medium">Note (Optional)</label>
+            <label htmlFor="note" className="text-sm font-medium">
+              Note (Optional)
+            </label>
             <textarea
               id="note"
               name="note"

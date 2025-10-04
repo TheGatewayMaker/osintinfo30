@@ -37,26 +37,46 @@ export default function Shop() {
               >
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl">
-                    <span className="text-3xl font-extrabold">{p.searches}</span> searches
+                    <span className="text-3xl font-extrabold">
+                      {p.searches}
+                    </span>{" "}
+                    searches
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-2 text-center text-foreground/80">
-                    <div className="text-lg"><span className="font-semibold">{p.prices.inr}</span> <span className="text-foreground/60">/ INR</span></div>
-                    <div className="text-lg"><span className="font-semibold">{p.prices.pkr}</span> <span className="text-foreground/60">/ PKR</span></div>
-                    <div className="text-lg"><span className="font-semibold">{p.prices.usd}</span> <span className="text-foreground/60">/ USD</span></div>
+                    <div className="text-lg">
+                      <span className="font-semibold">{p.prices.inr}</span>{" "}
+                      <span className="text-foreground/60">/ INR</span>
+                    </div>
+                    <div className="text-lg">
+                      <span className="font-semibold">{p.prices.pkr}</span>{" "}
+                      <span className="text-foreground/60">/ PKR</span>
+                    </div>
+                    <div className="text-lg">
+                      <span className="font-semibold">{p.prices.usd}</span>{" "}
+                      <span className="text-foreground/60">/ USD</span>
+                    </div>
                   </div>
                   <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Button
                       className="w-full"
-                      onClick={() => window.open("https://t.me/Osint_Info_supportbot", "_blank", "noopener,noreferrer")}
+                      onClick={() =>
+                        window.open(
+                          "https://t.me/Osint_Info_supportbot",
+                          "_blank",
+                          "noopener,noreferrer",
+                        )
+                      }
                     >
                       Buy via Telegram
                     </Button>
                     <Button
                       variant="secondary"
                       className="w-full"
-                      onClick={() => navigate(`/purchase?searches=${p.searches}`)}
+                      onClick={() =>
+                        navigate(`/purchase?searches=${p.searches}`)
+                      }
                     >
                       Buy via Email
                     </Button>

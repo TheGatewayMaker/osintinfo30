@@ -45,8 +45,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           unsubProfile = undefined;
         }
         if (u) {
-          const ensured = await ensureUserDoc(u.uid, u.email, u.displayName);
-          setProfile(ensured);
+          try {
+            const ensured = await ensureUserDoc(u.uid, u.email, u.displayName);
+            setProfile(ensured);
+          } catch (e) {
+            console.warn("ensureUserDoc failed: ", e);
+          }
           try {
             const db = getDbInstance();
             const ref = doc(db, "users", u.uid);

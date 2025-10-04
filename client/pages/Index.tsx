@@ -123,7 +123,8 @@ export default function Index() {
             Intelligence built for rapid response
           </h2>
           <p className="mt-3 text-base text-foreground/70">
-            Blend real-time monitoring with verified breach data to keep your team ahead of emerging threats.
+            Blend real-time monitoring with verified breach data to keep your
+            team ahead of emerging threats.
           </p>
         </div>
         <div className="mt-12">

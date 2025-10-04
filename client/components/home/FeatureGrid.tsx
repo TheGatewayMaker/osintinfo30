@@ -118,13 +118,15 @@ function FeatureCard({ feature }: FeatureCardProps) {
           "relative h-full overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-br from-white/14 via-white/8 to-white/4 px-7 py-9 text-left",
           "shadow-[0_12px_24px_-14px_rgba(64,48,196,0.46)] transition-[transform,box-shadow] duration-150 ease-out will-change-transform backdrop-blur-[18px]",
           "hover:shadow-[0_16px_32px_-18px_rgba(86,64,255,0.58)]",
-          "dark:border-white/10 dark:from-white/8 dark:via-white/4 dark:to-white/10"
+          "dark:border-white/10 dark:from-white/8 dark:via-white/4 dark:to-white/10",
         )}
-        style={{
-          transform:
-            "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
-          "--glow-opacity": 0.28,
-        } as CSSProperties}
+        style={
+          {
+            transform:
+              "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
+            "--glow-opacity": 0.28,
+          } as CSSProperties
+        }
       >
         <div className="absolute inset-0">
           <div className="absolute inset-px rounded-[calc(1.5rem-1px)] bg-gradient-to-br from-brand-500/16 via-transparent to-brand-200/10 opacity-[var(--glow-opacity)] transition-opacity duration-150" />

@@ -25,9 +25,12 @@ export default function Shop() {
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/12),transparent_55%)]" />
         <div className="container mx-auto">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black tracking-tight md:text-4xl">Shop</h1>
+            <h1 className="text-3xl font-black tracking-tight md:text-4xl">
+              Shop
+            </h1>
             <p className="mx-auto mt-2 max-w-2xl text-foreground/70">
-              Choose a searches package to increase your remaining searches instantly after purchase.
+              Choose a searches package to increase your remaining searches
+              instantly after purchase.
             </p>
           </div>
 
@@ -97,7 +100,9 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
           </div>
           <CardHeader className="relative text-center">
             <CardTitle className="text-2xl">
-              <span className="text-4xl font-extrabold text-foreground">{plan.searches}</span>{" "}
+              <span className="text-4xl font-extrabold text-foreground">
+                {plan.searches}
+              </span>{" "}
               <span className="align-super text-xs font-semibold uppercase tracking-[0.5em] text-amber-400">
                 searches
               </span>
@@ -106,15 +111,21 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
           <CardContent className="relative">
             <div className="grid gap-2 text-center text-foreground/80">
               <div className="text-lg">
-                <span className="font-semibold text-foreground">{plan.prices.inr}</span>{" "}
+                <span className="font-semibold text-foreground">
+                  {plan.prices.inr}
+                </span>{" "}
                 <span className="text-foreground/60">/ INR</span>
               </div>
               <div className="text-lg">
-                <span className="font-semibold text-foreground">{plan.prices.pkr}</span>{" "}
+                <span className="font-semibold text-foreground">
+                  {plan.prices.pkr}
+                </span>{" "}
                 <span className="text-foreground/60">/ PKR</span>
               </div>
               <div className="text-lg">
-                <span className="font-semibold text-foreground">{plan.prices.usd}</span>{" "}
+                <span className="font-semibold text-foreground">
+                  {plan.prices.usd}
+                </span>{" "}
                 <span className="text-foreground/60">/ USD</span>
               </div>
             </div>

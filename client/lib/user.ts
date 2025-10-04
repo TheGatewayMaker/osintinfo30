@@ -1,5 +1,4 @@
 import { getDbInstance } from "./firebase";
-import { getDbInstance } from "./firebase";
 import {
   collection,
   doc,

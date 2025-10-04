@@ -15,8 +15,8 @@ import Shop from "./pages/Shop";
 import AuthPage from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import Admin from "./pages/Admin";
 import SearchResults from "./pages/SearchResults";
+import Purchase from "./pages/Purchase";
 import { AuthProvider } from "@/context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -38,8 +38,9 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/super/auth/owner/panel" element={<Admin />} />
+            <Route path="/purchase" element={<Purchase />} />
+            <Route path="/admin" element={<NotFound />} />
+            <Route path="/super/auth/owner/panel" element={<NotFound />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

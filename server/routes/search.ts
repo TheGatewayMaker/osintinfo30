@@ -68,7 +68,8 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     requestPayload = String(rawCandidate).trim();
   }
 
-  const rawLimit = (parsedBody as any).limit ?? (req.query as any)?.limit ?? 100;
+  const rawLimit =
+    (parsedBody as any).limit ?? (req.query as any)?.limit ?? 100;
   const lang = (parsedBody as any).lang ?? (req.query as any)?.lang ?? "en";
   const type = (parsedBody as any).type ?? (req.query as any)?.type ?? "json";
 
@@ -105,7 +106,7 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
 
     if (!r.ok) {
       const text = await r.text();
-      const message = text || ("Upstream error (" + r.status + ").");
+      const message = text || "Upstream error (" + r.status + ").";
       res
         .status(r.status)
         .json({ error: message, status: r.status, upstream: true });

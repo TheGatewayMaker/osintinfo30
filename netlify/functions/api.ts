@@ -20,7 +20,11 @@ export const handler = async (event: any, context: any) => {
   }
 
   // Default to JSON for non-GET requests when no content-type is provided
-  if (!event.headers["content-type"] && event.httpMethod && event.httpMethod !== "GET") {
+  if (
+    !event.headers["content-type"] &&
+    event.httpMethod &&
+    event.httpMethod !== "GET"
+  ) {
     event.headers["content-type"] = "application/json";
   }
 

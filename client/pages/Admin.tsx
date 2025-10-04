@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/table";
 
 export default function Admin() {
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
 
   useEffect(() => {
@@ -71,6 +71,16 @@ export default function Admin() {
     }
     return { totalUsers, free, purchased, used, remaining };
   }, [users]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <section className="container mx-auto py-12 text-center">
+          <h1 className="text-3xl font-black">Loading…</h1>
+        </section>
+      </Layout>
+    );
+  }
 
   if (!user) {
     return (

@@ -122,7 +122,7 @@ export function Header() {
           ) : (
             <Button onClick={() => navigate("/auth")} title="Sign in">
               <LogIn />
-              <span className="hidden sm:inline">Sign in</span>
+              <span className="inline">Sign in</span>
             </Button>
           )}
 

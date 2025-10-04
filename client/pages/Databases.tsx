@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ export default function Databases() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setQuery(initialQ);
@@ -25,6 +26,7 @@ export default function Databases() {
     if (!query.trim()) return;
     if (!user) {
       toast.error("Please sign in to search.");
+      setTimeout(() => navigate("/auth"), 2000);
       return;
     }
     if (!Number.isFinite(remaining) || remaining <= 0) {

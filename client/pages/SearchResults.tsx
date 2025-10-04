@@ -15,7 +15,7 @@ export default function SearchResults() {
   const [result, setResult] = useState<any>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation() as { state?: { result?: any } } & Location;
+  const location = useLocation() as any;
 
   useEffect(() => {
     setQuery(initialQ);

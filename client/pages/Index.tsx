@@ -29,10 +29,8 @@ export default function Index() {
 
     setLoading(true);
     try {
-      const r = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q }),
+      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+        method: "GET",
       });
       const contentType = r.headers.get("content-type") || "";
       if (!r.ok) {

@@ -35,6 +35,15 @@ function baseFromEmail(email: string) {
   return cleaned || "user";
 }
 
+export function computeRemaining(p?: Partial<UserProfile> | null) {
+  const free = Number(p?.freeSearches ?? 0) || 0;
+  const purchased = Number(p?.purchasedSearches ?? 0) || 0;
+  const used = Number(p?.usedSearches ?? 0) || 0;
+  const derived = Math.max(0, free + purchased - used);
+  const explicit = Number(p?.totalSearchesRemaining);
+  return Number.isFinite(explicit) && explicit >= 0 ? explicit : derived;
+}
+
 async function findUniqueUsername(base: string): Promise<string> {
   const _db = db();
   let candidate = base;
@@ -65,6 +74,33 @@ function cryptoRandomSuffix() {
       .toString()
       .padStart(5, "0");
   }
+}
+
+async function normalizeExistingProfile(uid: string, existing: UserProfile) {
+  const _db = db();
+  const ref = doc(_db, "users", uid);
+  const free = Math.min(2, Number(existing.freeSearches ?? 0) || 0);
+  const purchased = Number(existing.purchasedSearches ?? 0) || 0;
+  const used = Number(existing.usedSearches ?? 0) || 0;
+  const derivedRemaining = Math.max(0, free + purchased - used);
+  const explicitRemaining = Number(existing.totalSearchesRemaining);
+  const needsFreeFix = free !== existing.freeSearches;
+  const needsRemainingFix =
+    !Number.isFinite(explicitRemaining) || explicitRemaining !== derivedRemaining;
+
+  if (needsFreeFix || needsRemainingFix) {
+    await updateDoc(ref, {
+      ...(needsFreeFix ? { freeSearches: free } : {}),
+      ...(needsRemainingFix ? { totalSearchesRemaining: derivedRemaining } : {}),
+      updatedAt: serverTimestamp(),
+    });
+    return {
+      ...existing,
+      freeSearches: free,
+      totalSearchesRemaining: derivedRemaining,
+    } as UserProfile;
+  }
+  return existing;
 }
 
 export async function ensureUserDoc(
@@ -100,14 +136,16 @@ export async function ensureUserDoc(
     return profile;
   } else {
     const existing = snap.data() as UserProfile;
+    let updated = existing;
     if (!existing.username && email) {
       const base = baseFromEmail(email);
       const username = await findUniqueUsername(base);
       await updateDoc(ref, { username, updatedAt: serverTimestamp() });
-      return { ...existing, username } as UserProfile;
+      updated = { ...existing, username } as UserProfile;
     }
+    // normalize values (clamp free to 2 and sync remaining)
+    return await normalizeExistingProfile(uid, updated);
   }
-  return snap.data() as UserProfile;
 }
 
 export async function incrementPurchasedSearches(uid: string, amount: number) {

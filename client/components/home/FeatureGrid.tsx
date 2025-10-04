@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { cn } from "@/lib/utils";
 
 type Feature = {
@@ -57,7 +58,7 @@ type FeatureCardProps = {
 function FeatureCard({ feature }: FeatureCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const element = cardRef.current;
     if (!element) return;
 

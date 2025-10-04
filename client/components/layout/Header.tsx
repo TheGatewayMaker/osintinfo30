@@ -93,7 +93,10 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background">
                     <Avatar className="h-9 w-9 select-none">
-                      <AvatarImage src={user.photoURL || undefined} alt="User" />
+                      <AvatarImage
+                        src={user.photoURL || undefined}
+                        alt="User"
+                      />
                       <AvatarFallback>
                         <UserIcon className="h-5 w-5 opacity-70" />
                       </AvatarFallback>
@@ -105,9 +108,9 @@ export function Header() {
                     onSelect={async () => {
                       try {
                         await signOut();
-                        navigate('/');
+                        navigate("/");
                       } catch (e) {
-                        console.warn('Sign out failed', e);
+                        console.warn("Sign out failed", e);
                       }
                     }}
                   >

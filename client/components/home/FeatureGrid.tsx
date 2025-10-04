@@ -105,7 +105,7 @@ function FeatureCard({ feature }: FeatureCardProps) {
         </div>
         <div className="relative z-10 flex h-full flex-col">
           {feature.eyebrow ? (
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-100 drop-shadow-[0_0_8px_rgba(25,18,87,0.5)]">
+            <span className="text-xs font-semibold uppercase tracking-[0.4em] text-brand-600 drop-shadow-[0_0_10px_rgba(26,21,76,0.45)] dark:text-brand-100">
               {feature.eyebrow}
             </span>
           ) : null}

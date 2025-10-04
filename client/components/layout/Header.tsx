@@ -150,7 +150,7 @@ export function Header() {
 
       {open && (
         <div className="md:hidden border-t border-border">
-          <div className="container py-2 grid gap-2">
+          <div className="container py-2 grid gap-2 px-4">
             {navItems.map((item) => (
               <Link
                 key={item.to}

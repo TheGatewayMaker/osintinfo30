@@ -156,7 +156,7 @@ export function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className={`rounded px-3 py-2 hover:bg-accent ${location.pathname === item.to ? "bg-accent" : ""}`}
+                className={`block rounded-md px-4 py-3 text-base font-semibold hover:bg-accent/10 ${location.pathname === item.to ? "bg-accent" : ""}`}
               >
                 {item.label}
               </Link>

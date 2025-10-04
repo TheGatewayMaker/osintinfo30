@@ -56,7 +56,7 @@ export default function SearchResults() {
     setLoading(true);
     setResult(null);
     try {
-      const { data, hasResults } = await performSearch(query.trim());
+      const { data, hasResults } = await performSearch(query);
       setResult(data);
 
       if (hasResults) {

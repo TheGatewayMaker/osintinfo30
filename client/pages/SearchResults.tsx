@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { consumeSearchCredit, computeRemaining } from "@/lib/user";
+import {
+  consumeSearchCredit,
+  computeRemaining,
+  isFirestorePermissionDenied,
+} from "@/lib/user";
 import { toast } from "sonner";
 
 export default function SearchResults() {
@@ -79,7 +83,18 @@ export default function SearchResults() {
             : false;
 
       if (hasResults) {
-        await consumeSearchCredit(user.uid, 1);
+        try {
+          await consumeSearchCredit(user.uid, 1);
+        } catch (creditError) {
+          if (isFirestorePermissionDenied(creditError)) {
+            console.warn(
+              "Skipping credit consumption due to permission error.",
+              creditError,
+            );
+          } else {
+            throw creditError;
+          }
+        }
       }
     } catch (e: any) {
       toast.error(e?.message || "Search error.");

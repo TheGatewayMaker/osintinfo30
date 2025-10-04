@@ -322,7 +322,7 @@ function AssignByPurchaseId() {
 }
 
 function UsersTable({ users }: { users: AdminUser[] }) {
-  const [target, setTarget] = useState<UserProfile | null>(null);
+  const [target, setTarget] = useState<AdminUser | null>(null);
   const [mode, setMode] = useState<"add" | "deduct" | "resetFree" | null>(null);
 
   return (

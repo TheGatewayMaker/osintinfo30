@@ -186,7 +186,7 @@ function AssignByPurchaseId() {
     setStatus("");
     try {
       const db = getDbInstance();
-      const ref = doc(db, "users", found.uid);
+      const ref = doc(db, "users", found.id);
       if (action === "add") {
         const newRemaining = (found.totalSearchesRemaining ?? 0) + amount;
         await updateDoc(ref, {

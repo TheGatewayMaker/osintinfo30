@@ -167,7 +167,7 @@ function AssignByPurchaseId() {
       const snap = await getDocs(q);
       if (!snap.empty) {
         const d = snap.docs[0];
-        setFound({ id: d.id, ...(d.data() as any) } as UserProfile);
+        setFound({ id: d.id, ...(d.data() as any) } as AdminUser);
         setStatus("");
       } else {
         setStatus("No user found for this Purchase ID.");

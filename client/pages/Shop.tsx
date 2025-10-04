@@ -1,5 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const PLANS = [
   { searches: 30, prices: { inr: "₹132", pkr: "₨432", usd: "$2" } },
@@ -11,6 +13,7 @@ const PLANS = [
 ];
 
 export default function Shop() {
+  const navigate = useNavigate();
   return (
     <Layout>
       <section className="relative py-16 md:py-24">
@@ -30,27 +33,53 @@ export default function Shop() {
             {PLANS.map((p) => (
               <Card
                 key={p.searches}
-                className="rounded-2xl border border-border bg-card/80 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
+                className="group rounded-2xl border border-border bg-card/80 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur transition transform hover:-translate-y-1 hover:shadow-xl"
               >
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl">
-                    {p.searches} searches
+                    <span className="text-3xl font-extrabold">
+                      {p.searches}
+                    </span>{" "}
+                    searches
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-2 text-center text-foreground/80">
-                    <div>
+                    <div className="text-lg">
                       <span className="font-semibold">{p.prices.inr}</span>{" "}
                       <span className="text-foreground/60">/ INR</span>
                     </div>
-                    <div>
+                    <div className="text-lg">
                       <span className="font-semibold">{p.prices.pkr}</span>{" "}
                       <span className="text-foreground/60">/ PKR</span>
                     </div>
-                    <div>
+                    <div className="text-lg">
                       <span className="font-semibold">{p.prices.usd}</span>{" "}
                       <span className="text-foreground/60">/ USD</span>
                     </div>
+                  </div>
+                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button
+                      className="w-full"
+                      onClick={() =>
+                        window.open(
+                          "https://t.me/Osint_Info_supportbot",
+                          "_blank",
+                          "noopener,noreferrer",
+                        )
+                      }
+                    >
+                      Buy via Telegram
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      className="w-full"
+                      onClick={() =>
+                        navigate(`/purchase?searches=${p.searches}`)
+                      }
+                    >
+                      Buy via Email
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

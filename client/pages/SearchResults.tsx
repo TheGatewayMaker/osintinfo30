@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ export default function SearchResults() {
   const [result, setResult] = useState<any>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation() as any;
 
   useEffect(() => {
     setQuery(initialQ);
@@ -23,9 +24,15 @@ export default function SearchResults() {
   const remaining = computeRemaining(profile);
 
   useEffect(() => {
-    if (initialQ.trim()) {
-      void onSearch();
+    if (!initialQ.trim()) return;
+    if (
+      (location as any).state &&
+      (location as any).state.result !== undefined
+    ) {
+      setResult((location as any).state.result);
+      return;
     }
+    void onSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQ]);
 

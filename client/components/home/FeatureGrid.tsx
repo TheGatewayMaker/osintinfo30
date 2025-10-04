@@ -91,7 +91,7 @@ function FeatureCard({ feature }: FeatureCardProps) {
         onPointerEnter={(event) => handlePointerMove(event)}
         className={cn(
           "relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/10 px-6 py-8 text-left",
-          "shadow-[0_25px_45px_-25px_rgba(72,54,218,0.45)] backdrop-blur-2xl transition-transform duration-200 ease-out will-change-transform",
+          "shadow-[0_18px_36px_-20px_rgba(72,54,218,0.42)] backdrop-blur-2xl transition-transform duration-200 ease-out will-change-transform",
           "dark:border-white/5 dark:bg-white/5"
         )}
         style={{
@@ -113,7 +113,7 @@ function FeatureCard({ feature }: FeatureCardProps) {
           <p className="mt-4 text-sm text-foreground/70">{feature.description}</p>
           <div className="mt-6 h-px w-16 bg-gradient-to-r from-brand-400/80 to-transparent" />
         </div>
-        <div className="pointer-events-none absolute inset-x-6 -bottom-10 h-24 translate-y-8 rounded-full bg-brand-500/25 blur-3xl transition-all duration-300 group-hover:translate-y-3 dark:bg-brand-400/20" />
+        <div className="pointer-events-none absolute inset-x-4 -bottom-6 h-20 translate-y-5 rounded-full bg-brand-500/22 blur-2xl transition-all duration-300 group-hover:translate-y-2 dark:bg-brand-400/18" />
       </div>
     </div>
   );

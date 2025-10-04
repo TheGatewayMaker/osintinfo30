@@ -26,45 +26,55 @@ res
 return;
 }
 
-// Normalize request body
-function normalizeBody(): any {
-let body: any = req.body ?? {};
+// Safe body normalizer
+function normalizeBody(): Record<string, unknown> {
+let body: unknown = req.body ?? {};
 
 ```
+// Empty string → treat as empty object
+if (body === "") {
+  return {};
+}
+
+// Raw string → try JSON parse, else wrap as { request }
 if (typeof body === "string") {
   const text = body.trim();
   if (text) {
     try {
-      body = JSON.parse(text);
+      return JSON.parse(text);
     } catch {
-      body = { request: text };
+      return { request: text };
     }
-  } else {
-    body = {};
   }
+  return {};
 }
 
-if (body && typeof body === "object" && typeof (body as any).body === "string") {
-  const inner = String((body as any).body).trim();
+// Object with .body as string → parse nested JSON
+if (
+  body &&
+  typeof body === "object" &&
+  typeof (body as Record<string, unknown>).body === "string"
+) {
+  const inner = String((body as Record<string, unknown>).body).trim();
   if (inner) {
     try {
-      body = JSON.parse(inner);
+      return JSON.parse(inner);
     } catch {
-      body = { request: inner };
+      return { request: inner };
     }
   }
 }
 
-return body ?? {};
+return (body as Record<string, unknown>) ?? {};
 ```
 
 }
 
-const parsedBody: any = normalizeBody();
+const parsedBody = normalizeBody();
 
 // Extract search candidate
 const rawCandidate =
-(parsedBody as any).request ?? // main param (API docs)
+(parsedBody as any).request ??
 (parsedBody as any).query ??
 (parsedBody as any).q ??
 (req.query as any)?.request ??
@@ -82,7 +92,8 @@ typeof rawCandidate === "boolean"
 requestPayload = String(rawCandidate).trim();
 }
 
-const rawLimit = (parsedBody as any).limit ?? (req.query as any)?.limit ?? 100;
+const rawLimit =
+(parsedBody as any).limit ?? (req.query as any)?.limit ?? 100;
 const lang = (parsedBody as any).lang ?? (req.query as any)?.lang ?? "en";
 const type = (parsedBody as any).type ?? (req.query as any)?.type ?? "json";
 

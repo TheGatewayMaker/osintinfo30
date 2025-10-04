@@ -120,7 +120,7 @@ const contentType = r.headers.get("content-type") || "";
 
 if (!r.ok) {
   const text = await r.text();
-  const message = text || `Upstream error (${r.status}).`;
+  const message = text || ("Upstream error (" + r.status + ").");
   res
     .status(r.status)
     .json({ error: message, status: r.status, upstream: true });

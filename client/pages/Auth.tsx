@@ -1,7 +1,8 @@
 import Layout from "@/components/layout/Layout";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
   const { signInWithGoogle } = useAuth();

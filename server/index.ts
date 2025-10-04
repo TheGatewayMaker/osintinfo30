@@ -20,6 +20,7 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
   app.post("/api/search", handleLeakSearch);
+  app.get("/api/search", handleLeakSearch);
 
   return app;
 }

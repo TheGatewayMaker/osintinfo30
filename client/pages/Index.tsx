@@ -5,6 +5,7 @@ import Layout from "@/components/layout/Layout";
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { performSearch } from "@/lib/search";
 import {
   computeRemaining,
   consumeSearchCredit,
@@ -35,26 +36,7 @@ export default function Index() {
     let resultData: unknown = null;
     let shouldNavigate = false;
     try {
-      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
-        method: "GET",
-      });
-      const contentType = r.headers.get("content-type") || "";
-      if (!r.ok) {
-        const text = await r.text();
-        toast.error(text || `Search failed (${r.status}).`);
-        return;
-      }
-      const data = contentType.includes("application/json")
-        ? await r.json()
-        : await r.text();
-
-      const hasResults = Array.isArray(data)
-        ? data.length > 0
-        : data && typeof data === "object"
-          ? Object.keys(data).length > 0
-          : typeof data === "string"
-            ? data.trim().length > 0 && !/no results/i.test(data)
-            : false;
+      const { data, hasResults } = await performSearch(q);
 
       if (hasResults) {
         try {
@@ -73,8 +55,12 @@ export default function Index() {
 
       resultData = data;
       shouldNavigate = true;
-    } catch (e: any) {
-      toast.error(e?.message || "Search error.");
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Search error.";
+      toast.error(message);
       return;
     } finally {
       setLoading(false);

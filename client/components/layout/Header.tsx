@@ -32,11 +32,11 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-black text-xl">
+        <Link to="/" className="flex items-center gap-2.5 font-black text-[1.35rem]">
           <img
             src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
             alt="Osint Info logo"
-            className="h-8 w-8 rounded"
+            className="h-9 w-9 rounded"
           />
           Osint Info
         </Link>
@@ -132,7 +132,7 @@ export function Header() {
             aria-label="Toggle navigation"
           >
             <svg
-              className="h-6 w-6"
+              className="h-7 w-7"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

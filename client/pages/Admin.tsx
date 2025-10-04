@@ -40,9 +40,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+type AdminUser = UserProfile & { id: string };
+
 export default function Admin() {
   const { user, profile, loading } = useAuth();
-  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
 
   useEffect(() => {
     if (!profile || profile.role !== "admin") return;

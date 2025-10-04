@@ -164,9 +164,15 @@ export async function incrementPurchasedSearches(uid: string, amount: number) {
 export async function consumeSearchCredit(uid: string, count = 1) {
   const _db = db();
   const ref = doc(_db, "users", uid);
-  await updateDoc(ref, {
-    usedSearches: increment(count),
-    totalSearchesRemaining: increment(-count),
-    updatedAt: serverTimestamp(),
-  });
+  try {
+    await updateDoc(ref, {
+      usedSearches: increment(count),
+      totalSearchesRemaining: increment(-count),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (e: any) {
+    if (typeof console !== "undefined") {
+      console.warn("consumeSearchCredit failed", e?.code || e?.message || e);
+    }
+  }
 }

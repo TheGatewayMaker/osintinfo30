@@ -44,6 +44,27 @@ export function computeRemaining(p?: Partial<UserProfile> | null) {
   return Number.isFinite(explicit) && explicit >= 0 ? explicit : derived;
 }
 
+export function isFirestorePermissionDenied(error: unknown) {
+  if (!error) return false;
+  if (typeof error === "string") {
+    return /missing or insufficient permissions/i.test(error);
+  }
+  const anyError = error as Record<string, unknown>;
+  const code = anyError?.code;
+  if (typeof code === "string" && code.toLowerCase().includes("permission")) {
+    return true;
+  }
+  const name = anyError?.name;
+  if (typeof name === "string" && name.toLowerCase().includes("permission")) {
+    return true;
+  }
+  const message = anyError?.message;
+  return (
+    typeof message === "string" &&
+    /missing or insufficient permissions/i.test(message)
+  );
+}
+
 async function findUniqueUsername(base: string): Promise<string> {
   const _db = db();
   let candidate = base;

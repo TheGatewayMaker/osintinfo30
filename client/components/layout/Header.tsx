@@ -22,7 +22,7 @@ const baseNavItems = [
 ];
 
 export function Header() {
-  const { user, profile } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const navItems =
     profile?.role === "admin"
       ? [...baseNavItems, { to: "/admin", label: "Admin" }]
@@ -67,7 +67,7 @@ export function Header() {
                   >
                     <span
                       aria-hidden
-                      className="pointer-events-none absolute -inset-0.5 rounded-full bg-[conic-gradient(from_0deg,rgba(251,191,36,0.25),rgba(245,158,11,0.6),rgba(217,119,6,0.5),rgba(251,191,36,0.25))] blur-md opacity-70 animate-[spin_6s_linear_infinite]"
+                      className="pointer-events-none absolute -inset-0.5 rounded-full [mask:radial-gradient(farthest-side,transparent_calc(100%_-_3px),#000_calc(100%_-_0px))] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_340deg,rgba(245,158,11,0.95)_350deg,transparent_360deg)] opacity-80 blur-[2px] animate-[spin_4s_linear_infinite]"
                     />
                     <span className="relative z-10 inline-flex items-center gap-2">
                       <span className="max-w-[12rem] truncate font-semibold">
@@ -88,13 +88,34 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Non-clickable user avatar */}
-              <Avatar className="h-9 w-9 select-none">
-                <AvatarImage src={user.photoURL || undefined} alt="User" />
-                <AvatarFallback>
-                  <UserIcon className="h-5 w-5 opacity-70" />
-                </AvatarFallback>
-              </Avatar>
+              {/* User avatar with menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background">
+                    <Avatar className="h-9 w-9 select-none">
+                      <AvatarImage src={user.photoURL || undefined} alt="User" />
+                      <AvatarFallback>
+                        <UserIcon className="h-5 w-5 opacity-70" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onSelect={() => navigate('/profile')}>Profile</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={async () => {
+                      try {
+                        await signOut();
+                        navigate('/');
+                      } catch (e) {
+                        console.warn('Sign out failed', e);
+                      }
+                    }}
+                  >
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <Button onClick={() => navigate("/auth")} title="Sign in">

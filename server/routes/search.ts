@@ -72,12 +72,10 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     }
   } catch (e: any) {
     const isAbort = e?.name === "AbortError";
-    res
-      .status(502)
-      .json({
-        error: isAbort
-          ? "Search provider timed out. Please retry."
-          : e?.message || "Search failed",
-      });
+    res.status(502).json({
+      error: isAbort
+        ? "Search provider timed out. Please retry."
+        : e?.message || "Search failed",
+    });
   }
 };

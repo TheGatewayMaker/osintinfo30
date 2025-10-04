@@ -86,9 +86,12 @@ export default function Databases() {
       <section className="container mx-auto py-8">
         <div className="text-center">
           <h1 className="text-3xl font-black">Databases</h1>
-          <p className="mt-2 text-foreground/80">Search leaked data sources and Dark Web datasets in real time.</p>
+          <p className="mt-2 text-foreground/80">
+            Search leaked data sources and Dark Web datasets in real time.
+          </p>
           <p className="mt-2 text-sm text-foreground/70 max-w-3xl mx-auto">
-            Monitor dumps, marketplaces, and breach chatter for exposed emails, phone numbers, usernames, IPs, and domains linked to your assets.
+            Monitor dumps, marketplaces, and breach chatter for exposed emails,
+            phone numbers, usernames, IPs, and domains linked to your assets.
           </p>
         </div>
 

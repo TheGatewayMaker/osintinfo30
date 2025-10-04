@@ -55,11 +55,12 @@ export default function SearchResults() {
     setLoading(true);
     setResult(null);
     try {
-      const r = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query.trim() }),
-      });
+      const r = await fetch(
+        `/api/search?q=${encodeURIComponent(query.trim())}`,
+        {
+          method: "GET",
+        },
+      );
       const contentType = r.headers.get("content-type") || "";
       if (!r.ok) {
         const text = await r.text();

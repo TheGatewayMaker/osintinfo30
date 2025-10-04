@@ -37,19 +37,34 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     return req.body ?? {};
   })();
 
-  const rawQuery =
+  const rawCandidate =
     (parsedBody as any).query ??
     (parsedBody as any).q ??
+    (parsedBody as any).request ??
     (req.query as any)?.query ??
-    (req.query as any)?.q;
-  const query = typeof rawQuery === "string" ? rawQuery.trim() : "";
+    (req.query as any)?.q ??
+    (req.query as any)?.request;
+
+  let requestPayload: string | string[] = "";
+  if (Array.isArray(rawCandidate)) {
+    requestPayload = rawCandidate
+      .map((s) => String(s))
+      .map((s) => s.trim())
+      .filter(Boolean);
+  } else if (typeof rawCandidate === "string") {
+    requestPayload = rawCandidate.trim();
+  }
 
   const rawLimit =
     (parsedBody as any).limit ?? (req.query as any)?.limit ?? 1000;
   const lang = (parsedBody as any).lang ?? (req.query as any)?.lang ?? "en";
   const type = (parsedBody as any).type ?? (req.query as any)?.type ?? "json";
 
-  if (!query) {
+  const isValid =
+    (typeof requestPayload === "string" && requestPayload.length > 0) ||
+    (Array.isArray(requestPayload) && requestPayload.length > 0);
+
+  if (!isValid) {
     res.status(400).json({ error: "Invalid query" });
     return;
   }
@@ -57,7 +72,7 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
   const safeLimit = Math.max(100, Math.min(10000, Number(rawLimit) || 1000));
   const body = {
     token,
-    request: query,
+    request: requestPayload,
     limit: safeLimit,
     lang,
     type,

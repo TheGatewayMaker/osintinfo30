@@ -109,7 +109,7 @@ export default function Index() {
               <Button
                 onClick={onSearch}
                 disabled={loading}
-                className="h-12 transform-gpu rounded-xl text-base transition duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.025]"
+                className="h-12 w-full sm:w-auto transform-gpu rounded-xl text-base transition duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.025]"
               >
                 {loading ? "Searching…" : "Search"}
               </Button>

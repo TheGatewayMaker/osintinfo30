@@ -5,7 +5,11 @@ import Layout from "@/components/layout/Layout";
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { computeRemaining, consumeSearchCredit } from "@/lib/user";
+import {
+  computeRemaining,
+  consumeSearchCredit,
+  isFirestorePermissionDenied,
+} from "@/lib/user";
 
 export default function Index() {
   const [query, setQuery] = useState("");
@@ -28,6 +32,8 @@ export default function Index() {
     }
 
     setLoading(true);
+    let resultData: unknown = null;
+    let shouldNavigate = false;
     try {
       const r = await fetch("/api/search", {
         method: "POST",
@@ -53,16 +59,33 @@ export default function Index() {
             : false;
 
       if (hasResults) {
-        await consumeSearchCredit(user.uid, 1);
+        try {
+          await consumeSearchCredit(user.uid, 1);
+        } catch (creditError) {
+          if (isFirestorePermissionDenied(creditError)) {
+            console.warn(
+              "Skipping credit consumption due to permission error.",
+              creditError,
+            );
+          } else {
+            throw creditError;
+          }
+        }
       }
 
-      navigate(`/search?q=${encodeURIComponent(q)}`, {
-        state: { result: data },
-      });
+      resultData = data;
+      shouldNavigate = true;
     } catch (e: any) {
       toast.error(e?.message || "Search error.");
+      return;
     } finally {
       setLoading(false);
+    }
+
+    if (shouldNavigate) {
+      navigate(`/search?q=${encodeURIComponent(q)}`, {
+        state: { result: resultData },
+      });
     }
   }
 

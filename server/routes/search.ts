@@ -44,7 +44,8 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     (req.query as any)?.q;
   const query = typeof rawQuery === "string" ? rawQuery.trim() : "";
 
-  const rawLimit = (parsedBody as any).limit ?? (req.query as any)?.limit ?? 1000;
+  const rawLimit =
+    (parsedBody as any).limit ?? (req.query as any)?.limit ?? 1000;
   const lang = (parsedBody as any).lang ?? (req.query as any)?.lang ?? "en";
   const type = (parsedBody as any).type ?? (req.query as any)?.type ?? "json";
 

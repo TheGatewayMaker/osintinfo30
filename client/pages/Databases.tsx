@@ -20,6 +20,13 @@ export default function Databases() {
     setQuery(initialQ);
   }, [initialQ]);
 
+  useEffect(() => {
+    if (initialQ.trim()) {
+      void onSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQ]);
+
   const remaining = computeRemaining(profile);
 
   async function onSearch() {

@@ -45,7 +45,11 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     }
 
     // Some environments wrap the original body under a `body` string field
-    if (body && typeof body === "object" && typeof (body as any).body === "string") {
+    if (
+      body &&
+      typeof body === "object" &&
+      typeof (body as any).body === "string"
+    ) {
       const inner = String((body as any).body).trim();
       if (inner) {
         try {

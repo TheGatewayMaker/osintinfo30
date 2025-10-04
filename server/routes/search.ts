@@ -26,53 +26,32 @@ res
 return;
 }
 
-// Safe body normalizer
+// Crash-proof body normalizer
 function normalizeBody(): Record<string, unknown> {
-let body: unknown = req.body ?? {};
+const body = req.body;
 
 ```
-// Empty string → treat as empty object
-if (body === "") {
-  return {};
-}
+if (!body) return {};
 
-// Raw string → try JSON parse, else wrap as { request }
 if (typeof body === "string") {
-  const text = body.trim();
-  if (text) {
-    try {
-      return JSON.parse(text);
-    } catch {
-      return { request: text };
-    }
-  }
-  return {};
-}
-
-// Object with .body as string → parse nested JSON
-if (
-  body &&
-  typeof body === "object" &&
-  typeof (body as Record<string, unknown>).body === "string"
-) {
-  const inner = String((body as Record<string, unknown>).body).trim();
-  if (inner) {
-    try {
-      return JSON.parse(inner);
-    } catch {
-      return { request: inner };
-    }
+  try {
+    return JSON.parse(body);
+  } catch {
+    return { request: body.trim() };
   }
 }
 
-return (body as Record<string, unknown>) ?? {};
+if (typeof body === "object") {
+  return body as Record<string, unknown>;
+}
+
+return {};
 ```
 
 }
 
 const parsedBody = normalizeBody();
 
-// Extract search candidate
 const rawCandidate =
 (parsedBody as any).request ??
 (parsedBody as any).query ??

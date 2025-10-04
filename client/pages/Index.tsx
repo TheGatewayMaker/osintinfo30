@@ -2,13 +2,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export default function Index() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   function onSearch() {
     if (!query.trim()) return;
+    if (!user) {
+      toast.error("Please sign in to search.");
+      setTimeout(() => navigate("/auth"), 2000);
+      return;
+    }
     navigate(`/databases?q=${encodeURIComponent(query.trim())}`);
   }
 

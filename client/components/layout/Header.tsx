@@ -31,7 +31,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
-      <div className="container mx-auto flex h-16 items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-3 font-black text-2xl">
           <img
             src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"

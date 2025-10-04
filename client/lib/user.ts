@@ -50,15 +50,17 @@ export function isFirestorePermissionDenied(error: unknown) {
     return /missing or insufficient permissions/i.test(error);
   }
   const anyError = error as Record<string, unknown>;
-  const code = anyError?.code;
+  const { code, name, message } = anyError as {
+    code?: unknown;
+    name?: unknown;
+    message?: unknown;
+  };
   if (typeof code === "string" && code.toLowerCase().includes("permission")) {
     return true;
   }
-  const name = anyError?.name;
   if (typeof name === "string" && name.toLowerCase().includes("permission")) {
     return true;
   }
-  const message = anyError?.message;
   return (
     typeof message === "string" &&
     /missing or insufficient permissions/i.test(message)

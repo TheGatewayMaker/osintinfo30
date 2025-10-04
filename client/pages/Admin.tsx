@@ -400,7 +400,7 @@ function AdjustModal({
   mode,
   onClose,
 }: {
-  user: UserProfile | null;
+  user: AdminUser | null;
   mode: "add" | "deduct" | "resetFree" | null;
   onClose: () => void;
 }) {

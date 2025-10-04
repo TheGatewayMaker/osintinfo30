@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { performSearch } from "@/lib/search";
 import {
   consumeSearchCredit,
   computeRemaining,
@@ -55,33 +56,8 @@ export default function SearchResults() {
     setLoading(true);
     setResult(null);
     try {
-      const r = await fetch(
-        `/api/search?q=${encodeURIComponent(query.trim())}`,
-        {
-          method: "GET",
-        },
-      );
-      const contentType = r.headers.get("content-type") || "";
-      if (!r.ok) {
-        const text = await r.text();
-        toast.error(text || `Search failed (${r.status}).`);
-        return;
-      }
-      let data: any = null;
-      if (contentType.includes("application/json")) {
-        data = await r.json();
-      } else {
-        data = await r.text();
-      }
+      const { data, hasResults } = await performSearch(query.trim());
       setResult(data);
-
-      const hasResults = Array.isArray(data)
-        ? data.length > 0
-        : data && typeof data === "object"
-          ? Object.keys(data).length > 0
-          : typeof data === "string"
-            ? data.trim().length > 0 && !/no results/i.test(data)
-            : false;
 
       if (hasResults) {
         try {
@@ -97,8 +73,12 @@ export default function SearchResults() {
           }
         }
       }
-    } catch (e: any) {
-      toast.error(e?.message || "Search error.");
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Search error.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

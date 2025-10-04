@@ -86,12 +86,15 @@ async function normalizeExistingProfile(uid: string, existing: UserProfile) {
   const explicitRemaining = Number(existing.totalSearchesRemaining);
   const needsFreeFix = free !== existing.freeSearches;
   const needsRemainingFix =
-    !Number.isFinite(explicitRemaining) || explicitRemaining !== derivedRemaining;
+    !Number.isFinite(explicitRemaining) ||
+    explicitRemaining !== derivedRemaining;
 
   if (needsFreeFix || needsRemainingFix) {
     await updateDoc(ref, {
       ...(needsFreeFix ? { freeSearches: free } : {}),
-      ...(needsRemainingFix ? { totalSearchesRemaining: derivedRemaining } : {}),
+      ...(needsRemainingFix
+        ? { totalSearchesRemaining: derivedRemaining }
+        : {}),
       updatedAt: serverTimestamp(),
     });
     return {

@@ -51,7 +51,12 @@ export async function performSearch(
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: trimmed }),
+    body: JSON.stringify({
+      token: import.meta.env.LEAKOSINT_API_KEY,
+      request: trimmed,
+      limit: 100,
+      lang: "en",
+    }),
   });
 
   const body = await readResponseBody(response);

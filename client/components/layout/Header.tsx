@@ -24,10 +24,7 @@ const baseNavItems = [
 
 export function Header() {
   const { user, profile, signOut } = useAuth();
-  const navItems =
-    profile?.role === "admin"
-      ? [...baseNavItems, { to: "/admin", label: "Admin" }]
-      : baseNavItems;
+  const navItems = baseNavItems;
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);

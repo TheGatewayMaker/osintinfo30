@@ -33,7 +33,7 @@ export function Header() {
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
       <div className="container mx-auto flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-black text-xl">
-          <span className="inline-block h-6 w-6 rounded bg-gradient-to-br from-brand-500 to-brand-700 shadow-md shadow-brand-500/30" />
+          <img src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png" alt="Osint Info logo" className="h-8 w-8 rounded" />
           Osint Info
         </Link>
 

@@ -93,8 +93,8 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
             "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
         }}
       >
-        <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-amber-500/30 blur-2xl transition-all duration-200 group-hover:translate-y-0.5 dark:bg-amber-400/24" />
-        <Card className="relative h-full rounded-2xl border border-white/10 bg-white/12 px-2 pb-6 pt-4 shadow-lg shadow-brand-500/15 hover:shadow-xl hover:shadow-brand-500/25 backdrop-blur-xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/8">
+        <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-amber-500/20 blur-2xl transition-all duration-200 group-hover:translate-y-0.5 dark:bg-amber-400/18" />
+        <Card className="relative h-full rounded-2xl border border-white/10 bg-white/12 px-2 pb-6 pt-4 shadow-md shadow-brand-500/10 hover:shadow-lg hover:shadow-brand-500/15 backdrop-blur-xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/8">
           <div className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/25 via-transparent to-brand-500/10" />
           </div>

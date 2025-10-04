@@ -40,7 +40,9 @@ export const handler = async (event: any) => {
 
     let requestPayload: string | string[] = "";
     if (Array.isArray(rawCandidate)) {
-      requestPayload = rawCandidate.map((s) => String(s).trim()).filter(Boolean);
+      requestPayload = rawCandidate
+        .map((s) => String(s).trim())
+        .filter(Boolean);
     } else if (
       typeof rawCandidate === "string" ||
       typeof rawCandidate === "number" ||
@@ -71,7 +73,9 @@ export const handler = async (event: any) => {
       return {
         statusCode: 500,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ error: "Server not configured. Missing LEAKOSINT_API_KEY." }),
+        body: JSON.stringify({
+          error: "Server not configured. Missing LEAKOSINT_API_KEY.",
+        }),
       };
     }
 
@@ -100,7 +104,11 @@ export const handler = async (event: any) => {
       return {
         statusCode: resp.status,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ error: message, status: resp.status, upstream: true }),
+        body: JSON.stringify({
+          error: message,
+          status: resp.status,
+          upstream: true,
+        }),
       };
     }
 
@@ -124,7 +132,11 @@ export const handler = async (event: any) => {
     return {
       statusCode: 502,
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ error: isAbort ? "Search provider timed out. Please retry." : err?.message || "Search failed" }),
+      body: JSON.stringify({
+        error: isAbort
+          ? "Search provider timed out. Please retry."
+          : err?.message || "Search failed",
+      }),
     };
   }
 };

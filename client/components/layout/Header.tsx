@@ -32,13 +32,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-black text-xl">
+        <Link to="/" className="flex items-center gap-3 font-black text-2xl">
           <img
             src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
             alt="Osint Info logo"
-            className="h-8 w-8 rounded"
+            className="h-10 w-10 rounded-lg"
           />
-          Osint Info
+          <span className="leading-none">Osint Info</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">

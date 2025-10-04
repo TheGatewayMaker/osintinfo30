@@ -148,7 +148,7 @@ function AssignByPurchaseId() {
   const [purchaseId, setPurchaseId] = useState("");
   const [amount, setAmount] = useState<number>(10);
   const [action, setAction] = useState<"add" | "deduct" | "set">("add");
-  const [found, setFound] = useState<UserProfile | null>(null);
+  const [found, setFound] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string>("");
 

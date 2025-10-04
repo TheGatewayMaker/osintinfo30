@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 export const handler = async (event: any) => {
   try {
     const headersIn = event?.headers || {};

@@ -37,7 +37,9 @@ export type PerformSearchResult = {
   hasResults: boolean;
 };
 
-export async function performSearch(query: string): Promise<PerformSearchResult> {
+export async function performSearch(
+  query: string,
+): Promise<PerformSearchResult> {
   const trimmed = query.trim();
   if (!trimmed) {
     throw new Error("Search query cannot be empty.");

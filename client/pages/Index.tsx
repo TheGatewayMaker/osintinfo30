@@ -103,7 +103,7 @@ export default function Index() {
                     if (e.key === "Enter") onSearch();
                   }}
                   placeholder="Enter an email, phone, IP, domain, keyword…"
-                  className="h-11 w-full rounded-xl bg-transparent px-4 text-base outline-none md:h-12"
+                  className="h-12 w-full rounded-xl bg-transparent px-4 text-base sm:text-lg outline-none md:h-12"
                 />
               </div>
               <Button

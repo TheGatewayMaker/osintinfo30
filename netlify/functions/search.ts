@@ -28,7 +28,10 @@ type ParsedPayload = {
   lang?: unknown;
 };
 
-function respond(statusCode: number, body: Record<string, unknown> | string): NetlifyResult {
+function respond(
+  statusCode: number,
+  body: Record<string, unknown> | string,
+): NetlifyResult {
   const payload = typeof body === "string" ? body : JSON.stringify(body);
   return {
     statusCode,
@@ -107,7 +110,10 @@ function clampLimit(value: unknown, fallback: number): number {
   return withinBounds;
 }
 
-export const handler = async (event: NetlifyEvent, _context: NetlifyContext): Promise<NetlifyResult> => {
+export const handler = async (
+  event: NetlifyEvent,
+  _context: NetlifyContext,
+): Promise<NetlifyResult> => {
   const method = (event.httpMethod || "GET").toUpperCase();
   if (method === "OPTIONS") {
     return {
@@ -124,7 +130,9 @@ export const handler = async (event: NetlifyEvent, _context: NetlifyContext): Pr
 
   const token = process.env.LEAKOSINT_API_KEY;
   if (!token) {
-    return respond(500, { error: "Server not configured. Missing LEAKOSINT_API_KEY." });
+    return respond(500, {
+      error: "Server not configured. Missing LEAKOSINT_API_KEY.",
+    });
   }
 
   const queryParams = event.queryStringParameters ?? {};
@@ -147,9 +155,10 @@ export const handler = async (event: NetlifyEvent, _context: NetlifyContext): Pr
   const langCandidate = body.lang ?? queryParams.lang;
 
   const limit = clampLimit(limitCandidate, 100);
-  const lang = typeof langCandidate === "string" && langCandidate.trim().length > 0
-    ? langCandidate.trim()
-    : "en";
+  const lang =
+    typeof langCandidate === "string" && langCandidate.trim().length > 0
+      ? langCandidate.trim()
+      : "en";
 
   const payload = {
     token,
@@ -172,7 +181,8 @@ export const handler = async (event: NetlifyEvent, _context: NetlifyContext): Pr
     const contentType = response.headers.get("content-type") || "";
 
     if (!response.ok) {
-      const message = (await response.text()) || `Upstream error (${response.status}).`;
+      const message =
+        (await response.text()) || `Upstream error (${response.status}).`;
       return respond(response.status, {
         error: message,
         status: response.status,
@@ -200,7 +210,10 @@ export const handler = async (event: NetlifyEvent, _context: NetlifyContext): Pr
         ? String((error as { message?: unknown }).message)
         : "Search failed";
     const isTimeout =
-      error && typeof error === "object" && "name" in error && (error as { name?: unknown }).name === "AbortError";
+      error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error as { name?: unknown }).name === "AbortError";
     return respond(502, {
       error: isTimeout ? "Search provider timed out. Please retry." : message,
     });

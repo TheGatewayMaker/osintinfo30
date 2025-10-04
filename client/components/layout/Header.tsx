@@ -2,6 +2,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { computeRemaining } from "@/lib/user";
 import { LogIn } from "lucide-react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -74,9 +75,7 @@ export function Header() {
                         Balance
                       </span>
                       <span className="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 px-2 py-0.5 text-xs font-semibold">
-                        {typeof profile?.totalSearchesRemaining === "number"
-                          ? profile.totalSearchesRemaining
-                          : 0}
+                        {computeRemaining(profile)}
                       </span>
                     </span>
                   </button>

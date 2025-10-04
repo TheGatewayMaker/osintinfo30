@@ -25,18 +25,47 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
     return;
   }
 
-  // Accept JSON body, form body, or query string, with "query" or "q" keys
-  const parsedBody: any = (() => {
-    if (typeof req.body === "string") {
-      try {
-        return JSON.parse(req.body);
-      } catch {
-        return {};
+  // Accept JSON body, form body, plain text, or nested body (some serverless wrappers)
+  function normalizeBody(): any {
+    // Start with what Express gives us
+    let body: any = req.body ?? {};
+
+    // If body is a raw string, try to parse JSON. On failure, treat it as the query itself
+    if (typeof body === "string") {
+      const text = body.trim();
+      if (text) {
+        try {
+          body = JSON.parse(text);
+        } catch {
+          body = { query: text };
+        }
+      } else {
+        body = {};
       }
     }
-    return req.body ?? {};
-  })();
 
+    // Some environments wrap the original body under a `body` string field
+    if (
+      body &&
+      typeof body === "object" &&
+      typeof (body as any).body === "string"
+    ) {
+      const inner = String((body as any).body).trim();
+      if (inner) {
+        try {
+          body = JSON.parse(inner);
+        } catch {
+          body = { query: inner };
+        }
+      }
+    }
+
+    return body ?? {};
+  }
+
+  const parsedBody: any = normalizeBody();
+
+  // Extract the search candidate from body or query string
   const rawCandidate =
     (parsedBody as any).query ??
     (parsedBody as any).q ??
@@ -51,8 +80,12 @@ export const handleLeakSearch: RequestHandler = async (req, res) => {
       .map((s) => String(s))
       .map((s) => s.trim())
       .filter(Boolean);
-  } else if (typeof rawCandidate === "string") {
-    requestPayload = rawCandidate.trim();
+  } else if (
+    typeof rawCandidate === "string" ||
+    typeof rawCandidate === "number" ||
+    typeof rawCandidate === "boolean"
+  ) {
+    requestPayload = String(rawCandidate).trim();
   }
 
   const rawLimit =

@@ -74,7 +74,7 @@ export function Header() {
                       <span className="max-w-[12rem] truncate font-semibold">
                         Balance
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 px-2 py-0.5 text-xs font-semibold">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 px-2 py-0.5 text-xs font-extrabold">
                         {computeRemaining(profile)}
                       </span>
                     </span>

@@ -17,7 +17,7 @@ export default function Index() {
       setTimeout(() => navigate("/auth"), 2000);
       return;
     }
-    navigate(`/databases?q=${encodeURIComponent(query.trim())}`);
+    navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   }
 
   return (

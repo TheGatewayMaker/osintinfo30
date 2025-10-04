@@ -16,6 +16,7 @@ import AuthPage from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Admin from "./pages/Admin";
+import SearchResults from "./pages/SearchResults";
 import { AuthProvider } from "@/context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/databases" element={<Databases />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/auth" element={<AuthPage />} />

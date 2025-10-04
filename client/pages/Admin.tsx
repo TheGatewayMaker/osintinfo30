@@ -40,18 +40,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+type AdminUser = UserProfile & { id: string };
+
 export default function Admin() {
   const { user, profile, loading } = useAuth();
-  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
 
   useEffect(() => {
     if (!profile || profile.role !== "admin") return;
     const db = getDbInstance();
     const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (snap) => {
-      const arr = snap.docs.map(
-        (d) => ({ id: d.id, ...(d.data() as any) }) as UserProfile,
-      );
+      const arr = snap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as any),
+      })) as AdminUser[];
       setUsers(arr);
     });
     return () => unsub();
@@ -148,7 +151,7 @@ function AssignByPurchaseId() {
   const [purchaseId, setPurchaseId] = useState("");
   const [amount, setAmount] = useState<number>(10);
   const [action, setAction] = useState<"add" | "deduct" | "set">("add");
-  const [found, setFound] = useState<UserProfile | null>(null);
+  const [found, setFound] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string>("");
 
@@ -167,7 +170,7 @@ function AssignByPurchaseId() {
       const snap = await getDocs(q);
       if (!snap.empty) {
         const d = snap.docs[0];
-        setFound({ id: d.id, ...(d.data() as any) } as UserProfile);
+        setFound({ id: d.id, ...(d.data() as any) } as AdminUser);
         setStatus("");
       } else {
         setStatus("No user found for this Purchase ID.");
@@ -186,7 +189,7 @@ function AssignByPurchaseId() {
     setStatus("");
     try {
       const db = getDbInstance();
-      const ref = doc(db, "users", found.uid);
+      const ref = doc(db, "users", found.id);
       if (action === "add") {
         const newRemaining = (found.totalSearchesRemaining ?? 0) + amount;
         await updateDoc(ref, {
@@ -318,7 +321,7 @@ function AssignByPurchaseId() {
   );
 }
 
-function UsersTable({ users }: { users: UserProfile[] }) {
+function UsersTable({ users }: { users: AdminUser[] }) {
   const [target, setTarget] = useState<UserProfile | null>(null);
   const [mode, setMode] = useState<"add" | "deduct" | "resetFree" | null>(null);
 
@@ -400,7 +403,7 @@ function AdjustModal({
   mode,
   onClose,
 }: {
-  user: UserProfile | null;
+  user: AdminUser | null;
   mode: "add" | "deduct" | "resetFree" | null;
   onClose: () => void;
 }) {
@@ -413,7 +416,7 @@ function AdjustModal({
     setLoading(true);
     try {
       const db = getDbInstance();
-      const ref = doc(db, "users", user.uid);
+      const ref = doc(db, "users", user.id);
       if (mode === "add") {
         const newRemaining = (user.totalSearchesRemaining ?? 0) + amount;
         await updateDoc(ref, {

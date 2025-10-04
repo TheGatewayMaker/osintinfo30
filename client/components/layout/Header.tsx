@@ -101,7 +101,6 @@ export function Header() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onSelect={() => navigate('/profile')}>Profile</DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={async () => {
                       try {

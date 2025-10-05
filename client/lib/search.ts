@@ -1,17 +1,9 @@
-export type SearchResult = unknown;
+import {
+  normalizeSearchResults,
+  type NormalizedSearchResults,
+} from "@/lib/search-normalize";
 
-function detectHasResults(value: SearchResult): boolean {
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-  if (value && typeof value === "object") {
-    return Object.keys(value as Record<string, unknown>).length > 0;
-  }
-  if (typeof value === "string") {
-    return value.trim().length > 0 && !/no results/i.test(value);
-  }
-  return Boolean(value);
-}
+export type SearchResult = unknown;
 
 async function readResponseBody(response: Response): Promise<SearchResult> {
   const contentType = response.headers.get("content-type") || "";
@@ -34,6 +26,7 @@ async function readResponseBody(response: Response): Promise<SearchResult> {
 
 export type PerformSearchResult = {
   data: SearchResult;
+  normalized: NormalizedSearchResults;
   hasResults: boolean;
 };
 
@@ -76,10 +69,15 @@ export async function performSearch(
     throw new Error(fallbackMessage);
   }
 
+  const normalized = normalizeSearchResults(body);
+
   return {
     data: body,
-    hasResults: detectHasResults(body),
+    normalized,
+    hasResults: normalized.hasMeaningfulData,
   };
 }
 
-export { detectHasResults as hasSearchResults };
+export function hasSearchResults(value: SearchResult): boolean {
+  return normalizeSearchResults(value).hasMeaningfulData;
+}

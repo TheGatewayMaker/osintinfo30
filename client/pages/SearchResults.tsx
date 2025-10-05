@@ -23,7 +23,14 @@ import {
   normalizeSearchResults,
   type NormalizedSearchResults,
 } from "@/lib/search-normalize";
-import { CheckCircle2, Circle, ClipboardList, Layers, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  ClipboardList,
+  Layers,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -166,9 +173,7 @@ export default function SearchResults() {
   const formattedRecords = recordCount.toLocaleString();
   const formattedFields = fieldCount.toLocaleString();
   const sourceCount = sources.length;
-  const formattedSourceCount = sourceCount
-    ? sourceCount.toLocaleString()
-    : "—";
+  const formattedSourceCount = sourceCount ? sourceCount.toLocaleString() : "—";
 
   const metricItems = [
     {
@@ -210,9 +215,10 @@ export default function SearchResults() {
     },
     {
       label: "Source enrichment",
-      description: sourceCount > 0
-        ? `Identified ${formattedSourceCount} source${sourceCount === 1 ? "" : "s"}.`
-        : "Run another search to surface data origins.",
+      description:
+        sourceCount > 0
+          ? `Identified ${formattedSourceCount} source${sourceCount === 1 ? "" : "s"}.`
+          : "Run another search to surface data origins.",
       active: sourceCount > 0,
     },
   ];
@@ -327,7 +333,9 @@ export default function SearchResults() {
                       Structured results
                     </h2>
                     <p className="text-sm leading-relaxed text-foreground/70 md:text-base">
-                      Visualize every breach record in an immersive layout, monitor enrichment at a glance, and guide your response playbook without leaving the page.
+                      Visualize every breach record in an immersive layout,
+                      monitor enrichment at a glance, and guide your response
+                      playbook without leaving the page.
                     </p>
                   </div>
                   <dl className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-[28rem] lg:grid-cols-2 xl:grid-cols-4">
@@ -351,7 +359,8 @@ export default function SearchResults() {
                             Record explorer
                           </h3>
                           <p className="text-sm text-foreground/60">
-                            Dive into each normalized result to understand what was captured, when, and from which leak source.
+                            Dive into each normalized result to understand what
+                            was captured, when, and from which leak source.
                           </p>
                         </div>
                         {hasResults && (
@@ -383,7 +392,8 @@ export default function SearchResults() {
                             Mapped sources
                           </h3>
                           <p className="mt-1 text-sm text-foreground/60">
-                            Track which breach repositories or OSINT feeds produced each record to understand provenance.
+                            Track which breach repositories or OSINT feeds
+                            produced each record to understand provenance.
                           </p>
                         </div>
                         <span className="rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-200">
@@ -404,7 +414,8 @@ export default function SearchResults() {
                         Review workflow
                       </h3>
                       <p className="mt-2 text-sm text-foreground/60">
-                        Use this checklist to validate structured records and coordinate remediation.
+                        Use this checklist to validate structured records and
+                        coordinate remediation.
                       </p>
                       <div className="mt-6 space-y-4">
                         {REVIEW_STEPS.map((step, index) => (
@@ -502,9 +513,12 @@ function ResultsNotice({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded-[26px] border border-dashed border-brand-500/40 bg-brand-500/10 px-8 py-16 text-center">
       <Sparkles className="h-10 w-10 text-brand-300" />
-      <p className="max-w-md text-base font-semibold text-foreground">{message}</p>
+      <p className="max-w-md text-base font-semibold text-foreground">
+        {message}
+      </p>
       <p className="max-w-sm text-sm text-foreground/60">
-        Try refining your search terms or broadening the identifiers to surface additional context.
+        Try refining your search terms or broadening the identifiers to surface
+        additional context.
       </p>
     </div>
   );
@@ -525,7 +539,9 @@ function MetricCard({
         {label}
       </dt>
       <dd className="mt-2 text-2xl font-bold text-foreground">{value}</dd>
-      <p className="mt-1 text-[0.7rem] font-medium text-foreground/60">{sublabel}</p>
+      <p className="mt-1 text-[0.7rem] font-medium text-foreground/60">
+        {sublabel}
+      </p>
     </div>
   );
 }

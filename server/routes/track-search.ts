@@ -1,6 +1,5 @@
 import type { RequestHandler } from "express";
 
-
 export const handleTrackSearch: RequestHandler = async (req, res) => {
   try {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;

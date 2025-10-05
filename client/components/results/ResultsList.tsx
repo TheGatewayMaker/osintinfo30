@@ -131,7 +131,9 @@ function ResultCard({
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <InfoTile
           label="Nickname"
-          icon={<UserRound className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
+          icon={
+            <UserRound className="h-5 w-5 text-brand-400 dark:text-brand-300" />
+          }
           value={nicknameDisplay}
         />
         <InfoTile
@@ -143,14 +145,18 @@ function ResultCard({
         />
         <InfoTile
           label="Profile URL"
-          icon={<LinkIcon className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
+          icon={
+            <LinkIcon className="h-5 w-5 text-brand-400 dark:text-brand-300" />
+          }
           value={url}
           href={urlHref}
           fallback="Not provided"
         />
         <InfoTile
           label="Info leak details"
-          icon={<ShieldAlert className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
+          icon={
+            <ShieldAlert className="h-5 w-5 text-brand-400 dark:text-brand-300" />
+          }
           value={infoLeakDetails}
           fallback="No details"
         />
@@ -318,10 +324,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
         {objects.length > 0 && (
           <div className="space-y-4">
             {objects.map((objectValue, index) => (
-              <div
-                key={index}
-                className="rounded-2xl bg-background/70 p-4"
-              >
+              <div key={index} className="rounded-2xl bg-background/70 p-4">
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
                   Item {index + 1}
                 </div>

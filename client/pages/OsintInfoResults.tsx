@@ -35,7 +35,11 @@ async function postSearchTrack(
       body: JSON.stringify(payload),
     });
     if (!(resp.status === 204 || resp.ok)) {
-      console.warn("Search tracking did not complete (status:", resp.status, ")");
+      console.warn(
+        "Search tracking did not complete (status:",
+        resp.status,
+        ")",
+      );
     }
   } catch (e) {
     // Swallow errors so UX is not affected

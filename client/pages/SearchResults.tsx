@@ -89,7 +89,11 @@ export default function SearchResults() {
       <section className="relative py-10 md:py-14">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/10),transparent_50%)]" />
         <div className="container mx-auto">
+<<<<<<< HEAD
           <div className="mx-auto max-w-5xl">
+=======
+          <div className="mx-auto max-w-4xl">
+>>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
             <div className="text-center">
               <h1 className="text-3xl md:text-4xl font-black tracking-tight">
                 Search Results
@@ -175,6 +179,7 @@ function ResultRenderer({ data }: { data: any }) {
   }
 
   if (data && typeof data === "object") {
+<<<<<<< HEAD
     // Filter out meta keys and render source blocks
     const hiddenKeys = new Set([
       "NumOfResults",
@@ -206,6 +211,11 @@ function ResultRenderer({ data }: { data: any }) {
     return (
       <div className="rounded-2xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10">
         <KeyValueGrid obj={filtered} />
+=======
+    return (
+      <div className="rounded-2xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10">
+        <KeyValueGrid obj={data} />
+>>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
       </div>
     );
   }
@@ -221,6 +231,7 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
   const entries = Object.entries(obj || {});
   if (!entries.length) return <Empty />;
   return (
+<<<<<<< HEAD
     <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-[0.95rem] leading-relaxed">
       {entries.map(([k, v]) => (
         <div key={k} className="grid grid-cols-3 gap-2 items-start">
@@ -230,6 +241,15 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
           <div className="col-span-2 break-words font-medium">
             {typeof v === "object" ? (
               <pre className="rounded border border-border bg-background/50 p-2 text-sm whitespace-pre-wrap">
+=======
+    <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      {entries.map(([k, v]) => (
+        <div key={k} className="grid grid-cols-3 gap-2 items-start">
+          <div className="col-span-1 text-foreground/60 break-words">{k}</div>
+          <div className="col-span-2 break-words font-medium">
+            {typeof v === "object" ? (
+              <pre className="rounded border border-border bg-background/50 p-2 text-xs whitespace-pre-wrap">
+>>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
                 {JSON.stringify(v, null, 2)}
               </pre>
             ) : (
@@ -242,6 +262,7 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
   );
 }
 
+<<<<<<< HEAD
 function SourceBlock({ name, value }: { name: string; value: any }) {
   const count =
     value && typeof value === "object" && typeof value.NumOfResults === "number"
@@ -296,6 +317,8 @@ function SourceBlock({ name, value }: { name: string; value: any }) {
   );
 }
 
+=======
+>>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
 function Empty() {
   return (
     <div className="text-center text-sm text-foreground/60">

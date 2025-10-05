@@ -177,7 +177,10 @@ export default function SearchResults() {
 
               {normalized ? (
                 normalized.records.length ? (
-                  <ResultsList records={normalized.records} />
+                  <ResultsList
+                    records={normalized.records}
+                    totalCount={normalized.recordCount}
+                  />
                 ) : (
                   <ResultsNotice message="No results found for this query." />
                 )

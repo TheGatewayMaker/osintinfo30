@@ -29,11 +29,14 @@ async function postSearchTrack(
       found,
       timestamp: new Date().toISOString(),
     };
-    await fetch("/api/track-search", {
+    const resp = await fetch("/api/track-search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    if (!(resp.status === 204 || resp.ok)) {
+      console.warn("Search tracking did not complete (status:", resp.status, ")");
+    }
   } catch (e) {
     // Swallow errors so UX is not affected
     console.warn("Search tracking failed", e);
@@ -126,7 +129,7 @@ export default function OsintInfoResults() {
     <Layout>
       <section className="relative isolate overflow-hidden py-10 md:py-14">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/12),transparent_60%)]" />
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-7xl">
           <header className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
               {trimmedQuery

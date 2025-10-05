@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Layout from "@/components/layout/Layout";
 import { performSearch } from "@/lib/search";
 import {
   consumeSearchCredit,

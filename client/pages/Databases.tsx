@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { consumeSearchCredit, computeRemaining } from "@/lib/user";
+import {
+  consumeSearchCredit,
+  computeRemaining,
+  isFirestorePermissionDenied,
+} from "@/lib/user";
 import { toast } from "sonner";
 
 export default function Databases() {
@@ -64,16 +68,17 @@ export default function Databases() {
       }
       setResult(data);
 
-      const hasResults = Array.isArray(data)
-        ? data.length > 0
-        : data && typeof data === "object"
-          ? Object.keys(data).length > 0
-          : typeof data === "string"
-            ? data.trim().length > 0 && !/no results/i.test(data)
-            : false;
-
-      if (hasResults) {
+      try {
         await consumeSearchCredit(user.uid, 1);
+      } catch (creditError) {
+        if (isFirestorePermissionDenied(creditError)) {
+          console.warn(
+            "Skipping credit consumption due to permission error.",
+            creditError,
+          );
+        } else {
+          throw creditError;
+        }
       }
     } catch (e: any) {
       toast.error(e?.message || "Search error.");

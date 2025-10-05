@@ -150,7 +150,10 @@ function FieldColumn({ fields }: { fields: ResultField[] }) {
   return (
     <dl className="space-y-4">
       {fields.map((field) => (
-        <div key={field.key} className="grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3">
+        <div
+          key={field.key}
+          className="grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3"
+        >
           <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
             {field.label}
           </dt>

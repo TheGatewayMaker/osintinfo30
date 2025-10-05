@@ -41,11 +41,11 @@ function ResultCard({
     <article className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground md:text-xl">
+          <h2 className="text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm font-medium text-foreground/60">{subtitle}</p>
+            <p className="text-base font-semibold text-foreground/70">{subtitle}</p>
           )}
         </div>
         <span className="rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">
@@ -67,10 +67,10 @@ function FieldGrid({ fields }: { fields: ResultField[] }) {
           key={field.key}
           className="rounded-xl border border-border/70 bg-background/60 p-4 shadow-sm shadow-brand-500/5"
         >
-          <div className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
+          <div className="text-base font-extrabold tracking-tight text-foreground">
             {field.label}
           </div>
-          <div className="mt-2 text-sm font-semibold text-foreground">
+          <div className="mt-2 text-base font-semibold text-foreground">
             <ValueRenderer value={field.value} />
           </div>
         </div>
@@ -85,7 +85,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
   }
 
   if (typeof value === "string") {
-    return <span className="break-words text-sm font-medium">{value}</span>;
+    return <span className="break-words text-base font-semibold">{value}</span>;
   }
 
   if (typeof value === "number") {
@@ -152,10 +152,10 @@ function ValueRenderer({ value }: { value: ResultValue }) {
           key={key}
           className="rounded-xl border border-border/60 bg-background/50 p-3 shadow-inner shadow-black/5"
         >
-          <div className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/60">
+          <div className="text-sm font-bold tracking-wide text-foreground">
             {formatLabel(key)}
           </div>
-          <div className="mt-1 text-sm font-medium text-foreground">
+          <div className="mt-1 text-base font-semibold text-foreground">
             <ValueRenderer value={nested} />
           </div>
         </div>

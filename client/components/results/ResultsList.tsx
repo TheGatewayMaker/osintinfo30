@@ -161,7 +161,7 @@ function FieldList({ fields }: { fields: ResultField[] }) {
         return (
           <div
             key={field.key}
-            className="group/field grid [grid-template-columns:minmax(140px,0.4fr)_1fr] items-start gap-x-6 gap-y-2 px-5 py-4 transition-all duration-200 even:bg-background/60 hover:bg-brand-500/4 sm:[grid-template-columns:minmax(180px,0.35fr)_1fr]"
+            className="group/field grid [grid-template-columns:minmax(140px,0.4fr)_1fr] items-start gap-x-6 gap-y-2 px-5 py-4 transition-all duration-200 even:bg-background/60 hover:bg-brand-500/10 sm:[grid-template-columns:minmax(180px,0.35fr)_1fr]"
           >
             <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60 transition-colors group-hover/field:text-brand-500 dark:group-hover/field:text-brand-300">
               {label}

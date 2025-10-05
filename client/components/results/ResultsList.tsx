@@ -84,11 +84,9 @@ function ResultCard({
   order: number;
   totalCount: number;
 }) {
-  const title = record.title || `Record ${order} of ${totalCount}`;
+  const title = `Record ${order} of ${totalCount}`;
   const subtitle =
-    record.contextLabel && record.contextLabel !== record.title
-      ? record.contextLabel
-      : undefined;
+    record.title || (record.contextLabel && record.contextLabel !== record.title ? record.contextLabel : undefined);
 
   const source = findFieldValue(record.fields, [
     "source",

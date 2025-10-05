@@ -58,7 +58,7 @@ export function ResultsList({
   const total = totalCount ?? records.length;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3">
       {records.map((record, index) => (
         <ResultCard
           key={record.id || `record-${index}`}
@@ -108,9 +108,9 @@ function ResultCard({
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-brand-500/20">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.18),transparent_60%)] opacity-70" />
-      <header className="flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-foreground/60">
+      <header className="flex items-center justify-between text-[0.7rem] md:text-xs font-semibold uppercase tracking-[0.3em] text-foreground/70">
         <span className="inline-flex items-center gap-2">
-          <span className="rounded-full bg-brand-500/15 px-3 py-1 text-brand-200">
+          <span className="rounded-full bg-brand-500/20 px-3 py-1 text-brand-700 dark:text-brand-200">
             Record {order}
           </span>
         </span>
@@ -131,26 +131,26 @@ function ResultCard({
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <InfoTile
           label="Nickname"
-          icon={<UserRound className="h-4 w-4 text-brand-200" />}
+          icon={<UserRound className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
           value={nicknameDisplay}
         />
         <InfoTile
           label="Password"
-          icon={<Lock className="h-4 w-4 text-brand-200" />}
+          icon={<Lock className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
           value={password}
           valueClassName="font-mono text-brand-100"
           fallback="Not available"
         />
         <InfoTile
           label="Profile URL"
-          icon={<LinkIcon className="h-4 w-4 text-brand-200" />}
+          icon={<LinkIcon className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
           value={url}
           href={urlHref}
           fallback="Not provided"
         />
         <InfoTile
           label="Info leak details"
-          icon={<ShieldAlert className="h-4 w-4 text-brand-200" />}
+          icon={<ShieldAlert className="h-5 w-5 text-brand-400 dark:text-brand-300" />}
           value={infoLeakDetails}
           fallback="No details"
         />
@@ -204,7 +204,7 @@ function InfoTile({
     "text-sm font-semibold leading-5 text-foreground break-words";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-background/80 p-4 shadow-inner shadow-black/5 transition-colors duration-300 group-hover:border-brand-500/40">
+    <div className="relative overflow-hidden rounded-xl bg-background/70 p-4 transition-colors duration-300">
       <div className="flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
         {icon}
         <span>{label}</span>
@@ -216,7 +216,7 @@ function InfoTile({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-semibold leading-5 text-brand-100 underline-offset-4 transition-colors hover:text-brand-50 hover:underline break-words"
+              className="text-sm font-semibold leading-5 text-brand-600 dark:text-brand-100 underline-offset-4 transition-colors hover:underline break-words"
             >
               {displayValue}
             </a>
@@ -250,7 +250,7 @@ function FieldList({ fields }: { fields: ResultField[] }) {
   }
 
   return (
-    <dl className="divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/50 bg-background/80 shadow-inner shadow-black/5">
+    <dl className="divide-y divide-border/50 overflow-hidden rounded-2xl bg-background/70">
       {fields.map((field) => {
         const label = field.label?.trim() || formatLabel(field.key);
         return (
@@ -320,7 +320,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             {objects.map((objectValue, index) => (
               <div
                 key={index}
-                className="rounded-2xl border border-border/60 bg-background/80 p-4"
+                className="rounded-2xl bg-background/70 p-4"
               >
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
                   Item {index + 1}

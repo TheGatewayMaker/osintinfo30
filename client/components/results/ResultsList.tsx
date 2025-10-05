@@ -86,18 +86,6 @@ function FieldColumns({ fields }: { fields: ResultField[] }) {
   );
 }
 
-function FieldRow({ field }: { field: ResultField }) {
-  return (
-    <div className="rounded-xl border border-border/50 bg-background/30 p-5">
-      <dt className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-600 dark:text-brand-300">
-        {field.label}
-      </dt>
-      <dd className="text-base leading-relaxed text-foreground">
-        <ValueRenderer value={field.value} />
-      </dd>
-    </div>
-  );
-}
 
 function ValueRenderer({ value }: { value: ResultValue }) {
   if (value === null || value === undefined) {

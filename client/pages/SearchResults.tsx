@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,6 @@ import {
 } from "@/lib/search-normalize";
 import { ResultsList } from "@/components/results/ResultsList";
 
-const PDF_FILE_PREFIX = "search-results";
-
 type LocationState = {
   result?: SearchResult;
   normalized?: NormalizedSearchResults;
@@ -33,8 +31,6 @@ export default function SearchResults() {
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
-  const [downloading, setDownloading] = useState(false);
-  const resultsRef = useRef<HTMLDivElement>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation() as { state?: LocationState };
@@ -82,18 +78,16 @@ export default function SearchResults() {
         await performSearch(trimmed);
       setNormalized(freshNormalized);
 
-      if (freshNormalized.hasMeaningfulData) {
-        try {
-          await consumeSearchCredit(user.uid, 1);
-        } catch (creditError) {
-          if (isFirestorePermissionDenied(creditError)) {
-            console.warn(
-              "Skipping credit consumption due to permission error.",
-              creditError,
-            );
-          } else {
-            throw creditError;
-          }
+      try {
+        await consumeSearchCredit(user.uid, 1);
+      } catch (creditError) {
+        if (isFirestorePermissionDenied(creditError)) {
+          console.warn(
+            "Skipping credit consumption due to permission error.",
+            creditError,
+          );
+        } else {
+          throw creditError;
         }
       }
 
@@ -112,48 +106,7 @@ export default function SearchResults() {
     }
   }
 
-  async function handleDownload() {
-    if (!normalized?.hasMeaningfulData || !resultsRef.current) {
-      toast.error("There are no results to export yet.");
-      return;
-    }
-
-    try {
-      setDownloading(true);
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-
-      const element = resultsRef.current;
-      const canvas = await html2canvas(element, {
-        scale: window.devicePixelRatio > 1 ? 2 : 1,
-        backgroundColor: null,
-        useCORS: true,
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const orientation =
-        canvas.width >= canvas.height ? "landscape" : "portrait";
-      const pdf = new jsPDF({
-        orientation,
-        unit: "px",
-        format: [canvas.width, canvas.height],
-      });
-
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`${PDF_FILE_PREFIX}-${Date.now()}.pdf`);
-    } catch (error) {
-      console.error("PDF export failed", error);
-      toast.error("Could not generate the PDF. Please try again.");
-    } finally {
-      setDownloading(false);
-    }
-  }
-
-  const canDownload = normalized?.hasMeaningfulData ?? false;
+  const hasResults = normalized?.hasMeaningfulData ?? false;
 
   return (
     <Layout>
@@ -189,31 +142,18 @@ export default function SearchResults() {
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    onClick={onSearch}
-                    disabled={loading}
-                    className="h-10"
-                  >
-                    {loading ? "Searching…" : "Search"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleDownload}
-                    disabled={downloading || !canDownload}
-                    className="h-10"
-                  >
-                    {downloading
-                      ? "Generating PDF…"
-                      : "Download Results as PDF"}
-                  </Button>
-                </div>
+                <Button
+                  onClick={onSearch}
+                  disabled={loading}
+                  className="h-10"
+                >
+                  {loading ? "Searching…" : "Search"}
+                </Button>
+              </div>
               </div>
             </div>
 
-            <div
-              ref={resultsRef}
-              className="mt-8 space-y-6 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
-            >
+            <div className="mt-8 space-y-6 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-3">
                   <SummaryPill
@@ -225,7 +165,7 @@ export default function SearchResults() {
                     value={normalized?.fieldCount ?? 0}
                   />
                 </div>
-                {canDownload && (
+                {hasResults && (
                   <div className="text-xs font-medium uppercase tracking-wide text-foreground/60">
                     Results captured from OSINT provider
                   </div>

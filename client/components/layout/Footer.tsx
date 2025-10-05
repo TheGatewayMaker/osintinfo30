@@ -3,7 +3,11 @@ export function Footer() {
     <footer className="border-t border-border mt-12">
       <div className="container mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-foreground/70 text-center">
         <div className="flex items-center gap-2 font-semibold">
-          <span className="inline-block h-5 w-5 rounded bg-gradient-to-br from-brand-500 to-brand-700 shadow-brand-500/30 shadow" />
+          <img
+            src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
+            alt="Osint Info logo"
+            className="h-5 w-5 rounded-lg"
+          />
           <span>Osint Info</span>
         </div>
         <p className="text-center">

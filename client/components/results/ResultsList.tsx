@@ -96,13 +96,14 @@ function ResultCard({
   const source = findFieldValue(record.fields, SOURCE_FIELD_KEYS);
   const dataset = findFieldValue(record.fields, DATASET_FIELD_KEYS);
 
-  const displayTitle =
-    record.title?.trim() || nickname || `Record ${order}`;
+  const displayTitle = record.title?.trim() || nickname || `Record ${order}`;
   const nicknameDisplay = nickname ?? displayTitle;
   const urlHref = createHref(url);
   const fieldCount = record.fields.length;
   const showSummary =
-    contextSummary && contextSummary !== infoLeakDetails ? contextSummary : undefined;
+    contextSummary && contextSummary !== infoLeakDetails
+      ? contextSummary
+      : undefined;
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-brand-500/20">
@@ -113,7 +114,9 @@ function ResultCard({
             Record {order}
           </span>
         </span>
-        <span className="text-foreground/40">of {totalCount.toLocaleString()}</span>
+        <span className="text-foreground/40">
+          of {totalCount.toLocaleString()}
+        </span>
       </header>
 
       <h3 className="mt-5 text-2xl font-bold tracking-tight text-foreground">
@@ -197,7 +200,8 @@ function InfoTile({
   valueClassName?: string;
 }) {
   const displayValue = value?.toString().trim();
-  const baseValueClass = "text-sm font-semibold leading-5 text-foreground break-words";
+  const baseValueClass =
+    "text-sm font-semibold leading-5 text-foreground break-words";
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-background/80 p-4 shadow-inner shadow-black/5 transition-colors duration-300 group-hover:border-brand-500/40">
@@ -222,7 +226,9 @@ function InfoTile({
             </span>
           )
         ) : (
-          <span className="text-sm font-medium text-foreground/45">{fallback}</span>
+          <span className="text-sm font-medium text-foreground/45">
+            {fallback}
+          </span>
         )}
       </div>
     </div>
@@ -346,7 +352,10 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   return (
     <dl className="space-y-3">
       {entries.map(([key, val]) => (
-        <div key={key} className="space-y-1 rounded-xl bg-background/70 px-3 py-2">
+        <div
+          key={key}
+          className="space-y-1 rounded-xl bg-background/70 px-3 py-2"
+        >
           <dt className="text-sm font-bold text-foreground md:text-base">
             {formatLabel(key)}
           </dt>

@@ -7,7 +7,9 @@ export default function Contact() {
     <Layout>
       <section className="container mx-auto py-12 text-center">
         <h1 className="text-3xl font-black md:text-4xl">Contact</h1>
-        <p className="mt-2 text-foreground/70">We usually respond within 24 hours.</p>
+        <p className="mt-2 text-foreground/70">
+          We usually respond within 24 hours.
+        </p>
 
         <div className="mt-6 flex justify-center">
           <Button

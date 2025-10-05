@@ -1,20 +1,38 @@
 import Layout from "@/components/layout/Layout";
+import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
 
 export default function Contact() {
   return (
     <Layout>
       <section className="container mx-auto py-12 text-center">
-        <h1 className="text-3xl md:text-4xl font-black">Contact</h1>
-        <p className="mt-2 text-foreground/70">
-          We usually respond within 24 hours.
-        </p>
+        <h1 className="text-3xl font-black md:text-4xl">Contact</h1>
+        <p className="mt-2 text-foreground/70">We usually respond within 24 hours.</p>
+
+        <div className="mt-6 flex justify-center">
+          <Button
+            asChild
+            size="lg"
+            className="h-12 rounded-xl px-7 font-semibold shadow-xl shadow-brand-500/20 transition-transform duration-200 hover:-translate-y-0.5"
+          >
+            <a
+              href="https://t.me/Osint_Info_supportbot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2"
+            >
+              <MessageCircle className="h-5 w-5" />
+              Contact on Telegram
+            </a>
+          </Button>
+        </div>
 
         <form
           action="https://formspree.io/f/movkllyk"
           method="POST"
-          className="mt-8 grid gap-6 max-w-2xl mx-auto rounded-2xl border border-border bg-card/80 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
+          className="mt-8 mx-auto grid max-w-2xl gap-6 rounded-2xl border border-border bg-card/80 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
         >
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <label htmlFor="firstName" className="text-sm font-medium">
                 First Name
@@ -72,12 +90,9 @@ export default function Contact() {
               className="rounded-md border border-input bg-background px-3 py-2"
             />
           </div>
-          <button
-            type="submit"
-            className="h-11 rounded-md bg-foreground text-background px-6 font-medium hover:opacity-90 transition-opacity"
-          >
+          <Button type="submit" className="h-11 rounded-xl px-6 font-semibold">
             Send
-          </button>
+          </Button>
         </form>
       </section>
     </Layout>

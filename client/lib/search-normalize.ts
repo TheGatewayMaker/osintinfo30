@@ -70,13 +70,14 @@ function nextRecordId() {
 }
 
 function normalizeKey(key: string) {
-  return key.trim().toLowerCase().replace(/[\s_-]+/g, " ");
+  return key
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return Boolean(
-    value && typeof value === "object" && !Array.isArray(value),
-  );
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 function shouldSkipKey(key: string) {
@@ -232,7 +233,8 @@ function objectToRecord(
   return {
     id: nextRecordId(),
     title,
-    contextLabel: contextLabel && contextLabel !== title ? contextLabel : undefined,
+    contextLabel:
+      contextLabel && contextLabel !== title ? contextLabel : undefined,
     fields,
   };
 }
@@ -275,9 +277,7 @@ function appendArrayRecords(
   });
 }
 
-export function normalizeSearchResults(
-  data: unknown,
-): NormalizedSearchResults {
+export function normalizeSearchResults(data: unknown): NormalizedSearchResults {
   const records: ResultRecord[] = [];
 
   function process(value: unknown, contextLabel?: string) {

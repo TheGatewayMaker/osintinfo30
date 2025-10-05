@@ -14,7 +14,11 @@ export function ResultsList({ records }: { records: ResultRecord[] }) {
   return (
     <div className="flex flex-col gap-6">
       {records.map((record, index) => (
-        <ResultCard key={record.id || index} record={record} order={index + 1} />
+        <ResultCard
+          key={record.id || index}
+          record={record}
+          order={index + 1}
+        />
       ))}
     </div>
   );

@@ -78,7 +78,8 @@ export default function SearchResults() {
 
     setLoading(true);
     try {
-      const { data, normalized: freshNormalized } = await performSearch(trimmed);
+      const { data, normalized: freshNormalized } =
+        await performSearch(trimmed);
       setNormalized(freshNormalized);
 
       if (freshNormalized.hasMeaningfulData) {
@@ -134,7 +135,8 @@ export default function SearchResults() {
       });
 
       const imgData = canvas.toDataURL("image/png", 1.0);
-      const orientation = canvas.width >= canvas.height ? "landscape" : "portrait";
+      const orientation =
+        canvas.width >= canvas.height ? "landscape" : "portrait";
       const pdf = new jsPDF({
         orientation,
         unit: "px",
@@ -181,13 +183,17 @@ export default function SearchResults() {
               </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm text-foreground/60">
-                  Remaining: {" "}
+                  Remaining:{" "}
                   <span className="font-semibold text-amber-600 dark:text-amber-400">
                     {remaining}
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Button onClick={onSearch} disabled={loading} className="h-10">
+                  <Button
+                    onClick={onSearch}
+                    disabled={loading}
+                    className="h-10"
+                  >
                     {loading ? "Searching…" : "Search"}
                   </Button>
                   <Button
@@ -196,7 +202,9 @@ export default function SearchResults() {
                     disabled={downloading || !canDownload}
                     className="h-10"
                   >
-                    {downloading ? "Generating PDF…" : "Download Results as PDF"}
+                    {downloading
+                      ? "Generating PDF…"
+                      : "Download Results as PDF"}
                   </Button>
                 </div>
               </div>
@@ -208,8 +216,14 @@ export default function SearchResults() {
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-3">
-                  <SummaryPill label="Records" value={normalized?.recordCount ?? 0} />
-                  <SummaryPill label="Data points" value={normalized?.fieldCount ?? 0} />
+                  <SummaryPill
+                    label="Records"
+                    value={normalized?.recordCount ?? 0}
+                  />
+                  <SummaryPill
+                    label="Data points"
+                    value={normalized?.fieldCount ?? 0}
+                  />
                 </div>
                 {canDownload && (
                   <div className="text-xs font-medium uppercase tracking-wide text-foreground/60">

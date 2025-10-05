@@ -45,7 +45,9 @@ function ResultCard({
             {title}
           </h2>
           {subtitle && (
-            <p className="text-base font-semibold text-foreground/70">{subtitle}</p>
+            <p className="text-base font-semibold text-foreground/70">
+              {subtitle}
+            </p>
           )}
         </div>
         <span className="rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">

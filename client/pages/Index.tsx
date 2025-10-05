@@ -6,6 +6,7 @@ import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { performSearch } from "@/lib/search";
+import type { NormalizedSearchResults } from "@/lib/search-normalize";
 import {
   computeRemaining,
   consumeSearchCredit,
@@ -34,11 +35,12 @@ export default function Index() {
 
     setLoading(true);
     let resultData: unknown = null;
+    let normalizedData: NormalizedSearchResults | null = null;
     let shouldNavigate = false;
     try {
-      const { data, hasResults } = await performSearch(q);
+      const { data, normalized } = await performSearch(q);
 
-      if (hasResults) {
+      if (normalized.hasMeaningfulData) {
         try {
           await consumeSearchCredit(user.uid, 1);
         } catch (creditError) {
@@ -54,6 +56,7 @@ export default function Index() {
       }
 
       resultData = data;
+      normalizedData = normalized;
       shouldNavigate = true;
     } catch (error) {
       const message =
@@ -68,7 +71,7 @@ export default function Index() {
 
     if (shouldNavigate) {
       navigate(`/search?q=${encodeURIComponent(q)}`, {
-        state: { result: resultData },
+        state: { result: resultData, normalized: normalizedData },
       });
     }
   }

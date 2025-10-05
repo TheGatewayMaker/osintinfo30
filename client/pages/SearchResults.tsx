@@ -1,79 +1,43 @@
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 import { performSearch } from "@/lib/search";
+import type { SearchResult } from "@/lib/search";
 import {
-  consumeSearchCredit,
   computeRemaining,
+  consumeSearchCredit,
   isFirestorePermissionDenied,
 } from "@/lib/user";
-import { toast } from "sonner";
+import {
+  normalizeSearchResults,
+  type NormalizedSearchResults,
+} from "@/lib/search-normalize";
+import { ResultsList } from "@/components/results/ResultsList";
 
-const HIDDEN_KEYS = new Set([
-  "num of results",
-  "num_of_results",
-  "num-results",
-  "numresults",
-  "num results",
-  "price",
-  "search time",
-  "search_time",
-  "search-time",
-]);
+const PDF_FILE_PREFIX = "search-results";
 
-function isHiddenKey(key: string) {
-  return HIDDEN_KEYS.has(key.trim().toLowerCase());
-}
-
-function sanitizeData(data: any): any {
-  if (Array.isArray(data)) {
-    return data.map((d) => sanitizeData(d));
-  }
-  if (data && typeof data === "object") {
-    const out: Record<string, any> = {};
-    for (const [k, v] of Object.entries(data)) {
-      if (isHiddenKey(k)) continue;
-      out[k] = sanitizeData(v);
-    }
-    return out;
-  }
-  return data;
-}
-
-function titleFromItem(item: Record<string, any>): {
-  key?: string;
-  value?: string;
-} {
-  const candidates = [
-    "title",
-    "name",
-    "email",
-    "username",
-    "domain",
-    "ip",
-    "id",
-  ];
-  for (const c of candidates) {
-    if (item[c]) {
-      const val = String(item[c]);
-      if (val.trim()) return { key: c, value: val };
-    }
-  }
-  return {};
-}
+type LocationState = {
+  result?: SearchResult;
+  normalized?: NormalizedSearchResults;
+};
 
 export default function SearchResults() {
   const [params] = useSearchParams();
   const initialQ = params.get("q") ?? "";
   const [query, setQuery] = useState(initialQ);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
+    null,
+  );
+  const [downloading, setDownloading] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation() as any;
+  const location = useLocation() as { state?: LocationState };
 
   useEffect(() => {
     setQuery(initialQ);
@@ -83,19 +47,25 @@ export default function SearchResults() {
 
   useEffect(() => {
     if (!initialQ.trim()) return;
-    if (
-      (location as any).state &&
-      (location as any).state.result !== undefined
-    ) {
-      setResult((location as any).state.result);
+    const stateResult = location.state?.result;
+    const stateNormalized = location.state?.normalized;
+
+    if (stateResult !== undefined) {
+      if (stateNormalized && typeof stateNormalized === "object") {
+        setNormalized(stateNormalized);
+      } else {
+        setNormalized(normalizeSearchResults(stateResult));
+      }
       return;
     }
+
     void onSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQ]);
 
   async function onSearch() {
-    if (!query.trim()) return;
+    const trimmed = query.trim();
+    if (!trimmed) return;
     if (!user) {
       toast.error("Please sign in to search.");
       setTimeout(() => navigate("/auth"), 2000);
@@ -107,12 +77,12 @@ export default function SearchResults() {
     }
 
     setLoading(true);
-    setResult(null);
     try {
-      const { data, hasResults } = await performSearch(query);
-      setResult(sanitizeData(data));
+      const { data, normalized: freshNormalized } =
+        await performSearch(trimmed);
+      setNormalized(freshNormalized);
 
-      if (hasResults) {
+      if (freshNormalized.hasMeaningfulData) {
         try {
           await consumeSearchCredit(user.uid, 1);
         } catch (creditError) {
@@ -126,6 +96,11 @@ export default function SearchResults() {
           }
         }
       }
+
+      navigate(`/search?q=${encodeURIComponent(trimmed)}`, {
+        replace: true,
+        state: { result: data, normalized: freshNormalized },
+      });
     } catch (error) {
       const message =
         error instanceof Error && error.message
@@ -137,7 +112,48 @@ export default function SearchResults() {
     }
   }
 
-  const cleaned = useMemo(() => sanitizeData(result), [result]);
+  async function handleDownload() {
+    if (!normalized?.hasMeaningfulData || !resultsRef.current) {
+      toast.error("There are no results to export yet.");
+      return;
+    }
+
+    try {
+      setDownloading(true);
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+
+      const element = resultsRef.current;
+      const canvas = await html2canvas(element, {
+        scale: window.devicePixelRatio > 1 ? 2 : 1,
+        backgroundColor: null,
+        useCORS: true,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
+      });
+
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      const orientation =
+        canvas.width >= canvas.height ? "landscape" : "portrait";
+      const pdf = new jsPDF({
+        orientation,
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`${PDF_FILE_PREFIX}-${Date.now()}.pdf`);
+    } catch (error) {
+      console.error("PDF export failed", error);
+      toast.error("Could not generate the PDF. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  const canDownload = normalized?.hasMeaningfulData ?? false;
 
   return (
     <Layout>
@@ -146,11 +162,11 @@ export default function SearchResults() {
         <div className="container mx-auto">
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+              <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
                 Search Results
               </h1>
               <p className="mt-2 text-sm font-semibold text-foreground/70">
-                Clean, readable results with your site’s styling.
+                Clean, human-readable intelligence data with your brand styling.
               </p>
             </div>
 
@@ -165,26 +181,65 @@ export default function SearchResults() {
                   }}
                 />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm text-foreground/60">
                   Remaining:{" "}
                   <span className="font-semibold text-amber-600 dark:text-amber-400">
                     {remaining}
                   </span>
                 </div>
-                <Button onClick={onSearch} disabled={loading} className="h-10">
-                  {loading ? "Searching…" : "Search"}
-                </Button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    onClick={onSearch}
+                    disabled={loading}
+                    className="h-10"
+                  >
+                    {loading ? "Searching…" : "Search"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleDownload}
+                    disabled={downloading || !canDownload}
+                    className="h-10"
+                  >
+                    {downloading
+                      ? "Generating PDF…"
+                      : "Download Results as PDF"}
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8">
-              {cleaned == null ? (
-                <div className="text-center text-sm text-foreground/60">
-                  Results will appear here.
+            <div
+              ref={resultsRef}
+              className="mt-8 space-y-6 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <SummaryPill
+                    label="Records"
+                    value={normalized?.recordCount ?? 0}
+                  />
+                  <SummaryPill
+                    label="Data points"
+                    value={normalized?.fieldCount ?? 0}
+                  />
                 </div>
+                {canDownload && (
+                  <div className="text-xs font-medium uppercase tracking-wide text-foreground/60">
+                    Results captured from OSINT provider
+                  </div>
+                )}
+              </div>
+
+              {normalized ? (
+                normalized.records.length ? (
+                  <ResultsList records={normalized.records} />
+                ) : (
+                  <ResultsNotice message="No results found for this query." />
+                )
               ) : (
-                <ResultRenderer data={cleaned} />
+                <ResultsNotice message="Results will appear here after you run a search." />
               )}
             </div>
           </div>
@@ -194,104 +249,21 @@ export default function SearchResults() {
   );
 }
 
-function ResultRenderer({ data }: { data: any }) {
-  if (typeof data === "string") {
-    return (
-      <pre className="overflow-auto rounded-2xl border border-border bg-card/80 p-4 text-left whitespace-pre-wrap shadow ring-1 ring-brand-500/10">
-        {data}
-      </pre>
-    );
-  }
-
-  if (Array.isArray(data)) {
-    if (data.length === 0) {
-      return <Empty />;
-    }
-    const isObjectArray = data.every((it) => it && typeof it === "object");
-    if (!isObjectArray) {
-      return (
-        <pre className="overflow-auto rounded-2xl border border-border bg-card/80 p-4 text-left whitespace-pre-wrap shadow ring-1 ring-brand-500/10">
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      );
-    }
-    return (
-      <div className="grid gap-4 md:grid-cols-2">
-        {data.map((item, idx) => (
-          <ItemCard key={idx} item={item as Record<string, any>} />
-        ))}
+function SummaryPill({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border border-border/70 bg-background/70 px-4 py-3 shadow-sm shadow-brand-500/5">
+      <div className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/60">
+        {label}
       </div>
-    );
-  }
-
-  if (data && typeof data === "object") {
-    return <ItemCard item={data as Record<string, any>} single />;
-  }
-
-  return (
-    <pre className="overflow-auto rounded-2xl border border-border bg-card/80 p-4 text-left whitespace-pre-wrap shadow ring-1 ring-brand-500/10">
-      {String(data)}
-    </pre>
-  );
-}
-
-function ItemCard({
-  item,
-  single,
-}: {
-  item: Record<string, any>;
-  single?: boolean;
-}) {
-  const { key: titleKey, value: titleVal } = titleFromItem(item);
-  const rest: Record<string, any> = {};
-  for (const [k, v] of Object.entries(item)) {
-    if (isHiddenKey(k)) continue;
-    if (titleKey && k === titleKey) continue;
-    rest[k] = v;
-  }
-  return (
-    <div
-      className={`rounded-2xl border border-border bg-card/80 p-5 shadow ring-1 ring-brand-500/10 ${single ? "" : ""}`}
-    >
-      {titleVal && (
-        <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-3 break-words">
-          {titleVal}
-        </h3>
-      )}
-      <KeyValueGrid obj={rest} />
+      <div className="mt-1 text-lg font-semibold text-foreground">{value}</div>
     </div>
   );
 }
 
-function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
-  const entries = Object.entries(obj || {});
-  if (!entries.length) return <Empty />;
+function ResultsNotice({ message }: { message: string }) {
   return (
-    <div className="grid gap-y-3 gap-x-6 text-sm">
-      {entries.map(([k, v]) => (
-        <div key={k} className="grid grid-cols-3 gap-2 items-start">
-          <div className="col-span-1 text-xs font-semibold uppercase tracking-wide text-foreground/60 break-words">
-            {k}
-          </div>
-          <div className="col-span-2 break-words text-sm font-semibold text-foreground">
-            {typeof v === "object" ? (
-              <pre className="rounded border border-border bg-background/50 p-2 text-xs whitespace-pre-wrap">
-                {JSON.stringify(v, null, 2)}
-              </pre>
-            ) : (
-              String(v)
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Empty() {
-  return (
-    <div className="text-center text-sm text-foreground/60">
-      No results found.
+    <div className="rounded-2xl border border-border/70 bg-background/60 px-6 py-12 text-center text-sm text-foreground/60 shadow-inner shadow-black/5">
+      {message}
     </div>
   );
 }

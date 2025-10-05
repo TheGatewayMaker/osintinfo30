@@ -1,54 +1,20 @@
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   formatLabel,
   hasMeaningfulValue,
   type ResultField,
   type ResultRecord,
   type ResultValue,
 } from "@/lib/search-normalize";
+import { findFieldValue } from "./result-utils";
 
-function normalizeKeyLocal(key: string) {
-  return key
-    .trim()
-    .toLowerCase()
-    .replace(/[\s_-]+/g, " ");
-}
-
-function extractFirstString(value: ResultValue): string | undefined {
-  if (value == null) return undefined;
-  if (typeof value === "string" || typeof value === "number") {
-    const s = String(value).trim();
-    return s || undefined;
-  }
-  if (typeof value === "boolean") return value ? "Yes" : "No";
-  if (Array.isArray(value)) {
-    for (const v of value) {
-      const s = extractFirstString(v as ResultValue);
-      if (s) return s;
-    }
-    return undefined;
-  }
-  if (typeof value === "object") {
-    for (const v of Object.values(value)) {
-      const s = extractFirstString(v as ResultValue);
-      if (s) return s;
-    }
-  }
-  return undefined;
-}
-
-function findFieldValue(
-  fields: ResultField[],
-  candidates: string[],
-): string | undefined {
-  for (const f of fields) {
-    const key = normalizeKeyLocal(f.key);
-    if (candidates.includes(key)) {
-      const v = extractFirstString(f.value);
-      if (v) return v;
-    }
-  }
-  return undefined;
-}
+const SOURCE_FIELD_KEYS = ["source", "breach", "leak name", "leak"];
+const DATASET_FIELD_KEYS = ["database", "db", "table", "collection"];
 
 export function ResultsList({
   records,
@@ -61,21 +27,38 @@ export function ResultsList({
     return null;
   }
 
+  const defaultOpenValues = records.slice(0, 1).map((record) => record.id);
+  const total = totalCount ?? records.length;
+
   return (
-    <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+    <Accordion
+      type="multiple"
+      defaultValue={defaultOpenValues}
+      className="flex flex-col gap-4"
+    >
       {records.map((record, index) => (
-        <ResultCard
+        <AccordionItem
           key={record.id || index}
-          record={record}
-          order={index + 1}
-          totalCount={totalCount ?? records.length}
-        />
+          value={record.id}
+          className="overflow-hidden rounded-3xl border border-border/70 bg-background/90 shadow-lg shadow-brand-500/10 transition-all data-[state=open]:shadow-brand-500/25 data-[state=open]:ring-1 data-[state=open]:ring-brand-500/20"
+        >
+          <AccordionTrigger className="px-6 py-5 text-left text-base font-semibold text-foreground">
+            <RecordHeader
+              record={record}
+              order={index + 1}
+              totalCount={total}
+            />
+          </AccordionTrigger>
+          <AccordionContent className="px-6">
+            <FieldList fields={record.fields} />
+          </AccordionContent>
+        </AccordionItem>
       ))}
-    </div>
+    </Accordion>
   );
 }
 
-function ResultCard({
+function RecordHeader({
   record,
   order,
   totalCount,
@@ -90,62 +73,48 @@ function ResultCard({
       ? record.contextLabel
       : undefined;
 
-  const source = findFieldValue(record.fields, [
-    "source",
-    "breach",
-    "leak name",
-    "leak",
-  ]);
-  const database = findFieldValue(record.fields, [
-    "database",
-    "db",
-    "table",
-    "collection",
-  ]);
+  const source = findFieldValue(record.fields, SOURCE_FIELD_KEYS);
+  const dataset = findFieldValue(record.fields, DATASET_FIELD_KEYS);
   const fieldCount = record.fields.length;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/95 p-7 shadow-lg shadow-brand-500/10 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.01] hover:border-brand-400/40 hover:shadow-2xl hover:shadow-brand-500/30">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-500/80">
-            <span className="rounded-full bg-brand-500/10 px-2 py-1 text-brand-600 dark:text-brand-300">
-              Record {order}
-            </span>
-            <span className="text-foreground/50">of {totalCount}</span>
-          </div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
-            {displayTitle}
-          </h2>
-          {subtitle && (
-            <p className="text-sm font-semibold text-foreground/70 md:text-base">
-              {subtitle}
-            </p>
-          )}
-          <div className="flex flex-wrap items-center gap-2">
-            {source && <MetaPill label="Source" value={source} />}
-            {database && <MetaPill label="Database" value={database} />}
-            <MetaPill label="Fields" value={String(fieldCount)} />
-          </div>
-        </div>
-        <span className="rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60 shadow-sm">
+    <div className="flex w-full flex-col gap-4 text-left">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
+        <span className="inline-flex items-center gap-2">
+          <span className="rounded-full bg-brand-500/10 px-2 py-1 text-brand-600 dark:text-brand-300">
+            Record {order}
+          </span>
+          <span className="text-foreground/40">of {totalCount}</span>
+        </span>
+        <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-foreground/60">
           #{order}
         </span>
-      </header>
-
-      <div className="mt-6">
-        <FieldList fields={record.fields} />
       </div>
-    </article>
+      <div className="space-y-1">
+        <h2 className="text-xl font-bold leading-snug text-foreground md:text-2xl">
+          {displayTitle}
+        </h2>
+        {subtitle && (
+          <p className="text-sm font-medium text-foreground/70 md:text-base">
+            {subtitle}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {source && <MetaPill label="Source" value={source} />}
+        {dataset && <MetaPill label="Dataset" value={dataset} />}
+        <MetaPill label="Fields" value={String(fieldCount)} />
+      </div>
+    </div>
   );
 }
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold text-foreground/80 shadow-sm shadow-brand-500/10">
+    <div className="flex max-w-full items-center gap-1 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold text-foreground/70 shadow-sm shadow-brand-500/10">
       <span className="text-foreground/50">{label}:</span>
-      <span className="max-w-[32ch] truncate text-foreground/80">{value}</span>
-    </span>
+      <span className="break-words text-foreground/80">{value}</span>
+    </div>
   );
 }
 
@@ -155,18 +124,18 @@ function FieldList({ fields }: { fields: ResultField[] }) {
   }
 
   return (
-    <dl className="overflow-hidden rounded-2xl border border-border/60 bg-background/80 shadow-inner shadow-black/5 backdrop-blur-sm">
+    <dl className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-background/85 shadow-inner shadow-black/5">
       {fields.map((field) => {
         const label = field.label?.trim() || formatLabel(field.key);
         return (
           <div
             key={field.key}
-            className="group/field grid [grid-template-columns:minmax(140px,0.4fr)_1fr] items-start gap-x-6 gap-y-2 px-5 py-4 transition-all duration-200 even:bg-background/60 hover:bg-brand-500/10 sm:[grid-template-columns:minmax(180px,0.35fr)_1fr]"
+            className="grid gap-y-2 gap-x-6 px-5 py-4 sm:grid-cols-[minmax(160px,0.35fr)_1fr]"
           >
-            <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60 transition-colors group-hover/field:text-brand-500 dark:group-hover/field:text-brand-300">
+            <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
               {label}
             </dt>
-            <dd className="min-w-0 text-sm font-medium text-foreground/80 transition-all duration-200 group-hover/field:text-foreground group-hover/field:underline group-hover/field:decoration-brand-400/50 group-hover/field:underline-offset-4 group-hover/field:[text-shadow:0_0_12px_rgba(167,139,250,0.3)] md:text-base">
+            <dd className="min-w-0 text-sm font-medium leading-6 text-foreground break-words md:text-base">
               <ValueRenderer value={field.value} />
             </dd>
           </div>
@@ -200,40 +169,40 @@ function ValueRenderer({ value }: { value: ResultValue }) {
     }
 
     const primitives = items.filter(
-      (i) =>
-        typeof i === "string" ||
-        typeof i === "number" ||
-        typeof i === "boolean",
+      (item) =>
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean",
     ) as Array<string | number | boolean>;
     const objects = items.filter(
-      (i) => i && typeof i === "object" && !Array.isArray(i),
+      (item) => item && typeof item === "object" && !Array.isArray(item),
     ) as Array<Record<string, ResultValue>>;
 
     return (
       <div className="space-y-4">
         {primitives.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {primitives.map((p, idx) => (
+            {primitives.map((primitive, index) => (
               <span
-                key={idx}
+                key={`${primitive}-${index}`}
                 className="inline-flex items-center rounded-full border border-border/50 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-200"
               >
-                {String(p)}
+                {String(primitive)}
               </span>
             ))}
           </div>
         )}
         {objects.length > 0 && (
           <div className="space-y-4">
-            {objects.map((obj, idx) => (
+            {objects.map((objectValue, index) => (
               <div
-                key={idx}
+                key={index}
                 className="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm shadow-brand-500/5"
               >
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
-                  Item {idx + 1}
+                  Item {index + 1}
                 </div>
-                <ObjectRenderer obj={obj} />
+                <ObjectRenderer obj={objectValue} />
               </div>
             ))}
           </div>
@@ -250,23 +219,23 @@ function ValueRenderer({ value }: { value: ResultValue }) {
 }
 
 function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
-  const entries = Object.entries(obj).filter(([, v]) => hasMeaningfulValue(v));
+  const entries = Object.entries(obj).filter(([, val]) => hasMeaningfulValue(val));
   if (!entries.length) {
     return <span className="text-foreground/50">Not provided</span>;
   }
 
   return (
     <dl className="space-y-3">
-      {entries.map(([key, v]) => (
+      {entries.map(([key, val]) => (
         <div
           key={key}
-          className="grid [grid-template-columns:minmax(120px,0.35fr)_1fr] items-start gap-x-4 gap-y-1 rounded-xl bg-background/60 px-3 py-2"
+          className="grid gap-y-1 gap-x-4 rounded-xl bg-background/60 px-3 py-2 sm:grid-cols-[minmax(140px,0.35fr)_1fr]"
         >
           <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
             {formatLabel(key)}
           </dt>
           <dd className="text-sm font-medium text-foreground/80">
-            <ValueRenderer value={v} />
+            <ValueRenderer value={val} />
           </dd>
         </div>
       ))}

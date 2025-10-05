@@ -55,29 +55,39 @@ function ResultCard({
         </span>
       </header>
       <div className="mt-5">
-        <FieldGrid fields={record.fields} />
+        <FieldColumns fields={record.fields} />
       </div>
     </article>
   );
 }
 
-function FieldGrid({ fields }: { fields: ResultField[] }) {
+function FieldColumns({ fields }: { fields: ResultField[] }) {
+  const halfway = Math.ceil(fields.length / 2);
+  const left = fields.slice(0, halfway);
+  const right = fields.slice(halfway);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-8 md:grid-cols-2">
+      <FieldColumn fields={left} />
+      <FieldColumn fields={right} />
+    </div>
+  );
+}
+
+function FieldColumn({ fields }: { fields: ResultField[] }) {
+  return (
+    <dl className="space-y-4">
       {fields.map((field) => (
-        <div
-          key={field.key}
-          className="rounded-xl border border-border/70 bg-background/60 p-4 shadow-sm shadow-brand-500/5"
-        >
-          <div className="text-base font-extrabold tracking-tight text-foreground">
+        <div key={field.key} className="grid grid-cols-3 items-start gap-3">
+          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
             {field.label}
-          </div>
-          <div className="mt-2 text-base font-semibold text-foreground">
+          </dt>
+          <dd className="col-span-2 break-words text-base font-medium text-foreground">
             <ValueRenderer value={field.value} />
-          </div>
+          </dd>
         </div>
       ))}
-    </div>
+    </dl>
   );
 }
 
@@ -87,7 +97,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
   }
 
   if (typeof value === "string") {
-    return <span className="break-words text-base font-semibold">{value}</span>;
+    return <span className="break-words">{value}</span>;
   }
 
   if (typeof value === "number") {
@@ -104,66 +114,60 @@ function ValueRenderer({ value }: { value: ResultValue }) {
       return <span className="text-foreground/50">None</span>;
     }
 
-    const allPrimitive = meaningfulItems.every(
-      (item) =>
-        item === null ||
-        item === undefined ||
+    const parts = meaningfulItems.map((item) => {
+      if (item === null || item === undefined) return "Not provided";
+      if (
         typeof item === "string" ||
         typeof item === "number" ||
-        typeof item === "boolean",
-    );
+        typeof item === "boolean"
+      )
+        return formatPrimitive(item);
+      try {
+        return conciseObject(item as Record<string, ResultValue>);
+      } catch {
+        return JSON.stringify(item);
+      }
+    });
 
-    if (allPrimitive) {
-      return (
-        <div className="flex flex-wrap gap-2">
-          {meaningfulItems.map((item, idx) => (
-            <span
-              key={idx}
-              className="rounded-full bg-brand-500/15 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-200"
-            >
-              {formatPrimitive(item)}
-            </span>
-          ))}
-        </div>
+    return <span>{parts.join(", ")}</span>;
+  }
+
+  try {
+    return <span>{conciseObject(value as Record<string, ResultValue>)}</span>;
+  } catch {
+    return <span>{JSON.stringify(value)}</span>;
+  }
+}
+
+function conciseObject(obj: Record<string, ResultValue>) {
+  const entries = Object.entries(obj).filter(([, v]) => hasMeaningfulValue(v));
+  if (!entries.length) return "Not provided";
+  const parts = entries.map(([key, v]) => {
+    if (v === null || v === undefined)
+      return `${formatLabel(key)}: Not provided`;
+    if (
+      typeof v === "string" ||
+      typeof v === "number" ||
+      typeof v === "boolean"
+    )
+      return `${formatLabel(key)}: ${formatPrimitive(v)}`;
+    if (Array.isArray(v)) {
+      const arr = v.filter((i) => hasMeaningfulValue(i));
+      if (!arr.length) return `${formatLabel(key)}: None`;
+      const primOnly = arr.every(
+        (i) =>
+          typeof i === "string" ||
+          typeof i === "number" ||
+          typeof i === "boolean",
       );
+      const val = primOnly
+        ? arr.map(formatPrimitive).join(", ")
+        : `${arr.length} items`;
+      return `${formatLabel(key)}: ${val}`;
     }
-
-    return (
-      <div className="space-y-3">
-        {meaningfulItems.map((item, idx) => (
-          <div
-            key={idx}
-            className="rounded-xl border border-border/70 bg-background/60 p-3"
-          >
-            <ValueRenderer value={item as ResultValue} />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  const entries = Object.entries(value as Record<string, ResultValue>);
-  if (!entries.length) {
-    return <span className="text-foreground/50">Not provided</span>;
-  }
-
-  return (
-    <div className="space-y-3">
-      {entries.map(([key, nested]) => (
-        <div
-          key={key}
-          className="rounded-xl border border-border/60 bg-background/50 p-3 shadow-inner shadow-black/5"
-        >
-          <div className="text-sm font-bold tracking-wide text-foreground">
-            {formatLabel(key)}
-          </div>
-          <div className="mt-1 text-base font-semibold text-foreground">
-            <ValueRenderer value={nested} />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+    return `${formatLabel(key)}: ${Object.keys(v as object).length} fields`;
+  });
+  return parts.join(" • ");
 }
 
 function formatPrimitive(value: ResultValue) {

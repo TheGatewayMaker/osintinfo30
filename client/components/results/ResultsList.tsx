@@ -157,10 +157,10 @@ function FieldColumn({ fields }: { fields: ResultField[] }) {
           key={field.key}
           className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-lg px-2 py-1 transition-colors hover:bg-foreground/5"
         >
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
             {field.label}
           </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
             <ValueRenderer value={field.value} />
           </dd>
         </div>
@@ -252,10 +252,10 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
     <dl className="space-y-3">
       {entries.map(([key, v]) => (
         <div key={key} className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-md px-2 py-1 transition-colors hover:bg-foreground/5">
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
             {formatLabel(key)}
           </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
             <ValueRenderer value={v} />
           </dd>
         </div>

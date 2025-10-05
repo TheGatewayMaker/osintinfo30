@@ -115,7 +115,10 @@ function ValueRenderer({ value }: { value: ResultValue }) {
     }
 
     const primitives = items.filter(
-      (i) => typeof i === "string" || typeof i === "number" || typeof i === "boolean",
+      (i) =>
+        typeof i === "string" ||
+        typeof i === "number" ||
+        typeof i === "boolean",
     ) as Array<string | number | boolean>;
     const objects = items.filter(
       (i) => i && typeof i === "object" && !Array.isArray(i),

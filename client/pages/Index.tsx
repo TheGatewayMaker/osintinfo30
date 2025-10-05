@@ -6,13 +6,7 @@ import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text"
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { performSearch } from "@/lib/search";
-import type { NormalizedSearchResults } from "@/lib/search-normalize";
-import {
-  computeRemaining,
-  consumeSearchCredit,
-  isFirestorePermissionDenied,
-} from "@/lib/user";
+import { computeRemaining } from "@/lib/user";
 
 export default function Index() {
   const [query, setQuery] = useState("");

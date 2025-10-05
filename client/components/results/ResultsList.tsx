@@ -62,32 +62,25 @@ function ResultCard({
 }
 
 function FieldColumns({ fields }: { fields: ResultField[] }) {
-  const halfway = Math.ceil(fields.length / 2);
-  const left = fields.slice(0, halfway);
-  const right = fields.slice(halfway);
-
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <FieldColumn fields={left} />
-      <FieldColumn fields={right} />
+    <div className="space-y-6">
+      {fields.map((field) => (
+        <FieldRow key={field.key} field={field} />
+      ))}
     </div>
   );
 }
 
-function FieldColumn({ fields }: { fields: ResultField[] }) {
+function FieldRow({ field }: { field: ResultField }) {
   return (
-    <dl className="space-y-4">
-      {fields.map((field) => (
-        <div key={field.key} className="grid grid-cols-3 items-start gap-3">
-          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
-            {field.label}
-          </dt>
-          <dd className="col-span-2 break-words text-base font-medium text-foreground">
-            <ValueRenderer value={field.value} />
-          </dd>
-        </div>
-      ))}
-    </dl>
+    <div className="rounded-xl border border-border/50 bg-background/30 p-5">
+      <dt className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-600 dark:text-brand-300">
+        {field.label}
+      </dt>
+      <dd className="text-base leading-relaxed text-foreground">
+        <ValueRenderer value={field.value} />
+      </dd>
+    </div>
   );
 }
 
@@ -125,13 +118,13 @@ function ValueRenderer({ value }: { value: ResultValue }) {
     ) as Array<Record<string, ResultValue>>;
 
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         {primitives.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {primitives.map((p, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center rounded-full border border-border/60 bg-background px-2.5 py-0.5 text-xs font-medium"
+                className="inline-flex items-center rounded-lg border border-border/60 bg-background px-3 py-1.5 text-sm font-medium"
               >
                 {String(p)}
               </span>
@@ -139,14 +132,14 @@ function ValueRenderer({ value }: { value: ResultValue }) {
           </div>
         )}
         {objects.length > 0 && (
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="space-y-4">
             {objects.map((obj, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border/70 bg-background/60 p-4 shadow-sm"
+                className="rounded-lg border border-border/70 bg-background/60 p-5"
               >
-                <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-foreground/60">
-                  Item #{idx + 1}
+                <div className="mb-4 text-sm font-semibold text-brand-600 dark:text-brand-300">
+                  {formatLabel(`Item ${idx + 1}`)}
                 </div>
                 <ObjectRenderer obj={obj} />
               </div>
@@ -171,17 +164,17 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   }
 
   return (
-    <dl className="space-y-3">
+    <div className="grid gap-4 lg:grid-cols-2">
       {entries.map(([key, v]) => (
-        <div key={key} className="grid grid-cols-3 items-start gap-3">
-          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+        <div key={key} className="space-y-2">
+          <dt className="text-sm font-semibold text-brand-600 dark:text-brand-300">
             {formatLabel(key)}
           </dt>
-          <dd className="col-span-2 break-words text-base font-medium text-foreground">
+          <dd className="break-words text-sm text-foreground pl-3 border-l-2 border-border/50">
             <ValueRenderer value={v} />
           </dd>
         </div>
       ))}
-    </dl>
+    </div>
   );
 }

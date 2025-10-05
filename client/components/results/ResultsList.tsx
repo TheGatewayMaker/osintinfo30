@@ -169,3 +169,50 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
     </div>
   );
 }
+
+function ObjectArrayTable({ items }: { items: Array<Record<string, ResultValue>> }) {
+  const keyCounts = new Map<string, number>();
+  for (const item of items) {
+    for (const key of Object.keys(item)) {
+      if (!hasMeaningfulValue(item[key] as ResultValue)) continue;
+      keyCounts.set(key, (keyCounts.get(key) ?? 0) + 1);
+    }
+  }
+  const headers = Array.from(keyCounts.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([k]) => k);
+
+  if (!headers.length) {
+    return <div className="text-foreground/50">No items</div>;
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-[720px] table-auto border-collapse">
+        <thead>
+          <tr className="bg-background/50">
+            {headers.map((key) => (
+              <th
+                key={key}
+                className="sticky top-0 z-0 border-b border-border/60 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-foreground/70"
+              >
+                {formatLabel(key)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((row, idx) => (
+            <tr key={idx} className={idx % 2 === 0 ? "bg-background/20" : "bg-background/40"}>
+              {headers.map((key) => (
+                <td key={key} className="align-top border-b border-border/40 px-3 py-2 text-sm">
+                  {key in row ? <ValueRenderer value={row[key] as ResultValue} /> : <span className="text-foreground/50">—</span>}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

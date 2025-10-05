@@ -50,7 +50,7 @@ function findFieldValue(
   return undefined;
 }
 
-export function ResultsList({ records }: { records: ResultRecord[] }) {
+export function ResultsList({ records, totalCount }: { records: ResultRecord[]; totalCount?: number }) {
   if (!records.length) {
     return null;
   }
@@ -62,6 +62,7 @@ export function ResultsList({ records }: { records: ResultRecord[] }) {
           key={record.id || index}
           record={record}
           order={index + 1}
+          totalCount={totalCount ?? records.length}
         />
       ))}
     </div>
@@ -71,11 +72,13 @@ export function ResultsList({ records }: { records: ResultRecord[] }) {
 function ResultCard({
   record,
   order,
+  totalCount,
 }: {
   record: ResultRecord;
   order: number;
+  totalCount: number;
 }) {
-  const title = record.title || `Record ${order}`;
+  const title = record.title || `Record ${order} of ${totalCount}`;
   const subtitle =
     record.contextLabel && record.contextLabel !== record.title
       ? record.contextLabel
@@ -96,7 +99,7 @@ function ResultCard({
   const fieldCount = record.fields.length;
 
   return (
-    <article className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur h-full">
+    <article className="group rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur h-full transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl hover:shadow-brand-500/20 hover:ring-brand-500/30">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h2 className="text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
@@ -152,12 +155,12 @@ function FieldColumn({ fields }: { fields: ResultField[] }) {
       {fields.map((field) => (
         <div
           key={field.key}
-          className="grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3"
+          className="group/field grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-lg px-2 py-1 transition-colors hover:bg-foreground/5"
         >
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
             {field.label}
           </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2">
             <ValueRenderer value={field.value} />
           </dd>
         </div>
@@ -248,11 +251,11 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   return (
     <dl className="space-y-3">
       {entries.map(([key, v]) => (
-        <div key={key} className="grid grid-cols-3 items-start gap-3">
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+        <div key={key} className="group/field grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-md px-2 py-1 transition-colors hover:bg-foreground/5">
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
             {formatLabel(key)}
           </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2">
             <ValueRenderer value={v} />
           </dd>
         </div>

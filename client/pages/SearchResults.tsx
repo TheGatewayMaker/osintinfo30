@@ -89,7 +89,7 @@ export default function SearchResults() {
       <section className="relative py-10 md:py-14">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/10),transparent_50%)]" />
         <div className="container mx-auto">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-5xl">
             <div className="text-center">
               <h1 className="text-3xl md:text-4xl font-black tracking-tight">
                 Search Results
@@ -175,9 +175,37 @@ function ResultRenderer({ data }: { data: any }) {
   }
 
   if (data && typeof data === "object") {
+    // Filter out meta keys and render source blocks
+    const hiddenKeys = new Set([
+      "NumOfResults",
+      "NumOfDatabase",
+      "NumOfDatabases",
+      "price",
+      "search time",
+      "search_time",
+    ]);
+    const entries = Object.entries(data as Record<string, any>);
+    const visibleEntries = entries.filter(([k]) => !hiddenKeys.has(k));
+
+    const looksLikeAggregate = visibleEntries.some(([, v]) =>
+      v && typeof v === "object" && ("Data" in v || "InfoLeak" in v),
+    );
+
+    if (looksLikeAggregate) {
+      return (
+        <div className="grid gap-4">
+          {visibleEntries.map(([source, block]) => (
+            <SourceBlock key={source} name={source} value={block} />
+          ))}
+        </div>
+      );
+    }
+
+    // Generic object fallback (without metadata)
+    const filtered: Record<string, any> = Object.fromEntries(visibleEntries);
     return (
       <div className="rounded-2xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10">
-        <KeyValueGrid obj={data} />
+        <KeyValueGrid obj={filtered} />
       </div>
     );
   }
@@ -193,13 +221,13 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
   const entries = Object.entries(obj || {});
   if (!entries.length) return <Empty />;
   return (
-    <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+    <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-[0.95rem] leading-relaxed">
       {entries.map(([k, v]) => (
         <div key={k} className="grid grid-cols-3 gap-2 items-start">
-          <div className="col-span-1 text-foreground/60 break-words">{k}</div>
+          <div className="col-span-1 text-foreground/60 break-words font-semibold">{k}</div>
           <div className="col-span-2 break-words font-medium">
             {typeof v === "object" ? (
-              <pre className="rounded border border-border bg-background/50 p-2 text-xs whitespace-pre-wrap">
+              <pre className="rounded border border-border bg-background/50 p-2 text-sm whitespace-pre-wrap">
                 {JSON.stringify(v, null, 2)}
               </pre>
             ) : (
@@ -208,6 +236,53 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+function SourceBlock({ name, value }: { name: string; value: any }) {
+  const count =
+    value && typeof value === "object" && typeof value.NumOfResults === "number"
+      ? value.NumOfResults
+      : Array.isArray(value?.Data)
+        ? value.Data.length
+        : undefined;
+  const info = value && typeof value === "object" ? value.InfoLeak : undefined;
+  const dataArray = Array.isArray(value?.Data) ? (value.Data as any[]) : null;
+
+  return (
+    <div className="rounded-2xl border border-border bg-card/80 p-4 md:p-6 shadow ring-1 ring-brand-500/10">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">{name}</h3>
+        {typeof count === "number" && (
+          <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">{count}</span>
+        )}
+      </div>
+      {typeof info === "string" && info.trim() && (
+        <p className="mt-2 text-sm font-semibold text-foreground/70">{info}</p>
+      )}
+
+      {dataArray ? (
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          {dataArray.map((item, idx) => (
+            <div key={idx} className="rounded-xl border border-border bg-background/40 p-3">
+              {item && typeof item === "object" ? (
+                <KeyValueGrid obj={item} />
+              ) : (
+                <div className="text-sm font-medium">{String(item)}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4">
+          {value && typeof value === "object" ? (
+            <KeyValueGrid obj={value} />
+          ) : (
+            <div className="text-sm font-medium">{String(value)}</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

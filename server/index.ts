@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleLeakSearch } from "./routes/search";
+import { handleTrackSearch } from "./routes/track-search";
 
 export function createServer() {
   const app = express();

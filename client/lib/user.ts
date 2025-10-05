@@ -7,6 +7,7 @@ import {
   serverTimestamp,
   increment,
   updateDoc,
+  runTransaction,
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
@@ -187,9 +188,33 @@ export async function incrementPurchasedSearches(uid: string, amount: number) {
 export async function consumeSearchCredit(uid: string, count = 1) {
   const _db = db();
   const ref = doc(_db, "users", uid);
-  await updateDoc(ref, {
-    usedSearches: increment(count),
-    totalSearchesRemaining: increment(-count),
-    updatedAt: serverTimestamp(),
+  await runTransaction(_db, async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists()) {
+      throw new Error("User profile not found");
+    }
+    const data = snap.data() as UserProfile;
+
+    const free = Math.max(0, Number(data.freeSearches ?? 0) || 0);
+    const purchased = Math.max(0, Number(data.purchasedSearches ?? 0) || 0);
+    const used = Math.max(0, Number(data.usedSearches ?? 0) || 0);
+
+    const explicit = Number(data.totalSearchesRemaining);
+    const currentRemaining = Number.isFinite(explicit)
+      ? Math.max(0, explicit)
+      : Math.max(0, free + purchased - used);
+
+    if (currentRemaining < count) {
+      throw new Error("No searches remaining");
+    }
+
+    const newUsed = used + count;
+    const newRemaining = Math.max(0, currentRemaining - count);
+
+    tx.update(ref, {
+      usedSearches: newUsed,
+      totalSearchesRemaining: newRemaining,
+      updatedAt: serverTimestamp(),
+    });
   });
 }

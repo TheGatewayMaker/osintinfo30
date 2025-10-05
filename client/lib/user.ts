@@ -76,8 +76,12 @@ async function findUniqueUsername(base: string): Promise<string> {
   while (i <= 50) {
     try {
       const q = collection(_db, "users");
-      const { getDocs, where, query, limit } = await import("firebase/firestore");
-      const snap = await getDocs(query(q, where("username", "==", candidate), limit(1)));
+      const { getDocs, where, query, limit } = await import(
+        "firebase/firestore"
+      );
+      const snap = await getDocs(
+        query(q, where("username", "==", candidate), limit(1)),
+      );
       if (snap.empty) return candidate;
       i += 1;
       candidate = `${base}${i}`;

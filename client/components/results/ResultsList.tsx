@@ -45,17 +45,17 @@ export function ResultsList({
             value={itemValue}
             className="overflow-hidden rounded-3xl border border-border/70 bg-background/90 shadow-lg shadow-brand-500/10 transition-all data-[state=open]:shadow-brand-500/25 data-[state=open]:ring-1 data-[state=open]:ring-brand-500/20"
           >
-          <AccordionTrigger className="px-6 py-5 text-left text-base font-semibold text-foreground">
-            <RecordHeader
-              record={record}
-              order={index + 1}
-              totalCount={total}
-            />
-          </AccordionTrigger>
-          <AccordionContent className="px-6">
-            <FieldList fields={record.fields} />
-          </AccordionContent>
-        </AccordionItem>
+            <AccordionTrigger className="px-6 py-5 text-left text-base font-semibold text-foreground">
+              <RecordHeader
+                record={record}
+                order={index + 1}
+                totalCount={total}
+              />
+            </AccordionTrigger>
+            <AccordionContent className="px-6">
+              <FieldList fields={record.fields} />
+            </AccordionContent>
+          </AccordionItem>
         );
       })}
     </Accordion>
@@ -223,7 +223,9 @@ function ValueRenderer({ value }: { value: ResultValue }) {
 }
 
 function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
-  const entries = Object.entries(obj).filter(([, val]) => hasMeaningfulValue(val));
+  const entries = Object.entries(obj).filter(([, val]) =>
+    hasMeaningfulValue(val),
+  );
   if (!entries.length) {
     return <span className="text-foreground/50">Not provided</span>;
   }

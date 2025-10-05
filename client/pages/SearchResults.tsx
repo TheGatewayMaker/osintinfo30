@@ -1,4 +1,10 @@
-import { type FormEvent, type ReactNode, useEffect, useMemo, useState } from "react";
+import {
+  type FormEvent,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -77,7 +83,8 @@ export default function SearchResults() {
 
     setLoading(true);
     try {
-      const { data, normalized: freshNormalized } = await performSearch(trimmed);
+      const { data, normalized: freshNormalized } =
+        await performSearch(trimmed);
       setNormalized(freshNormalized);
 
       try {
@@ -150,9 +157,9 @@ export default function SearchResults() {
                         : "Check if your data has leaked"}
                     </h1>
                     <p className="text-sm leading-relaxed text-foreground/70 md:text-base">
-                      Search across verified breach intelligence and OSINT sources.
-                      Refine your query at any time and review the structured
-                      results below.
+                      Search across verified breach intelligence and OSINT
+                      sources. Refine your query at any time and review the
+                      structured results below.
                     </p>
                   </header>
 
@@ -177,7 +184,10 @@ export default function SearchResults() {
                       </Button>
                     </div>
                     <p className="text-xs text-foreground/60">
-                      Remaining searches: <span className="font-semibold text-brand-600 dark:text-brand-300">{formattedRemaining}</span>
+                      Remaining searches:{" "}
+                      <span className="font-semibold text-brand-600 dark:text-brand-300">
+                        {formattedRemaining}
+                      </span>
                     </p>
                   </form>
                 </div>

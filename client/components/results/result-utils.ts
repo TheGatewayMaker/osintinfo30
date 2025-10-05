@@ -5,7 +5,10 @@ import type {
 } from "@/lib/search-normalize";
 
 export function normalizeFieldKey(key: string) {
-  return key.trim().toLowerCase().replace(/[\s_-]+/g, " ");
+  return key
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
 }
 
 export function extractFirstText(value: ResultValue): string | undefined {

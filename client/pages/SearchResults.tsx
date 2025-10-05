@@ -116,10 +116,13 @@ export default function SearchResults() {
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
               <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-                {query.trim() ? `Results for "${query.trim()}"` : "Search Results"}
+                {query.trim()
+                  ? `Results for "${query.trim()}"`
+                  : "Search Results"}
               </h1>
               <p className="mt-2 text-sm font-semibold text-foreground/70">
-                Clean, readable OSINT results. Refine your query and re-run as needed.
+                Clean, readable OSINT results. Refine your query and re-run as
+                needed.
               </p>
             </div>
 

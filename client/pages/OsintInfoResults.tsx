@@ -48,7 +48,7 @@ export default function OsintInfoResults() {
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function OsintInfoResults() {
     const trimmed = (explicit ?? query).trim();
     if (!trimmed) return;
 
-    if (loading) return;
+    if (authLoading) return;
     if (!user) {
       toast.error("Please sign in to search.");
       return;

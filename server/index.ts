@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleLeakSearch } from "./routes/search";
+import { handleTrackSearch } from "./routes/track-search";
 
 export function createServer() {
   const app = express();
@@ -21,6 +22,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.post("/api/search", handleLeakSearch);
   app.get("/api/search", handleLeakSearch);
+  app.post("/api/track-search", handleTrackSearch);
 
   return app;
 }

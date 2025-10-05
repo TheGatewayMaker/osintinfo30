@@ -10,7 +10,7 @@ export default function Contact() {
         </p>
 
         <form
-          action="https://formspree.io/f/mnngvokw"
+          action="https://formspree.io/f/movkllyk"
           method="POST"
           className="mt-8 grid gap-6 max-w-2xl mx-auto rounded-2xl border border-border bg-card/80 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
         >

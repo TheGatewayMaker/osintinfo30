@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,59 @@ import {
   isFirestorePermissionDenied,
 } from "@/lib/user";
 import { toast } from "sonner";
+
+const HIDDEN_KEYS = new Set([
+  "num of results",
+  "num_of_results",
+  "num-results",
+  "numresults",
+  "num results",
+  "price",
+  "search time",
+  "search_time",
+  "search-time",
+]);
+
+function isHiddenKey(key: string) {
+  return HIDDEN_KEYS.has(key.trim().toLowerCase());
+}
+
+function sanitizeData(data: any): any {
+  if (Array.isArray(data)) {
+    return data.map((d) => sanitizeData(d));
+  }
+  if (data && typeof data === "object") {
+    const out: Record<string, any> = {};
+    for (const [k, v] of Object.entries(data)) {
+      if (isHiddenKey(k)) continue;
+      out[k] = sanitizeData(v);
+    }
+    return out;
+  }
+  return data;
+}
+
+function titleFromItem(item: Record<string, any>): {
+  key?: string;
+  value?: string;
+} {
+  const candidates = [
+    "title",
+    "name",
+    "email",
+    "username",
+    "domain",
+    "ip",
+    "id",
+  ];
+  for (const c of candidates) {
+    if (item[c]) {
+      const val = String(item[c]);
+      if (val.trim()) return { key: c, value: val };
+    }
+  }
+  return {};
+}
 
 export default function SearchResults() {
   const [params] = useSearchParams();
@@ -57,7 +110,7 @@ export default function SearchResults() {
     setResult(null);
     try {
       const { data, hasResults } = await performSearch(query);
-      setResult(data);
+      setResult(sanitizeData(data));
 
       if (hasResults) {
         try {
@@ -84,21 +137,19 @@ export default function SearchResults() {
     }
   }
 
+  const cleaned = useMemo(() => sanitizeData(result), [result]);
+
   return (
     <Layout>
       <section className="relative py-10 md:py-14">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/10),transparent_50%)]" />
         <div className="container mx-auto">
-<<<<<<< HEAD
-          <div className="mx-auto max-w-5xl">
-=======
-          <div className="mx-auto max-w-4xl">
->>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
+          <div className="mx-auto max-w-6xl">
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
                 Search Results
               </h1>
-              <p className="mt-2 text-foreground/70">
+              <p className="mt-2 text-sm font-semibold text-foreground/70">
                 Clean, readable results with your site’s styling.
               </p>
             </div>
@@ -128,12 +179,12 @@ export default function SearchResults() {
             </div>
 
             <div className="mt-8">
-              {result == null ? (
+              {cleaned == null ? (
                 <div className="text-center text-sm text-foreground/60">
                   Results will appear here.
                 </div>
               ) : (
-                <ResultRenderer data={result} />
+                <ResultRenderer data={cleaned} />
               )}
             </div>
           </div>
@@ -165,59 +216,16 @@ function ResultRenderer({ data }: { data: any }) {
       );
     }
     return (
-      <div className="grid gap-3">
+      <div className="grid gap-4 md:grid-cols-2">
         {data.map((item, idx) => (
-          <div
-            key={idx}
-            className="rounded-xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10"
-          >
-            <KeyValueGrid obj={item} />
-          </div>
+          <ItemCard key={idx} item={item as Record<string, any>} />
         ))}
       </div>
     );
   }
 
   if (data && typeof data === "object") {
-<<<<<<< HEAD
-    // Filter out meta keys and render source blocks
-    const hiddenKeys = new Set([
-      "NumOfResults",
-      "NumOfDatabase",
-      "NumOfDatabases",
-      "price",
-      "search time",
-      "search_time",
-    ]);
-    const entries = Object.entries(data as Record<string, any>);
-    const visibleEntries = entries.filter(([k]) => !hiddenKeys.has(k));
-
-    const looksLikeAggregate = visibleEntries.some(
-      ([, v]) => v && typeof v === "object" && ("Data" in v || "InfoLeak" in v),
-    );
-
-    if (looksLikeAggregate) {
-      return (
-        <div className="grid gap-4">
-          {visibleEntries.map(([source, block]) => (
-            <SourceBlock key={source} name={source} value={block} />
-          ))}
-        </div>
-      );
-    }
-
-    // Generic object fallback (without metadata)
-    const filtered: Record<string, any> = Object.fromEntries(visibleEntries);
-    return (
-      <div className="rounded-2xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10">
-        <KeyValueGrid obj={filtered} />
-=======
-    return (
-      <div className="rounded-2xl border border-border bg-card/80 p-4 shadow ring-1 ring-brand-500/10">
-        <KeyValueGrid obj={data} />
->>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
-      </div>
-    );
+    return <ItemCard item={data as Record<string, any>} single />;
   }
 
   return (
@@ -227,29 +235,47 @@ function ResultRenderer({ data }: { data: any }) {
   );
 }
 
+function ItemCard({
+  item,
+  single,
+}: {
+  item: Record<string, any>;
+  single?: boolean;
+}) {
+  const { key: titleKey, value: titleVal } = titleFromItem(item);
+  const rest: Record<string, any> = {};
+  for (const [k, v] of Object.entries(item)) {
+    if (isHiddenKey(k)) continue;
+    if (titleKey && k === titleKey) continue;
+    rest[k] = v;
+  }
+  return (
+    <div
+      className={`rounded-2xl border border-border bg-card/80 p-5 shadow ring-1 ring-brand-500/10 ${single ? "" : ""}`}
+    >
+      {titleVal && (
+        <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-3 break-words">
+          {titleVal}
+        </h3>
+      )}
+      <KeyValueGrid obj={rest} />
+    </div>
+  );
+}
+
 function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
   const entries = Object.entries(obj || {});
   if (!entries.length) return <Empty />;
   return (
-<<<<<<< HEAD
-    <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-[0.95rem] leading-relaxed">
+    <div className="grid gap-y-3 gap-x-6 text-sm">
       {entries.map(([k, v]) => (
         <div key={k} className="grid grid-cols-3 gap-2 items-start">
-          <div className="col-span-1 text-foreground/60 break-words font-semibold">
+          <div className="col-span-1 text-xs font-semibold uppercase tracking-wide text-foreground/60 break-words">
             {k}
           </div>
-          <div className="col-span-2 break-words font-medium">
-            {typeof v === "object" ? (
-              <pre className="rounded border border-border bg-background/50 p-2 text-sm whitespace-pre-wrap">
-=======
-    <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-      {entries.map(([k, v]) => (
-        <div key={k} className="grid grid-cols-3 gap-2 items-start">
-          <div className="col-span-1 text-foreground/60 break-words">{k}</div>
-          <div className="col-span-2 break-words font-medium">
+          <div className="col-span-2 break-words text-sm font-semibold text-foreground">
             {typeof v === "object" ? (
               <pre className="rounded border border-border bg-background/50 p-2 text-xs whitespace-pre-wrap">
->>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
                 {JSON.stringify(v, null, 2)}
               </pre>
             ) : (
@@ -262,63 +288,6 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
   );
 }
 
-<<<<<<< HEAD
-function SourceBlock({ name, value }: { name: string; value: any }) {
-  const count =
-    value && typeof value === "object" && typeof value.NumOfResults === "number"
-      ? value.NumOfResults
-      : Array.isArray(value?.Data)
-        ? value.Data.length
-        : undefined;
-  const info = value && typeof value === "object" ? value.InfoLeak : undefined;
-  const dataArray = Array.isArray(value?.Data) ? (value.Data as any[]) : null;
-
-  return (
-    <div className="rounded-2xl border border-border bg-card/80 p-4 md:p-6 shadow ring-1 ring-brand-500/10">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">
-          {name}
-        </h3>
-        {typeof count === "number" && (
-          <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-            {count}
-          </span>
-        )}
-      </div>
-      {typeof info === "string" && info.trim() && (
-        <p className="mt-2 text-sm font-semibold text-foreground/70">{info}</p>
-      )}
-
-      {dataArray ? (
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {dataArray.map((item, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl border border-border bg-background/40 p-3"
-            >
-              {item && typeof item === "object" ? (
-                <KeyValueGrid obj={item} />
-              ) : (
-                <div className="text-sm font-medium">{String(item)}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-4">
-          {value && typeof value === "object" ? (
-            <KeyValueGrid obj={value} />
-          ) : (
-            <div className="text-sm font-medium">{String(value)}</div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-=======
->>>>>>> c4a6f21708505d43cebd1d055c7c4fa8d6e971c8
 function Empty() {
   return (
     <div className="text-center text-sm text-foreground/60">

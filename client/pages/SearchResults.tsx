@@ -509,3 +509,74 @@ function ResultsNotice({ message }: { message: string }) {
     </div>
   );
 }
+
+function MetricCard({
+  label,
+  value,
+  sublabel,
+}: {
+  label: string;
+  value: string;
+  sublabel: string;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-background/80 p-4 shadow-inner shadow-black/5">
+      <dt className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+        {label}
+      </dt>
+      <dd className="mt-2 text-2xl font-bold text-foreground">{value}</dd>
+      <p className="mt-1 text-[0.7rem] font-medium text-foreground/60">{sublabel}</p>
+    </div>
+  );
+}
+
+function ReviewStep({
+  icon: Icon,
+  title,
+  description,
+  index,
+}: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  index: number;
+}) {
+  return (
+    <div className="flex gap-4 rounded-2xl border border-border/60 bg-background/75 p-4 shadow-inner shadow-black/5">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300">
+        <Icon className="h-5 w-5" />
+      </div>
+      <div className="space-y-1">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+          Step {index}
+        </p>
+        <h4 className="text-sm font-semibold text-foreground">{title}</h4>
+        <p className="text-xs text-foreground/60">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function StatusItem({
+  label,
+  description,
+  active,
+}: {
+  label: string;
+  description: string;
+  active: boolean;
+}) {
+  const Icon = active ? CheckCircle2 : Circle;
+
+  return (
+    <li className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/75 p-4 shadow-inner shadow-black/5">
+      <Icon
+        className={`h-5 w-5 shrink-0 ${active ? "text-brand-300" : "text-foreground/40"}`}
+      />
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-foreground">{label}</p>
+        <p className="text-xs text-foreground/60">{description}</p>
+      </div>
+    </li>
+  );
+}

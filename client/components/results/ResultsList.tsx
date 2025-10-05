@@ -63,10 +63,25 @@ function ResultCard({
 
 function FieldColumns({ fields }: { fields: ResultField[] }) {
   return (
-    <div className="space-y-6">
-      {fields.map((field) => (
-        <FieldRow key={field.key} field={field} />
-      ))}
+    <div className="overflow-x-auto rounded-xl border border-border/50">
+      <table className="min-w-full table-fixed">
+        <colgroup>
+          <col className="w-48 md:w-56 lg:w-64" />
+          <col />
+        </colgroup>
+        <tbody className="divide-y divide-border/60">
+          {fields.map((field, idx) => (
+            <tr key={field.key} className={idx % 2 === 0 ? "bg-background/20" : "bg-background/40"}>
+              <th className="align-top p-4 text-left text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-300">
+                {field.label}
+              </th>
+              <td className="align-top p-4 text-sm leading-relaxed text-foreground">
+                <ValueRenderer value={field.value} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

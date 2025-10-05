@@ -70,21 +70,26 @@ export function isFirestorePermissionDenied(error: unknown) {
 
 async function findUniqueUsername(base: string): Promise<string> {
   const _db = db();
-  let candidate = base;
+  let candidate = base || "user";
   let i = 1;
-  // Check existence by querying username equality
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const q = collection(_db, "users");
-    const { getDocs, where, query, limit } = await import("firebase/firestore");
-    const snap = await getDocs(
-      query(q, where("username", "==", candidate), limit(1)),
-    );
-    if (snap.empty) return candidate;
-    i += 1;
-    candidate = `${base}${i}`;
-    if (i > 1000) return `${base}-${cryptoRandomSuffix()}`;
+  // Try a bounded number of checks; if rules block collection reads, fall back to random suffix
+  while (i <= 50) {
+    try {
+      const q = collection(_db, "users");
+      const { getDocs, where, query, limit } = await import(
+        "firebase/firestore"
+      );
+      const snap = await getDocs(
+        query(q, where("username", "==", candidate), limit(1)),
+      );
+      if (snap.empty) return candidate;
+      i += 1;
+      candidate = `${base}${i}`;
+    } catch (err) {
+      return `${base}-${cryptoRandomSuffix()}`;
+    }
   }
+  return `${base}-${cryptoRandomSuffix()}`;
 }
 
 function cryptoRandomSuffix() {

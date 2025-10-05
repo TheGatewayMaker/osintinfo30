@@ -86,7 +86,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       async signIn(email, password) {
         const _auth = getAuthInstance();
-        await signInWithEmailAndPassword(_auth, email, password);
+        const cred = await signInWithEmailAndPassword(_auth, email, password);
+        if (cred.user) {
+          try {
+            await ensureUserDoc(
+              cred.user.uid,
+              cred.user.email,
+              cred.user.displayName,
+            );
+          } catch (e) {
+            console.warn("ensureUserDoc on signIn failed: ", e);
+          }
+        }
       },
       async signUp(name, email, password) {
         const _auth = getAuthInstance();
@@ -102,7 +113,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
       async signInWithGoogle() {
         const _auth = getAuthInstance();
-        await signInWithPopup(_auth, getGoogleProvider());
+        const cred = await signInWithPopup(_auth, getGoogleProvider());
+        if (cred.user) {
+          try {
+            await ensureUserDoc(
+              cred.user.uid,
+              cred.user.email,
+              cred.user.displayName,
+            );
+          } catch (e) {
+            console.warn("ensureUserDoc on Google sign-in failed: ", e);
+          }
+        }
       },
       async signOut() {
         const _auth = getAuthInstance();

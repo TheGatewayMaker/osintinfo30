@@ -43,7 +43,7 @@ export function ResultsList({
           <AccordionItem
             key={itemValue}
             value={itemValue}
-            className="overflow-hidden rounded-3xl border border-border/70 bg-background/90 shadow-lg shadow-brand-500/10 transition-all data-[state=open]:shadow-brand-500/25 data-[state=open]:ring-1 data-[state=open]:ring-brand-500/20"
+            className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-md transition-all data-[state=open]:shadow-lg"
           >
             <AccordionTrigger className="px-6 py-5 text-left text-base font-semibold text-foreground">
               <RecordHeader
@@ -52,7 +52,7 @@ export function ResultsList({
                 totalCount={total}
               />
             </AccordionTrigger>
-            <AccordionContent className="px-6">
+            <AccordionContent className="px-6 pb-6">
               <FieldList fields={record.fields} />
             </AccordionContent>
           </AccordionItem>
@@ -83,15 +83,12 @@ function RecordHeader({
 
   return (
     <div className="flex w-full flex-col gap-4 text-left">
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wide text-foreground/60">
         <span className="inline-flex items-center gap-2">
           <span className="rounded-full bg-brand-500/10 px-2 py-1 text-brand-600 dark:text-brand-300">
             Record {order}
           </span>
           <span className="text-foreground/40">of {totalCount}</span>
-        </span>
-        <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-foreground/60">
-          #{order}
         </span>
       </div>
       <div className="space-y-1">
@@ -115,7 +112,7 @@ function RecordHeader({
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex max-w-full items-center gap-1 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold text-foreground/70 shadow-sm shadow-brand-500/10">
+    <div className="flex max-w-full items-center gap-1 rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-semibold text-foreground/80">
       <span className="text-foreground/50">{label}:</span>
       <span className="break-words text-foreground/80">{value}</span>
     </div>
@@ -128,7 +125,7 @@ function FieldList({ fields }: { fields: ResultField[] }) {
   }
 
   return (
-    <dl className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-background/85 shadow-inner shadow-black/5">
+    <dl className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-background">
       {fields.map((field) => {
         const label = field.label?.trim() || formatLabel(field.key);
         return (
@@ -201,7 +198,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             {objects.map((objectValue, index) => (
               <div
                 key={index}
-                className="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm shadow-brand-500/5"
+                className="rounded-2xl border border-border/60 bg-background p-4"
               >
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
                   Item {index + 1}
@@ -235,7 +232,7 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
       {entries.map(([key, val]) => (
         <div
           key={key}
-          className="grid gap-y-1 gap-x-4 rounded-xl bg-background/60 px-3 py-2 sm:grid-cols-[minmax(140px,0.35fr)_1fr]"
+          className="grid gap-y-1 gap-x-4 rounded-xl bg-background px-3 py-2 sm:grid-cols-[minmax(140px,0.35fr)_1fr]"
         >
           <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
             {formatLabel(key)}

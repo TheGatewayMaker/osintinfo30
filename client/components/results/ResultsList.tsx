@@ -71,7 +71,12 @@ function FieldColumns({ fields }: { fields: ResultField[] }) {
         </colgroup>
         <tbody className="divide-y divide-border/60">
           {fields.map((field, idx) => (
-            <tr key={field.key} className={idx % 2 === 0 ? "bg-background/20" : "bg-background/40"}>
+            <tr
+              key={field.key}
+              className={
+                idx % 2 === 0 ? "bg-background/20" : "bg-background/40"
+              }
+            >
               <th className="align-top p-4 text-left text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-300">
                 {field.label}
               </th>
@@ -85,7 +90,6 @@ function FieldColumns({ fields }: { fields: ResultField[] }) {
     </div>
   );
 }
-
 
 function ValueRenderer({ value }: { value: ResultValue }) {
   if (value === null || value === undefined) {
@@ -134,9 +138,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             ))}
           </div>
         )}
-        {objects.length > 0 && (
-          <ObjectArrayTable items={objects} />
-        )}
+        {objects.length > 0 && <ObjectArrayTable items={objects} />}
       </div>
     );
   }
@@ -170,7 +172,11 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   );
 }
 
-function ObjectArrayTable({ items }: { items: Array<Record<string, ResultValue>> }) {
+function ObjectArrayTable({
+  items,
+}: {
+  items: Array<Record<string, ResultValue>>;
+}) {
   const keyCounts = new Map<string, number>();
   for (const item of items) {
     for (const key of Object.keys(item)) {
@@ -203,10 +209,22 @@ function ObjectArrayTable({ items }: { items: Array<Record<string, ResultValue>>
         </thead>
         <tbody>
           {items.map((row, idx) => (
-            <tr key={idx} className={idx % 2 === 0 ? "bg-background/20" : "bg-background/40"}>
+            <tr
+              key={idx}
+              className={
+                idx % 2 === 0 ? "bg-background/20" : "bg-background/40"
+              }
+            >
               {headers.map((key) => (
-                <td key={key} className="align-top border-b border-border/40 px-3 py-2 text-sm">
-                  {key in row ? <ValueRenderer value={row[key] as ResultValue} /> : <span className="text-foreground/50">—</span>}
+                <td
+                  key={key}
+                  className="align-top border-b border-border/40 px-3 py-2 text-sm"
+                >
+                  {key in row ? (
+                    <ValueRenderer value={row[key] as ResultValue} />
+                  ) : (
+                    <span className="text-foreground/50">—</span>
+                  )}
                 </td>
               ))}
             </tr>

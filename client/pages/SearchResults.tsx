@@ -43,7 +43,10 @@ function sanitizeData(data: any): any {
   return data;
 }
 
-function titleFromItem(item: Record<string, any>): { key?: string; value?: string } {
+function titleFromItem(item: Record<string, any>): {
+  key?: string;
+  value?: string;
+} {
   const candidates = [
     "title",
     "name",
@@ -215,8 +218,8 @@ function ResultRenderer({ data }: { data: any }) {
     return (
       <div className="grid gap-4 md:grid-cols-2">
         {data.map((item, idx) => (
-          <ItemCard key={idx} item={item as Record<string, any>} />)
-        )}
+          <ItemCard key={idx} item={item as Record<string, any>} />
+        ))}
       </div>
     );
   }
@@ -232,7 +235,13 @@ function ResultRenderer({ data }: { data: any }) {
   );
 }
 
-function ItemCard({ item, single }: { item: Record<string, any>; single?: boolean }) {
+function ItemCard({
+  item,
+  single,
+}: {
+  item: Record<string, any>;
+  single?: boolean;
+}) {
   const { key: titleKey, value: titleVal } = titleFromItem(item);
   const rest: Record<string, any> = {};
   for (const [k, v] of Object.entries(item)) {
@@ -241,7 +250,9 @@ function ItemCard({ item, single }: { item: Record<string, any>; single?: boolea
     rest[k] = v;
   }
   return (
-    <div className={`rounded-2xl border border-border bg-card/80 p-5 shadow ring-1 ring-brand-500/10 ${single ? "" : ""}`}>
+    <div
+      className={`rounded-2xl border border-border bg-card/80 p-5 shadow ring-1 ring-brand-500/10 ${single ? "" : ""}`}
+    >
       {titleVal && (
         <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-3 break-words">
           {titleVal}

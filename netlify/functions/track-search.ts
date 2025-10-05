@@ -17,9 +17,11 @@ export const handler = async (event: any) => {
     };
   }
 
-  const DEFAULT_WEBHOOK =
-    "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL || DEFAULT_WEBHOOK;
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+
+  if (!webhookUrl) {
+    return { statusCode: 204, headers: { ...corsHeaders } };
+  }
 
   const raw = event.isBase64Encoded
     ? Buffer.from(event.body || "", "base64").toString("utf-8")

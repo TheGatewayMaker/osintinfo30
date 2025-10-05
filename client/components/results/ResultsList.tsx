@@ -56,7 +56,7 @@ export function ResultsList({ records }: { records: ResultRecord[] }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid gap-6 md:grid-cols-2">
       {records.map((record, index) => (
         <ResultCard
           key={record.id || index}
@@ -96,7 +96,7 @@ function ResultCard({
   const fieldCount = record.fields.length;
 
   return (
-    <article className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
+    <article className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur h-full">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h2 className="text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
@@ -150,11 +150,14 @@ function FieldColumn({ fields }: { fields: ResultField[] }) {
   return (
     <dl className="space-y-4">
       {fields.map((field) => (
-        <div key={field.key} className="grid grid-cols-3 items-start gap-3">
-          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+        <div
+          key={field.key}
+          className="grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3"
+        >
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
             {field.label}
           </dt>
-          <dd className="col-span-2 break-words text-base font-medium text-foreground">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground">
             <ValueRenderer value={field.value} />
           </dd>
         </div>
@@ -246,10 +249,10 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
     <dl className="space-y-3">
       {entries.map(([key, v]) => (
         <div key={key} className="grid grid-cols-3 items-start gap-3">
-          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
             {formatLabel(key)}
           </dt>
-          <dd className="col-span-2 break-words text-base font-medium text-foreground">
+          <dd className="min-w-0 break-words text-base font-medium text-foreground">
             <ValueRenderer value={v} />
           </dd>
         </div>

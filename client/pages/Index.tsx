@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text";
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -83,8 +84,15 @@ export default function Index() {
         <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl sm:block" />
         <div className="container mx-auto">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="text-4xl font-black tracking-tight md:text-6xl">
-              Check if your data has been leaked
+            <h1>
+              <AnimatedGradientText
+                speed={2}
+                colorFrom="#4ade80"
+                colorTo="#06b6d4"
+                className="text-4xl font-black tracking-tight md:text-6xl"
+              >
+                Check if your data has been leaked
+              </AnimatedGradientText>
             </h1>
             <p className="mt-4 text-lg text-foreground/75">
               You can search Phone Numbers, Emails, Full Names, IP addresses,

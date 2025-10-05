@@ -205,7 +205,7 @@ function InfoTile({
 
   return (
     <div className="relative overflow-hidden rounded-xl bg-background/70 p-4 transition-colors duration-300">
-      <div className="flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+      <div className="flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/70">
         {icon}
         <span>{label}</span>
       </div>

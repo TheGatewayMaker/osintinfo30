@@ -304,7 +304,7 @@ function SummarySources({ sources }: { sources: string[] }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className="inline-flex items-center rounded-full border border-brand-600/40 bg-brand-500/15 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-foreground">
-        Osint Info
+        Osint Info DBs
       </span>
       {display.map((source) => (
         <span

@@ -23,9 +23,38 @@ import {
   normalizeSearchResults,
   type NormalizedSearchResults,
 } from "@/lib/search-normalize";
+import { CheckCircle2, Circle, ClipboardList, Layers, ShieldCheck, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const SOURCE_KEYS = ["source", "breach", "leak name", "leak"];
+
+type ReviewStepItem = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
+
+const REVIEW_STEPS: ReviewStepItem[] = [
+  {
+    title: "Validate exposed identities",
+    description:
+      "Confirm that each record matches the identifiers you are investigating and note any aliases or related accounts.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Compare field coverage",
+    description:
+      "Track which data points surface most often to help prioritize remediation and downstream monitoring.",
+    icon: Layers,
+  },
+  {
+    title: "Document next actions",
+    description:
+      "Capture the steps your team will take to mitigate risk, notify impacted parties, or escalate the finding.",
+    icon: ClipboardList,
+  },
+];
 
 interface LocationState {
   result?: SearchResult;

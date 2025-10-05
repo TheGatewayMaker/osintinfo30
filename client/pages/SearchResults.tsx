@@ -157,11 +157,11 @@ export default function SearchResults() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-3">
                   <SummaryPill
-                    label="Records"
+                    label="Total results"
                     value={normalized?.recordCount ?? 0}
                   />
                   <SummaryPill
-                    label="Data points"
+                    label="Fields"
                     value={normalized?.fieldCount ?? 0}
                   />
                 </div>

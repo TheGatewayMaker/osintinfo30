@@ -6,6 +6,44 @@ import {
   type ResultValue,
 } from "@/lib/search-normalize";
 
+function normalizeKeyLocal(key: string) {
+  return key.trim().toLowerCase().replace(/[\s_-]+/g, " ");
+}
+
+function extractFirstString(value: ResultValue): string | undefined {
+  if (value == null) return undefined;
+  if (typeof value === "string" || typeof value === "number") {
+    const s = String(value).trim();
+    return s || undefined;
+  }
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) {
+    for (const v of value) {
+      const s = extractFirstString(v as ResultValue);
+      if (s) return s;
+    }
+    return undefined;
+  }
+  if (typeof value === "object") {
+    for (const v of Object.values(value)) {
+      const s = extractFirstString(v as ResultValue);
+      if (s) return s;
+    }
+  }
+  return undefined;
+}
+
+function findFieldValue(fields: ResultField[], candidates: string[]): string | undefined {
+  for (const f of fields) {
+    const key = normalizeKeyLocal(f.key);
+    if (candidates.includes(key)) {
+      const v = extractFirstString(f.value);
+      if (v) return v;
+    }
+  }
+  return undefined;
+}
+
 export function ResultsList({ records }: { records: ResultRecord[] }) {
   if (!records.length) {
     return null;
@@ -37,6 +75,20 @@ function ResultCard({
       ? record.contextLabel
       : undefined;
 
+  const source = findFieldValue(record.fields, [
+    "source",
+    "breach",
+    "leak name",
+    "leak",
+  ]);
+  const database = findFieldValue(record.fields, [
+    "database",
+    "db",
+    "table",
+    "collection",
+  ]);
+  const fieldCount = record.fields.length;
+
   return (
     <article className="rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -49,6 +101,15 @@ function ResultCard({
               {subtitle}
             </p>
           )}
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {source && (
+              <MetaPill label="Source" value={source} />
+            )}
+            {database && (
+              <MetaPill label="Database" value={database} />
+            )}
+            <MetaPill label="Fields" value={String(fieldCount)} />
+          </div>
         </div>
         <span className="rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">
           #{order}
@@ -58,6 +119,15 @@ function ResultCard({
         <FieldColumns fields={record.fields} />
       </div>
     </article>
+  );
+}
+
+function MetaPill({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background px-2.5 py-1 text-xs font-semibold text-foreground/80">
+      <span className="text-foreground/60">{label}:</span>
+      <span className="max-w-[28ch] truncate">{value}</span>
+    </span>
   );
 }
 

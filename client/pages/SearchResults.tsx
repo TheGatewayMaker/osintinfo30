@@ -314,37 +314,128 @@ export default function SearchResults() {
               </aside>
             </div>
 
-            <section className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden lg:mx-0 lg:max-w-none">
-              <header className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground md:text-xl">
-                    Structured results
-                  </h2>
-                  <p className="text-sm text-foreground/60">
-                    Explore each record to review the mapped fields and nested
-                    data captured for this query.
-                  </p>
-                </div>
-                {hasResults && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/70">
-                    Showing {formattedRecords} records
-                  </span>
-                )}
-              </header>
+            <section className="relative overflow-hidden rounded-[2.5rem] border border-border/70 bg-gradient-to-br from-brand-500/12 via-background to-background px-6 py-8 shadow-2xl shadow-brand-900/15 md:px-8 md:py-10">
+              <div className="pointer-events-none absolute -inset-20 -z-10 bg-[radial-gradient(circle_farthest-corner_at_0%_0%,theme(colors.brand.500/0.18),transparent_65%)]" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-2/5 bg-[radial-gradient(circle_at_center,theme(colors.brand.300/0.22),transparent_70%)] blur-3xl lg:block" />
+              <div className="relative space-y-10">
+                <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="max-w-2xl space-y-3">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-brand-600/30 bg-brand-500/15 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-600 dark:text-brand-200">
+                      Structured intelligence
+                    </span>
+                    <h2 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
+                      Structured results
+                    </h2>
+                    <p className="text-sm leading-relaxed text-foreground/70 md:text-base">
+                      Visualize every breach record in an immersive layout, monitor enrichment at a glance, and guide your response playbook without leaving the page.
+                    </p>
+                  </div>
+                  <dl className="grid w-full gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-[28rem] lg:grid-cols-2 xl:grid-cols-4">
+                    {metricItems.map((metric) => (
+                      <MetricCard
+                        key={metric.label}
+                        label={metric.label}
+                        value={metric.value}
+                        sublabel={metric.sublabel}
+                      />
+                    ))}
+                  </dl>
+                </header>
 
-              <div className="mt-6">
-                {normalized ? (
-                  normalized.records.length ? (
-                    <ResultsList
-                      records={normalized.records}
-                      totalCount={normalized.recordCount}
-                    />
-                  ) : (
-                    <ResultsNotice message="No results found for this query." />
-                  )
-                ) : (
-                  <ResultsNotice message="Results will appear here after you run a search." />
-                )}
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+                  <div className="space-y-6">
+                    <div className="overflow-hidden rounded-[32px] border border-border/60 bg-background/90 shadow-xl shadow-brand-900/20 backdrop-blur">
+                      <div className="flex flex-col gap-2 border-b border-border/60 bg-background/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground">
+                            Record explorer
+                          </h3>
+                          <p className="text-sm text-foreground/60">
+                            Dive into each normalized result to understand what was captured, when, and from which leak source.
+                          </p>
+                        </div>
+                        {hasResults && (
+                          <span className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-200">
+                            Showing {formattedRecords} records
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-6">
+                        {normalized ? (
+                          normalized.records.length ? (
+                            <ResultsList
+                              records={normalized.records}
+                              totalCount={normalized.recordCount}
+                            />
+                          ) : (
+                            <ResultsNotice message="No results found for this query." />
+                          )
+                        ) : (
+                          <ResultsNotice message="Results will appear here after you run a search." />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="rounded-[30px] border border-border/60 bg-background/80 p-6 shadow-inner shadow-brand-500/15 backdrop-blur-sm">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-foreground">
+                            Mapped sources
+                          </h3>
+                          <p className="mt-1 text-sm text-foreground/60">
+                            Track which breach repositories or OSINT feeds produced each record to understand provenance.
+                          </p>
+                        </div>
+                        <span className="rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-200">
+                          {sourceCount > 0
+                            ? `${formattedSourceCount} source${sourceCount === 1 ? "" : "s"}`
+                            : "Awaiting"}
+                        </span>
+                      </div>
+                      <div className="mt-4">
+                        <SummarySources sources={sources} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <aside className="space-y-6">
+                    <div className="rounded-[30px] border border-border/60 bg-background/80 p-6 shadow-inner shadow-brand-500/15 backdrop-blur-sm">
+                      <h3 className="text-base font-semibold text-foreground">
+                        Review workflow
+                      </h3>
+                      <p className="mt-2 text-sm text-foreground/60">
+                        Use this checklist to validate structured records and coordinate remediation.
+                      </p>
+                      <div className="mt-6 space-y-4">
+                        {REVIEW_STEPS.map((step, index) => (
+                          <ReviewStep
+                            key={step.title}
+                            icon={step.icon}
+                            title={step.title}
+                            description={step.description}
+                            index={index + 1}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-[30px] border border-border/60 bg-background/80 p-6 shadow-inner shadow-brand-500/15 backdrop-blur-sm">
+                      <h3 className="text-base font-semibold text-foreground">
+                        Status tracker
+                      </h3>
+                      <ul className="mt-4 space-y-3">
+                        {statusItems.map((item) => (
+                          <StatusItem
+                            key={item.label}
+                            label={item.label}
+                            description={item.description}
+                            active={item.active}
+                          />
+                        ))}
+                      </ul>
+                    </div>
+                  </aside>
+                </div>
               </div>
             </section>
           </div>

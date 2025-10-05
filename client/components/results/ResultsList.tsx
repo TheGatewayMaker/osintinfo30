@@ -62,7 +62,7 @@ export function ResultsList({
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
       {records.map((record, index) => (
         <ResultCard
           key={record.id || index}
@@ -84,7 +84,7 @@ function ResultCard({
   order: number;
   totalCount: number;
 }) {
-  const title = record.title || `Record ${order} of ${totalCount}`;
+  const displayTitle = record.title?.trim() || `Record ${order}`;
   const subtitle =
     record.contextLabel && record.contextLabel !== record.title
       ? record.contextLabel
@@ -105,29 +105,36 @@ function ResultCard({
   const fieldCount = record.fields.length;
 
   return (
-    <article className="group rounded-2xl border border-border bg-card/90 p-6 shadow-sm shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur h-full transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl hover:shadow-brand-500/20 hover:ring-brand-500/30">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-card/95 p-7 shadow-lg shadow-brand-500/10 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.01] hover:border-brand-400/40 hover:shadow-2xl hover:shadow-brand-500/30">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-500/80">
+            <span className="rounded-full bg-brand-500/10 px-2 py-1 text-brand-600 dark:text-brand-300">
+              Record {order}
+            </span>
+            <span className="text-foreground/50">of {totalCount}</span>
+          </div>
           <h2 className="text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
-            {title}
+            {displayTitle}
           </h2>
           {subtitle && (
-            <p className="text-base font-semibold text-foreground/70">
+            <p className="text-sm font-semibold text-foreground/70 md:text-base">
               {subtitle}
             </p>
           )}
-          <div className="mt-2 flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {source && <MetaPill label="Source" value={source} />}
             {database && <MetaPill label="Database" value={database} />}
             <MetaPill label="Fields" value={String(fieldCount)} />
           </div>
         </div>
-        <span className="rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">
+        <span className="rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/60 shadow-sm">
           #{order}
         </span>
       </header>
-      <div className="mt-5">
-        <FieldColumns fields={record.fields} />
+
+      <div className="mt-6">
+        <FieldList fields={record.fields} />
       </div>
     </article>
   );
@@ -135,42 +142,36 @@ function ResultCard({
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background px-2.5 py-1 text-xs font-semibold text-foreground/80">
-      <span className="text-foreground/60">{label}:</span>
-      <span className="max-w-[28ch] truncate">{value}</span>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs font-semibold text-foreground/80 shadow-sm shadow-brand-500/10">
+      <span className="text-foreground/50">{label}:</span>
+      <span className="max-w-[32ch] truncate text-foreground/80">{value}</span>
     </span>
   );
 }
 
-function FieldColumns({ fields }: { fields: ResultField[] }) {
-  const halfway = Math.ceil(fields.length / 2);
-  const left = fields.slice(0, halfway);
-  const right = fields.slice(halfway);
+function FieldList({ fields }: { fields: ResultField[] }) {
+  if (!fields.length) {
+    return null;
+  }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <FieldColumn fields={left} />
-      <FieldColumn fields={right} />
-    </div>
-  );
-}
-
-function FieldColumn({ fields }: { fields: ResultField[] }) {
-  return (
-    <dl className="space-y-4">
-      {fields.map((field) => (
-        <div
-          key={field.key}
-          className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-lg px-2 py-1 transition-colors hover:bg-foreground/5"
-        >
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
-            {field.label}
-          </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
-            <ValueRenderer value={field.value} />
-          </dd>
-        </div>
-      ))}
+    <dl className="overflow-hidden rounded-2xl border border-border/60 bg-background/80 shadow-inner shadow-black/5 backdrop-blur-sm">
+      {fields.map((field) => {
+        const label = field.label?.trim() || formatLabel(field.key);
+        return (
+          <div
+            key={field.key}
+            className="group/field grid [grid-template-columns:minmax(140px,0.4fr)_1fr] items-start gap-x-6 gap-y-2 px-5 py-4 transition-all duration-200 even:bg-background/60 hover:bg-brand-500/4 sm:[grid-template-columns:minmax(180px,0.35fr)_1fr]"
+          >
+            <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60 transition-colors group-hover/field:text-brand-500 dark:group-hover/field:text-brand-300">
+              {label}
+            </dt>
+            <dd className="min-w-0 text-sm font-medium text-foreground/80 transition-all duration-200 group-hover/field:text-foreground group-hover/field:underline group-hover/field:decoration-brand-400/50 group-hover/field:underline-offset-4 group-hover/field:[text-shadow:0_0_12px_rgba(167,139,250,0.3)] md:text-base">
+              <ValueRenderer value={field.value} />
+            </dd>
+          </div>
+        );
+      })}
     </dl>
   );
 }
@@ -181,7 +182,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
   }
 
   if (typeof value === "string") {
-    return <span className="break-words">{value}</span>;
+    return <span className="whitespace-pre-line break-words">{value}</span>;
   }
 
   if (typeof value === "number") {
@@ -209,13 +210,13 @@ function ValueRenderer({ value }: { value: ResultValue }) {
     ) as Array<Record<string, ResultValue>>;
 
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         {primitives.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {primitives.map((p, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center rounded-full border border-border/60 bg-background px-2.5 py-0.5 text-xs font-medium"
+                className="inline-flex items-center rounded-full border border-border/50 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-200"
               >
                 {String(p)}
               </span>
@@ -223,14 +224,14 @@ function ValueRenderer({ value }: { value: ResultValue }) {
           </div>
         )}
         {objects.length > 0 && (
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="space-y-4">
             {objects.map((obj, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border/70 bg-background/60 p-4 shadow-sm"
+                className="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm shadow-brand-500/5"
               >
-                <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-foreground/60">
-                  Item #{idx + 1}
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
+                  Item {idx + 1}
                 </div>
                 <ObjectRenderer obj={obj} />
               </div>
@@ -259,12 +260,12 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
       {entries.map(([key, v]) => (
         <div
           key={key}
-          className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-md px-2 py-1 transition-colors hover:bg-foreground/5"
+          className="grid [grid-template-columns:minmax(120px,0.35fr)_1fr] items-start gap-x-4 gap-y-1 rounded-xl bg-background/60 px-3 py-2"
         >
-          <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
+          <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
             {formatLabel(key)}
           </dt>
-          <dd className="min-w-0 break-words text-base font-medium text-foreground transition-colors group-hover/field:text-foreground group-hover/field:underline decoration-brand-400/50 underline-offset-2 group-hover/field:[text-shadow:0_0_8px_rgba(167,139,250,0.35)]">
+          <dd className="text-sm font-medium text-foreground/80">
             <ValueRenderer value={v} />
           </dd>
         </div>

@@ -142,14 +142,14 @@ export default function SearchResults() {
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  onClick={onSearch}
-                  disabled={loading}
-                  className="h-10"
-                >
-                  {loading ? "Searching…" : "Search"}
-                </Button>
-              </div>
+                  <Button
+                    onClick={onSearch}
+                    disabled={loading}
+                    className="h-10"
+                  >
+                    {loading ? "Searching…" : "Search"}
+                  </Button>
+                </div>
               </div>
             </div>
 

@@ -7,7 +7,10 @@ import {
 } from "@/lib/search-normalize";
 
 function normalizeKeyLocal(key: string) {
-  return key.trim().toLowerCase().replace(/[\s_-]+/g, " ");
+  return key
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, " ");
 }
 
 function extractFirstString(value: ResultValue): string | undefined {
@@ -33,7 +36,10 @@ function extractFirstString(value: ResultValue): string | undefined {
   return undefined;
 }
 
-function findFieldValue(fields: ResultField[], candidates: string[]): string | undefined {
+function findFieldValue(
+  fields: ResultField[],
+  candidates: string[],
+): string | undefined {
   for (const f of fields) {
     const key = normalizeKeyLocal(f.key);
     if (candidates.includes(key)) {
@@ -102,12 +108,8 @@ function ResultCard({
             </p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            {source && (
-              <MetaPill label="Source" value={source} />
-            )}
-            {database && (
-              <MetaPill label="Database" value={database} />
-            )}
+            {source && <MetaPill label="Source" value={source} />}
+            {database && <MetaPill label="Database" value={database} />}
             <MetaPill label="Fields" value={String(fieldCount)} />
           </div>
         </div>

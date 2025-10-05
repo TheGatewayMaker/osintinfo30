@@ -165,6 +165,57 @@ export default function SearchResults() {
     : "—";
   const formattedRecords = recordCount.toLocaleString();
   const formattedFields = fieldCount.toLocaleString();
+  const sourceCount = sources.length;
+  const formattedSourceCount = sourceCount
+    ? sourceCount.toLocaleString()
+    : "—";
+
+  const metricItems = [
+    {
+      label: "Records matched",
+      value: hasResults ? formattedRecords : "—",
+      sublabel: hasResults ? "Normalized entries" : "Run a search to populate",
+    },
+    {
+      label: "Fields detected",
+      value: hasResults ? formattedFields : "—",
+      sublabel: hasResults ? "Unique mapped fields" : "Pending results",
+    },
+    {
+      label: "Sources mapped",
+      value: sourceCount > 0 ? formattedSourceCount : "—",
+      sublabel: sourceCount > 0 ? "Distinct leak origins" : "Awaiting data",
+    },
+    {
+      label: "Remaining balance",
+      value: formattedRemaining,
+      sublabel: "Search credits available",
+    },
+  ];
+
+  const statusItems = [
+    {
+      label: "Query provided",
+      description: trimmedQuery
+        ? `Searching for \"${trimmedQuery}\"`
+        : "Enter an email, domain, or identifier to begin",
+      active: Boolean(trimmedQuery),
+    },
+    {
+      label: "Structured data normalized",
+      description: hasResults
+        ? "Records are ready to explore in the grid."
+        : "Results will populate here after your next search.",
+      active: hasResults,
+    },
+    {
+      label: "Source enrichment",
+      description: sourceCount > 0
+        ? `Identified ${formattedSourceCount} source${sourceCount === 1 ? "" : "s"}.`
+        : "Run another search to surface data origins.",
+      active: sourceCount > 0,
+    },
+  ];
 
   return (
     <Layout>

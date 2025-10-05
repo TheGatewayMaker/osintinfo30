@@ -135,19 +135,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
           </div>
         )}
         {objects.length > 0 && (
-          <div className="space-y-4">
-            {objects.map((obj, idx) => (
-              <div
-                key={idx}
-                className="rounded-lg border border-border/70 bg-background/60 p-5"
-              >
-                <div className="mb-4 text-sm font-semibold text-brand-600 dark:text-brand-300">
-                  {formatLabel(`Item ${idx + 1}`)}
-                </div>
-                <ObjectRenderer obj={obj} />
-              </div>
-            ))}
-          </div>
+          <ObjectArrayTable items={objects} />
         )}
       </div>
     );

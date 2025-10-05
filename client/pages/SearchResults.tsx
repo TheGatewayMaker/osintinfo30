@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ResultsList } from "@/components/results/ResultsList";
+import { collectDistinctFieldValues } from "@/components/results/result-utils";
 import { useAuth } from "@/context/AuthContext";
-import { toast } from "sonner";
 import { performSearch } from "@/lib/search";
 import type { SearchResult } from "@/lib/search";
 import {
@@ -16,12 +17,14 @@ import {
   normalizeSearchResults,
   type NormalizedSearchResults,
 } from "@/lib/search-normalize";
-import { ResultsList } from "@/components/results/ResultsList";
+import { toast } from "sonner";
 
-type LocationState = {
+const SOURCE_KEYS = ["source", "breach", "leak name", "leak"];
+
+interface LocationState {
   result?: SearchResult;
   normalized?: NormalizedSearchResults;
-};
+}
 
 export default function SearchResults() {
   const [params] = useSearchParams();
@@ -74,8 +77,7 @@ export default function SearchResults() {
 
     setLoading(true);
     try {
-      const { data, normalized: freshNormalized } =
-        await performSearch(trimmed);
+      const { data, normalized: freshNormalized } = await performSearch(trimmed);
       setNormalized(freshNormalized);
 
       try {
@@ -106,88 +108,155 @@ export default function SearchResults() {
     }
   }
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void onSearch();
+  }
+
   const hasResults = normalized?.hasMeaningfulData ?? false;
+  const trimmedQuery = query.trim();
+  const records = normalized?.records ?? [];
+  const recordCount = normalized?.recordCount ?? 0;
+  const fieldCount = normalized?.fieldCount ?? 0;
+
+  const sources = useMemo(
+    () => (hasResults ? collectDistinctFieldValues(records, SOURCE_KEYS) : []),
+    [hasResults, records],
+  );
+
+  const formattedRemaining = Number.isFinite(remaining)
+    ? Number(remaining).toLocaleString()
+    : "—";
+  const formattedRecords = recordCount.toLocaleString();
+  const formattedFields = fieldCount.toLocaleString();
 
   return (
     <Layout>
-      <section className="relative py-10 md:py-14">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/10),transparent_50%)]" />
+      <section className="relative isolate overflow-hidden pb-16 pt-10 md:pb-20 md:pt-14">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/12),transparent_60%)]" />
         <div className="container mx-auto">
-          <div className="mx-auto max-w-6xl">
-            <div className="text-center">
-              <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-                {query.trim()
-                  ? `Results for "${query.trim()}"`
-                  : "Search Results"}
-              </h1>
-              <p className="mt-2 text-sm font-semibold text-foreground/70">
-                Clean, readable OSINT results. Refine your query and re-run as
-                needed.
-              </p>
-            </div>
+          <div className="mx-auto max-w-6xl space-y-10">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
+              <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-gradient-to-br from-brand-500/10 via-background/95 to-background p-8 shadow-xl shadow-brand-500/10">
+                <div className="absolute -right-24 top-1/2 hidden h-56 w-56 -translate-y-1/2 rounded-full bg-brand-500/10 blur-3xl lg:block" />
+                <div className="relative space-y-6">
+                  <header className="space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600/70 dark:text-brand-300/80">
+                      Search Exposure
+                    </p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
+                      {trimmedQuery
+                        ? `Results for "${trimmedQuery}"`
+                        : "Check if your data has leaked"}
+                    </h1>
+                    <p className="text-sm leading-relaxed text-foreground/70 md:text-base">
+                      Search across verified breach intelligence and OSINT sources.
+                      Refine your query at any time and review the structured
+                      results below.
+                    </p>
+                  </header>
 
-            <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-border bg-card/80 p-3 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
-                <Input
-                  placeholder="Enter an email, phone, IP, domain, keyword…"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") onSearch();
-                  }}
-                />
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-3 rounded-2xl border border-border/70 bg-background/80 p-4 shadow-inner shadow-black/5 backdrop-blur"
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <Input
+                        aria-label="Search query"
+                        placeholder="Enter an email, phone, IP, domain, or keyword"
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        className="h-12 flex-1 rounded-xl border-foreground/10 bg-background text-base shadow-sm focus-visible:ring-brand-500"
+                      />
+                      <Button
+                        type="submit"
+                        className="h-12 shrink-0 rounded-xl px-6 text-sm font-semibold"
+                        disabled={loading}
+                      >
+                        {loading ? "Searching…" : "Search again"}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-foreground/60">
+                      Remaining searches: <span className="font-semibold text-brand-600 dark:text-brand-300">{formattedRemaining}</span>
+                    </p>
+                  </form>
+                </div>
               </div>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm text-foreground/60">
-                  Remaining:{" "}
-                  <span className="font-semibold text-amber-600 dark:text-amber-400">
-                    {remaining}
+
+              <aside className="rounded-[2rem] border border-border/70 bg-background/80 p-6 shadow-lg shadow-brand-500/10 backdrop-blur lg:sticky lg:top-28">
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="text-base font-semibold text-foreground">
+                    Query summary
+                  </h2>
+                  <span className="rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-300">
+                    {hasResults ? "Updated" : "Awaiting"}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    onClick={onSearch}
-                    disabled={loading}
-                    className="h-10"
-                  >
-                    {loading ? "Searching…" : "Search"}
-                  </Button>
-                </div>
-              </div>
+                <dl className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:gap-5">
+                  <SummaryItem label="Query">
+                    {trimmedQuery ? (
+                      <span className="break-words text-sm font-semibold text-foreground">
+                        {trimmedQuery}
+                      </span>
+                    ) : (
+                      <EmptyValue />
+                    )}
+                  </SummaryItem>
+                  <SummaryItem label="Total results">
+                    <span className="text-2xl font-bold text-foreground">
+                      {formattedRecords}
+                    </span>
+                  </SummaryItem>
+                  <SummaryItem label="Fields captured">
+                    <span className="text-xl font-semibold text-foreground">
+                      {formattedFields}
+                    </span>
+                  </SummaryItem>
+                  <SummaryItem label="Data sources">
+                    <SummarySources sources={sources} />
+                  </SummaryItem>
+                  <SummaryItem label="Remaining balance">
+                    <span className="text-lg font-semibold text-foreground">
+                      {formattedRemaining}
+                    </span>
+                  </SummaryItem>
+                </dl>
+              </aside>
             </div>
 
-            <div className="mt-8 space-y-6 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-3">
-                  <SummaryPill
-                    label="Total results"
-                    value={normalized?.recordCount ?? 0}
-                  />
-                  <SummaryPill
-                    label="Fields"
-                    value={normalized?.fieldCount ?? 0}
-                  />
+            <section className="rounded-[2rem] border border-border/70 bg-background/85 p-6 shadow-xl shadow-brand-500/10 backdrop-blur">
+              <header className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground md:text-xl">
+                    Structured results
+                  </h2>
+                  <p className="text-sm text-foreground/60">
+                    Explore each record to review the mapped fields and nested
+                    data captured for this query.
+                  </p>
                 </div>
                 {hasResults && (
-                  <div className="text-xs font-medium uppercase tracking-wide text-foreground/60">
-                    Results captured from OSINT provider
-                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/60">
+                    Showing {formattedRecords} records
+                  </span>
+                )}
+              </header>
+
+              <div className="mt-6">
+                {normalized ? (
+                  normalized.records.length ? (
+                    <ResultsList
+                      records={normalized.records}
+                      totalCount={normalized.recordCount}
+                    />
+                  ) : (
+                    <ResultsNotice message="No results found for this query." />
+                  )
+                ) : (
+                  <ResultsNotice message="Results will appear here after you run a search." />
                 )}
               </div>
-
-              {normalized ? (
-                normalized.records.length ? (
-                  <ResultsList
-                    records={normalized.records}
-                    totalCount={normalized.recordCount}
-                  />
-                ) : (
-                  <ResultsNotice message="No results found for this query." />
-                )
-              ) : (
-                <ResultsNotice message="Results will appear here after you run a search." />
-              )}
-            </div>
+            </section>
           </div>
         </div>
       </section>
@@ -195,20 +264,59 @@ export default function SearchResults() {
   );
 }
 
-function SummaryPill({ label, value }: { label: string; value: number }) {
+function SummaryItem({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="rounded-xl border border-border/70 bg-background/70 px-4 py-3 shadow-sm shadow-brand-500/5">
-      <div className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/60">
+    <div className="rounded-2xl border border-border/60 bg-background/80 p-4 shadow-inner shadow-black/5">
+      <dt className="text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/60">
         {label}
-      </div>
-      <div className="mt-1 text-lg font-semibold text-foreground">{value}</div>
+      </dt>
+      <dd className="mt-2 min-h-[1.5rem] text-sm font-medium text-foreground">
+        {children}
+      </dd>
     </div>
   );
 }
 
+function SummarySources({ sources }: { sources: string[] }) {
+  if (!sources.length) {
+    return <EmptyValue />;
+  }
+
+  const display = sources.slice(0, 4);
+  const overflow = sources.length - display.length;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {display.map((source) => (
+        <span
+          key={source}
+          className="inline-flex items-center rounded-full border border-border/60 bg-brand-500/10 px-2.5 py-1 text-xs font-semibold text-brand-700 dark:text-brand-200"
+        >
+          {source}
+        </span>
+      ))}
+      {overflow > 0 && (
+        <span className="inline-flex items-center rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-xs font-semibold text-foreground/60">
+          +{overflow} more
+        </span>
+      )}
+    </div>
+  );
+}
+
+function EmptyValue() {
+  return <span className="text-foreground/50">—</span>;
+}
+
 function ResultsNotice({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/60 px-6 py-12 text-center text-sm text-foreground/60 shadow-inner shadow-black/5">
+    <div className="rounded-2xl border border-dashed border-border/70 bg-background/75 px-6 py-12 text-center text-sm font-medium text-foreground/60">
       {message}
     </div>
   );

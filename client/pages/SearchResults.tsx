@@ -500,8 +500,12 @@ function EmptyValue() {
 
 function ResultsNotice({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border/70 bg-background/75 px-6 py-12 text-center text-sm font-medium text-foreground/60">
-      {message}
+    <div className="flex flex-col items-center justify-center gap-4 rounded-[26px] border border-dashed border-brand-500/40 bg-brand-500/10 px-8 py-16 text-center">
+      <Sparkles className="h-10 w-10 text-brand-300" />
+      <p className="max-w-md text-base font-semibold text-foreground">{message}</p>
+      <p className="max-w-sm text-sm text-foreground/60">
+        Try refining your search terms or broadening the identifiers to surface additional context.
+      </p>
     </div>
   );
 }

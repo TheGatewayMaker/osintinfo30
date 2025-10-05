@@ -129,14 +129,11 @@ function FieldList({ fields }: { fields: ResultField[] }) {
       {fields.map((field) => {
         const label = field.label?.trim() || formatLabel(field.key);
         return (
-          <div
-            key={field.key}
-            className="grid gap-y-2 gap-x-6 px-5 py-4 sm:grid-cols-[minmax(160px,0.35fr)_1fr]"
-          >
-            <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
+          <div key={field.key} className="px-5 py-4 space-y-1">
+            <dt className="text-sm md:text-base font-bold text-foreground">
               {label}
             </dt>
-            <dd className="min-w-0 text-sm font-medium leading-6 text-foreground break-words md:text-base">
+            <dd className="min-w-0 text-sm md:text-base font-medium leading-6 text-foreground break-words">
               <ValueRenderer value={field.value} />
             </dd>
           </div>
@@ -230,14 +227,11 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   return (
     <dl className="space-y-3">
       {entries.map(([key, val]) => (
-        <div
-          key={key}
-          className="grid gap-y-1 gap-x-4 rounded-xl bg-background px-3 py-2 sm:grid-cols-[minmax(140px,0.35fr)_1fr]"
-        >
-          <dt className="text-xs font-semibold uppercase tracking-wide text-foreground/60">
+        <div key={key} className="rounded-xl bg-background px-3 py-2 space-y-1">
+          <dt className="text-sm md:text-base font-bold text-foreground">
             {formatLabel(key)}
           </dt>
-          <dd className="text-sm font-medium text-foreground/80">
+          <dd className="text-sm md:text-base font-medium text-foreground/90">
             <ValueRenderer value={val} />
           </dd>
         </div>

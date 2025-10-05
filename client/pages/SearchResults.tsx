@@ -234,7 +234,7 @@ export default function SearchResults() {
               </aside>
             </div>
 
-            <section className="mx-auto max-w-3xl rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden">
+            <section className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden lg:mx-0 lg:max-w-none">
               <header className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground md:text-xl">
@@ -304,7 +304,7 @@ function SummarySources({ sources }: { sources: string[] }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className="inline-flex items-center rounded-full border border-brand-600/40 bg-brand-500/15 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-foreground">
-        Osint Info
+        Osint Info DBs
       </span>
       {display.map((source) => (
         <span

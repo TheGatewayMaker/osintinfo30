@@ -187,8 +187,8 @@ function ResultRenderer({ data }: { data: any }) {
     const entries = Object.entries(data as Record<string, any>);
     const visibleEntries = entries.filter(([k]) => !hiddenKeys.has(k));
 
-    const looksLikeAggregate = visibleEntries.some(([, v]) =>
-      v && typeof v === "object" && ("Data" in v || "InfoLeak" in v),
+    const looksLikeAggregate = visibleEntries.some(
+      ([, v]) => v && typeof v === "object" && ("Data" in v || "InfoLeak" in v),
     );
 
     if (looksLikeAggregate) {
@@ -224,7 +224,9 @@ function KeyValueGrid({ obj }: { obj: Record<string, any> }) {
     <div className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-[0.95rem] leading-relaxed">
       {entries.map(([k, v]) => (
         <div key={k} className="grid grid-cols-3 gap-2 items-start">
-          <div className="col-span-1 text-foreground/60 break-words font-semibold">{k}</div>
+          <div className="col-span-1 text-foreground/60 break-words font-semibold">
+            {k}
+          </div>
           <div className="col-span-2 break-words font-medium">
             {typeof v === "object" ? (
               <pre className="rounded border border-border bg-background/50 p-2 text-sm whitespace-pre-wrap">
@@ -253,9 +255,13 @@ function SourceBlock({ name, value }: { name: string; value: any }) {
   return (
     <div className="rounded-2xl border border-border bg-card/80 p-4 md:p-6 shadow ring-1 ring-brand-500/10">
       <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">{name}</h3>
+        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">
+          {name}
+        </h3>
         {typeof count === "number" && (
-          <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">{count}</span>
+          <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+            {count}
+          </span>
         )}
       </div>
       {typeof info === "string" && info.trim() && (
@@ -265,7 +271,10 @@ function SourceBlock({ name, value }: { name: string; value: any }) {
       {dataArray ? (
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {dataArray.map((item, idx) => (
-            <div key={idx} className="rounded-xl border border-border bg-background/40 p-3">
+            <div
+              key={idx}
+              className="rounded-xl border border-border bg-background/40 p-3"
+            >
               {item && typeof item === "object" ? (
                 <KeyValueGrid obj={item} />
               ) : (

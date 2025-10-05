@@ -16,6 +16,7 @@ import AuthPage from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import SearchResults from "./pages/SearchResults";
+import OsintInfoResults from "./pages/OsintInfoResults";
 import Purchase from "./pages/Purchase";
 import { AuthProvider } from "@/context/AuthContext";
 

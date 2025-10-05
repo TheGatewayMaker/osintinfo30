@@ -94,7 +94,7 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
         }}
       >
         <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-amber-500/12 blur-xl transition-all duration-200 group-hover:translate-y-0.5 dark:bg-amber-400/10" />
-        <Card className="relative h-full rounded-2xl border border-white/10 bg-white/12 px-2 pb-6 pt-4 shadow-sm shadow-black/5 hover:shadow-md hover:shadow-black/10 backdrop-blur-xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/8">
+        <Card className="relative h-full rounded-2xl border border-border/70 bg-card px-2 pb-6 pt-4 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 backdrop-blur-xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/8 dark:shadow-black/30">
           <div className="absolute inset-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/25 via-transparent to-brand-500/10" />
           </div>

@@ -148,7 +148,7 @@ export default function SearchResults() {
                 <div className="absolute -right-24 top-1/2 hidden h-56 w-56 -translate-y-1/2 rounded-full bg-brand-500/10 blur-3xl lg:block" />
                 <div className="relative space-y-6">
                   <header className="space-y-3">
-                    <p className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-brand-700 dark:text-brand-200">
+                    <p className="inline-flex items-center gap-2 rounded-full border border-brand-600/40 bg-brand-500/15 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-foreground">
                       Search Exposure
                     </p>
                     <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
@@ -234,7 +234,7 @@ export default function SearchResults() {
               </aside>
             </div>
 
-            <section className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg">
+            <section className="mx-auto max-w-3xl rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden">
               <header className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground md:text-xl">
@@ -303,7 +303,7 @@ function SummarySources({ sources }: { sources: string[] }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="inline-flex items-center rounded-full border border-brand-500/30 bg-brand-500/10 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-200">
+      <span className="inline-flex items-center rounded-full border border-brand-600/40 bg-brand-500/15 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-foreground">
         Osint Info
       </span>
       {display.map((source) => (

@@ -109,69 +109,76 @@ function ValueRenderer({ value }: { value: ResultValue }) {
   }
 
   if (Array.isArray(value)) {
-    const meaningfulItems = value.filter((item) => hasMeaningfulValue(item));
-    if (!meaningfulItems.length) {
+    const items = value.filter((item) => hasMeaningfulValue(item));
+    if (!items.length) {
       return <span className="text-foreground/50">None</span>;
     }
 
-    const parts = meaningfulItems.map((item) => {
-      if (item === null || item === undefined) return "Not provided";
-      if (
-        typeof item === "string" ||
-        typeof item === "number" ||
-        typeof item === "boolean"
-      )
-        return formatPrimitive(item);
-      try {
-        return conciseObject(item as Record<string, ResultValue>);
-      } catch {
-        return JSON.stringify(item);
-      }
-    });
+    const primitives = items.filter(
+      (i) => typeof i === "string" || typeof i === "number" || typeof i === "boolean",
+    ) as Array<string | number | boolean>;
+    const objects = items.filter(
+      (i) => i && typeof i === "object" && !Array.isArray(i),
+    ) as Array<Record<string, ResultValue>>;
 
-    return <span>{parts.join(", ")}</span>;
+    return (
+      <div className="space-y-3">
+        {primitives.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {primitives.map((p, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center rounded-full border border-border/60 bg-background px-2.5 py-0.5 text-xs font-medium"
+              >
+                {String(p)}
+              </span>
+            ))}
+          </div>
+        )}
+        {objects.length > 0 && (
+          <div className="grid gap-3 md:grid-cols-2">
+            {objects.map((obj, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl border border-border/70 bg-background/60 p-4 shadow-sm"
+              >
+                <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-foreground/60">
+                  Item #{idx + 1}
+                </div>
+                <ObjectRenderer obj={obj} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   }
 
-  try {
-    return <span>{conciseObject(value as Record<string, ResultValue>)}</span>;
-  } catch {
-    return <span>{JSON.stringify(value)}</span>;
+  if (typeof value === "object") {
+    return <ObjectRenderer obj={value as Record<string, ResultValue>} />;
   }
+
+  return <span className="break-words">{String(value)}</span>;
 }
 
-function conciseObject(obj: Record<string, ResultValue>) {
+function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   const entries = Object.entries(obj).filter(([, v]) => hasMeaningfulValue(v));
-  if (!entries.length) return "Not provided";
-  const parts = entries.map(([key, v]) => {
-    if (v === null || v === undefined)
-      return `${formatLabel(key)}: Not provided`;
-    if (
-      typeof v === "string" ||
-      typeof v === "number" ||
-      typeof v === "boolean"
-    )
-      return `${formatLabel(key)}: ${formatPrimitive(v)}`;
-    if (Array.isArray(v)) {
-      const arr = v.filter((i) => hasMeaningfulValue(i));
-      if (!arr.length) return `${formatLabel(key)}: None`;
-      const primOnly = arr.every(
-        (i) =>
-          typeof i === "string" ||
-          typeof i === "number" ||
-          typeof i === "boolean",
-      );
-      const val = primOnly
-        ? arr.map(formatPrimitive).join(", ")
-        : `${arr.length} items`;
-      return `${formatLabel(key)}: ${val}`;
-    }
-    return `${formatLabel(key)}: ${Object.keys(v as object).length} fields`;
-  });
-  return parts.join(" • ");
-}
+  if (!entries.length) {
+    return <span className="text-foreground/50">Not provided</span>;
+  }
 
-function formatPrimitive(value: ResultValue) {
-  if (value === null || value === undefined) return "Not provided";
-  if (typeof value === "boolean") return value ? "Yes" : "No";
-  return String(value);
+  return (
+    <dl className="space-y-3">
+      {entries.map(([key, v]) => (
+        <div key={key} className="grid grid-cols-3 items-start gap-3">
+          <dt className="col-span-1 text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300">
+            {formatLabel(key)}
+          </dt>
+          <dd className="col-span-2 break-words text-base font-medium text-foreground">
+            <ValueRenderer value={v} />
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
 }

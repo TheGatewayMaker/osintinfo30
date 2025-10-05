@@ -1,11 +1,14 @@
 import type { RequestHandler } from "express";
 
-const DEFAULT_WEBHOOK =
-  "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
 
 export const handleTrackSearch: RequestHandler = async (req, res) => {
   try {
-    const webhookUrl = process.env.DISCORD_WEBHOOK_URL || DEFAULT_WEBHOOK;
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+
+    if (!webhookUrl) {
+      res.status(204).end();
+      return;
+    }
 
     const body = (req.body ?? {}) as Record<string, unknown>;
     const email = typeof body.email === "string" ? body.email : "unknown";

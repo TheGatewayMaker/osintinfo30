@@ -248,7 +248,7 @@ function SummaryPill({ label, value }: { label: string; value: number }) {
 
 function ResultsNotice({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-background/60 px-6 py-12 text-center text-sm text-foreground/65 shadow-inner shadow-black/5">
+    <div className="rounded-2xl border border-border/70 bg-background/60 px-6 py-12 text-center text-sm text-foreground/60 shadow-inner shadow-black/5">
       {message}
     </div>
   );

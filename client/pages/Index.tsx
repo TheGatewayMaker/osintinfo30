@@ -35,43 +35,11 @@ export default function Index() {
     }
 
     setLoading(true);
-    let resultData: unknown = null;
-    let normalizedData: NormalizedSearchResults | null = null;
-    let shouldNavigate = false;
     try {
-      const { data, normalized } = await performSearch(q);
-
-      try {
-        await consumeSearchCredit(user.uid, 1);
-      } catch (creditError) {
-        if (isFirestorePermissionDenied(creditError)) {
-          console.warn(
-            "Skipping credit consumption due to permission error.",
-            creditError,
-          );
-        } else {
-          throw creditError;
-        }
-      }
-
-      resultData = data;
-      normalizedData = normalized;
-      shouldNavigate = true;
-    } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : "Search error.";
-      toast.error(message);
-      return;
+      const url = `/osintinforesults?q=${encodeURIComponent(q)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
     } finally {
       setLoading(false);
-    }
-
-    if (shouldNavigate) {
-      navigate(`/search?q=${encodeURIComponent(q)}`, {
-        state: { result: resultData, normalized: normalizedData },
-      });
     }
   }
 

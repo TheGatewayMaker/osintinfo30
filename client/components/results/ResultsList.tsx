@@ -27,7 +27,8 @@ export function ResultsList({
     return null;
   }
 
-  const defaultOpenValues = records.slice(0, 1).map((record) => record.id);
+  const defaultOpenValues =
+    records.length > 0 ? [records[0].id || "record-0"] : [];
   const total = totalCount ?? records.length;
 
   return (
@@ -36,12 +37,14 @@ export function ResultsList({
       defaultValue={defaultOpenValues}
       className="flex flex-col gap-4"
     >
-      {records.map((record, index) => (
-        <AccordionItem
-          key={record.id || index}
-          value={record.id}
-          className="overflow-hidden rounded-3xl border border-border/70 bg-background/90 shadow-lg shadow-brand-500/10 transition-all data-[state=open]:shadow-brand-500/25 data-[state=open]:ring-1 data-[state=open]:ring-brand-500/20"
-        >
+      {records.map((record, index) => {
+        const itemValue = record.id || `record-${index}`;
+        return (
+          <AccordionItem
+            key={itemValue}
+            value={itemValue}
+            className="overflow-hidden rounded-3xl border border-border/70 bg-background/90 shadow-lg shadow-brand-500/10 transition-all data-[state=open]:shadow-brand-500/25 data-[state=open]:ring-1 data-[state=open]:ring-brand-500/20"
+          >
           <AccordionTrigger className="px-6 py-5 text-left text-base font-semibold text-foreground">
             <RecordHeader
               record={record}
@@ -53,7 +56,8 @@ export function ResultsList({
             <FieldList fields={record.fields} />
           </AccordionContent>
         </AccordionItem>
-      ))}
+        );
+      })}
     </Accordion>
   );
 }

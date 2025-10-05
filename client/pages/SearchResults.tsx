@@ -148,7 +148,7 @@ export default function SearchResults() {
                 <div className="absolute -right-24 top-1/2 hidden h-56 w-56 -translate-y-1/2 rounded-full bg-brand-500/10 blur-3xl lg:block" />
                 <div className="relative space-y-6">
                   <header className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600/70 dark:text-brand-300/80">
+                    <p className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-brand-700 dark:text-brand-200">
                       Search Exposure
                     </p>
                     <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
@@ -165,7 +165,7 @@ export default function SearchResults() {
 
                   <form
                     onSubmit={handleSubmit}
-                    className="space-y-3 rounded-2xl border border-border/70 bg-background/80 p-4 shadow-inner shadow-black/5 backdrop-blur"
+                    className="space-y-3 rounded-2xl border border-border/70 bg-background p-4 shadow-inner shadow-black/5"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                       <Input
@@ -193,7 +193,7 @@ export default function SearchResults() {
                 </div>
               </div>
 
-              <aside className="rounded-[2rem] border border-border/70 bg-background/80 p-6 shadow-lg shadow-brand-500/10 backdrop-blur lg:sticky lg:top-28">
+              <aside className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-md lg:sticky lg:top-28">
                 <div className="flex items-center justify-between gap-2">
                   <h2 className="text-base font-semibold text-foreground">
                     Query summary
@@ -234,7 +234,7 @@ export default function SearchResults() {
               </aside>
             </div>
 
-            <section className="rounded-[2rem] border border-border/70 bg-background/85 p-6 shadow-xl shadow-brand-500/10 backdrop-blur">
+            <section className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg">
               <header className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground md:text-xl">
@@ -246,7 +246,7 @@ export default function SearchResults() {
                   </p>
                 </div>
                 {hasResults && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/60">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/70">
                     Showing {formattedRecords} records
                   </span>
                 )}
@@ -302,17 +302,20 @@ function SummarySources({ sources }: { sources: string[] }) {
   const overflow = sources.length - display.length;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="inline-flex items-center rounded-full border border-brand-500/30 bg-brand-500/10 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-200">
+        Osint Info
+      </span>
       {display.map((source) => (
         <span
           key={source}
-          className="inline-flex items-center rounded-full border border-border/60 bg-brand-500/10 px-2.5 py-1 text-xs font-semibold text-brand-700 dark:text-brand-200"
+          className="inline-flex items-center rounded-full border border-border/60 bg-background px-2.5 py-1 text-xs font-semibold text-foreground/80"
         >
           {source}
         </span>
       ))}
       {overflow > 0 && (
-        <span className="inline-flex items-center rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-xs font-semibold text-foreground/60">
+        <span className="inline-flex items-center rounded-full border border-border/60 bg-background px-2.5 py-1 text-xs font-semibold text-foreground/60">
           +{overflow} more
         </span>
       )}

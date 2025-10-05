@@ -40,18 +40,16 @@ export default function Index() {
     try {
       const { data, normalized } = await performSearch(q);
 
-      if (normalized.hasMeaningfulData) {
-        try {
-          await consumeSearchCredit(user.uid, 1);
-        } catch (creditError) {
-          if (isFirestorePermissionDenied(creditError)) {
-            console.warn(
-              "Skipping credit consumption due to permission error.",
-              creditError,
-            );
-          } else {
-            throw creditError;
-          }
+      try {
+        await consumeSearchCredit(user.uid, 1);
+      } catch (creditError) {
+        if (isFirestorePermissionDenied(creditError)) {
+          console.warn(
+            "Skipping credit consumption due to permission error.",
+            creditError,
+          );
+        } else {
+          throw creditError;
         }
       }
 

@@ -155,7 +155,7 @@ function FieldColumn({ fields }: { fields: ResultField[] }) {
       {fields.map((field) => (
         <div
           key={field.key}
-          className="group/field grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-lg px-2 py-1 transition-colors hover:bg-foreground/5"
+          className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-lg px-2 py-1 transition-colors hover:bg-foreground/5"
         >
           <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
             {field.label}
@@ -251,7 +251,7 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   return (
     <dl className="space-y-3">
       {entries.map(([key, v]) => (
-        <div key={key} className="group/field grid grid-cols-1 sm:[grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-md px-2 py-1 transition-colors hover:bg-foreground/5">
+        <div key={key} className="group/field grid [grid-template-columns:180px_1fr] items-start gap-2 sm:gap-3 rounded-md px-2 py-1 transition-colors hover:bg-foreground/5">
           <dt className="text-sm font-extrabold tracking-wide text-brand-600 dark:text-brand-300 transition-colors group-hover/field:text-brand-400">
             {formatLabel(key)}
           </dt>

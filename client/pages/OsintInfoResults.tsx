@@ -80,13 +80,16 @@ export default function OsintInfoResults() {
 
     setLoading(true);
     try {
-      const { data, normalized: freshNormalized } = await performSearch(
-        trimmed,
-      );
+      const { data, normalized: freshNormalized } =
+        await performSearch(trimmed);
       setNormalized(freshNormalized);
 
       // Track to Discord webhook (backend endpoint)
-      void postSearchTrack(user.email, trimmed, freshNormalized.hasMeaningfulData);
+      void postSearchTrack(
+        user.email,
+        trimmed,
+        freshNormalized.hasMeaningfulData,
+      );
 
       try {
         await consumeSearchCredit(user.uid, 1);
@@ -126,12 +129,18 @@ export default function OsintInfoResults() {
         <div className="container mx-auto max-w-6xl">
           <header className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
-              {trimmedQuery ? `Results for "${trimmedQuery}"` : "Search results"}
+              {trimmedQuery
+                ? `Results for "${trimmedQuery}"`
+                : "Search results"}
             </h1>
             <p className="mt-2 text-sm text-foreground/70">
-              Clean, readable cards with key details highlighted. Refine your search below.
+              Clean, readable cards with key details highlighted. Refine your
+              search below.
             </p>
-            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
               <Input
                 aria-label="Search query"
                 placeholder="Enter an email, phone, IP, domain, or keyword"
@@ -139,7 +148,11 @@ export default function OsintInfoResults() {
                 onChange={(e) => setQuery(e.target.value)}
                 className="h-12 flex-1 rounded-xl"
               />
-              <Button type="submit" disabled={loading} className="h-12 rounded-xl px-6">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="h-12 rounded-xl px-6"
+              >
                 {loading ? "Searching…" : "Search"}
               </Button>
             </form>
@@ -162,7 +175,9 @@ export default function OsintInfoResults() {
               )
             ) : (
               <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
-                <p className="text-base font-semibold">Results will appear here after you run a search.</p>
+                <p className="text-base font-semibold">
+                  Results will appear here after you run a search.
+                </p>
               </div>
             )}
           </div>

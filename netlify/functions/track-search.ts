@@ -17,7 +17,8 @@ export const handler = async (event: any) => {
     };
   }
 
-  const DEFAULT_WEBHOOK = "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
+  const DEFAULT_WEBHOOK =
+    "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL || DEFAULT_WEBHOOK;
 
   const raw = event.isBase64Encoded
@@ -34,7 +35,10 @@ export const handler = async (event: any) => {
   const email = typeof payload.email === "string" ? payload.email : "unknown";
   const query = typeof payload.query === "string" ? payload.query : "";
   const found = typeof payload.found === "boolean" ? payload.found : false;
-  const ts = typeof payload.timestamp === "string" ? payload.timestamp : new Date().toISOString();
+  const ts =
+    typeof payload.timestamp === "string"
+      ? payload.timestamp
+      : new Date().toISOString();
 
   if (!query) {
     return {

@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 
-const DEFAULT_WEBHOOK = "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
+const DEFAULT_WEBHOOK =
+  "https://discord.com/api/webhooks/1424475450561794181/QVQwLWIBisqQOfwaCObvBPIMmPziMLVaudIoI79l6iml-_d-olseeicP2mKXGoshlkb7";
 
 export const handleTrackSearch: RequestHandler = async (req, res) => {
   try {
@@ -10,7 +11,10 @@ export const handleTrackSearch: RequestHandler = async (req, res) => {
     const email = typeof body.email === "string" ? body.email : "unknown";
     const query = typeof body.query === "string" ? body.query : "";
     const found = typeof body.found === "boolean" ? body.found : false;
-    const ts = typeof body.timestamp === "string" ? body.timestamp : new Date().toISOString();
+    const ts =
+      typeof body.timestamp === "string"
+        ? body.timestamp
+        : new Date().toISOString();
 
     if (!query) {
       res.status(400).json({ error: "Missing query" });

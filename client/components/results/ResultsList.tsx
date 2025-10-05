@@ -12,7 +12,7 @@ export function ResultsList({ records }: { records: ResultRecord[] }) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {records.map((record, index) => (
         <ResultCard
           key={record.id || index}

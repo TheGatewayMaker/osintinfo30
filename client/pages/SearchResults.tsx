@@ -134,7 +134,9 @@ export default function SearchResults() {
                   </span>
                   <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1">
                     <span className="text-foreground/60">Fields</span>
-                    <span className="font-semibold">{normalized?.fieldCount ?? 0}</span>
+                    <span className="font-semibold">
+                      {normalized?.fieldCount ?? 0}
+                    </span>
                   </span>
                 </div>
 
@@ -149,7 +151,11 @@ export default function SearchResults() {
                       }}
                     />
                   </div>
-                  <Button onClick={onSearch} disabled={loading} className="h-11 md:h-full">
+                  <Button
+                    onClick={onSearch}
+                    disabled={loading}
+                    className="h-11 md:h-full"
+                  >
                     {loading ? "Searching…" : "Search"}
                   </Button>
                 </div>

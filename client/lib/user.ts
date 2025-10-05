@@ -108,27 +108,21 @@ function cryptoRandomSuffix() {
 async function normalizeExistingProfile(uid: string, existing: UserProfile) {
   const _db = db();
   const ref = doc(_db, "users", uid);
-  const free = Math.min(2, Number(existing.freeSearches ?? 0) || 0);
+  const free = Number(existing.freeSearches ?? 0) || 0;
   const purchased = Number(existing.purchasedSearches ?? 0) || 0;
   const used = Number(existing.usedSearches ?? 0) || 0;
   const derivedRemaining = Math.max(0, free + purchased - used);
   const explicitRemaining = Number(existing.totalSearchesRemaining);
-  const needsFreeFix = free !== existing.freeSearches;
-  const needsRemainingFix =
-    !Number.isFinite(explicitRemaining) ||
-    explicitRemaining !== derivedRemaining;
+  const needsRemainingInit =
+    !Number.isFinite(explicitRemaining) || explicitRemaining < 0;
 
-  if (needsFreeFix || needsRemainingFix) {
+  if (needsRemainingInit) {
     await updateDoc(ref, {
-      ...(needsFreeFix ? { freeSearches: free } : {}),
-      ...(needsRemainingFix
-        ? { totalSearchesRemaining: derivedRemaining }
-        : {}),
+      totalSearchesRemaining: derivedRemaining,
       updatedAt: serverTimestamp(),
     });
     return {
       ...existing,
-      freeSearches: free,
       totalSearchesRemaining: derivedRemaining,
     } as UserProfile;
   }

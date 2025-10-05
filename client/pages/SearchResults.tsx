@@ -76,7 +76,7 @@ export default function SearchResults() {
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation() as { state?: LocationState };
 
@@ -107,9 +107,9 @@ export default function SearchResults() {
   async function onSearch() {
     const trimmed = query.trim();
     if (!trimmed) return;
+    if (authLoading) return;
     if (!user) {
       toast.error("Please sign in to search.");
-      setTimeout(() => navigate("/auth"), 2000);
       return;
     }
     if (!Number.isFinite(remaining) || remaining <= 0) {

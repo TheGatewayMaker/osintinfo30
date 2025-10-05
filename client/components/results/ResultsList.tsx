@@ -143,7 +143,8 @@ function conciseObject(obj: Record<string, ResultValue>) {
   const entries = Object.entries(obj).filter(([, v]) => hasMeaningfulValue(v));
   if (!entries.length) return "Not provided";
   const parts = entries.map(([key, v]) => {
-    if (v === null || v === undefined) return `${formatLabel(key)}: Not provided`;
+    if (v === null || v === undefined)
+      return `${formatLabel(key)}: Not provided`;
     if (
       typeof v === "string" ||
       typeof v === "number" ||
@@ -154,9 +155,14 @@ function conciseObject(obj: Record<string, ResultValue>) {
       const arr = v.filter((i) => hasMeaningfulValue(i));
       if (!arr.length) return `${formatLabel(key)}: None`;
       const primOnly = arr.every(
-        (i) => typeof i === "string" || typeof i === "number" || typeof i === "boolean",
+        (i) =>
+          typeof i === "string" ||
+          typeof i === "number" ||
+          typeof i === "boolean",
       );
-      const val = primOnly ? arr.map(formatPrimitive).join(", ") : `${arr.length} items`;
+      const val = primOnly
+        ? arr.map(formatPrimitive).join(", ")
+        : `${arr.length} items`;
       return `${formatLabel(key)}: ${val}`;
     }
     return `${formatLabel(key)}: ${Object.keys(v as object).length} fields`;

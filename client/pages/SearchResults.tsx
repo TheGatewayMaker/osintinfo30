@@ -234,7 +234,7 @@ export default function SearchResults() {
               </aside>
             </div>
 
-            <section className="mx-auto max-w-3xl rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden">
+            <section className="rounded-[2rem] border border-border/70 bg-background p-6 shadow-lg overflow-hidden lg:mx-0 lg:max-w-none">
               <header className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <h2 className="text-lg font-semibold text-foreground md:text-xl">

@@ -45,18 +45,17 @@ export async function performSearch(
     throw new Error("Search query cannot be empty.");
   }
 
-  const response = await fetch("/api/search", {
-    method: "POST",
+  const params = new URLSearchParams({
+    q: trimmed,
+    limit: String(100),
+    lang: "en",
+  });
+
+  const response = await fetch(`/api/search?${params.toString()}`, {
+    method: "GET",
     headers: {
-      "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      token: import.meta.env.LEAKOSINT_API_KEY,
-      request: trimmed,
-      limit: 100,
-      lang: "en",
-    }),
   });
 
   const body = await readResponseBody(response);

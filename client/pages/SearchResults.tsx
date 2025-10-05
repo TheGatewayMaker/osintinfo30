@@ -110,71 +110,60 @@ export default function SearchResults() {
 
   return (
     <Layout>
-      <section className="relative py-10 md:py-14">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/10),transparent_50%)]" />
+      <section className="relative py-8 md:py-12">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(1000px_600px_at_50%_-200px,theme(colors.brand.600/0.12),transparent_60%),radial-gradient(600px_400px_at_10%_20%,theme(colors.brand.400/0.08),transparent_60%)]" />
         <div className="container mx-auto">
-          <div className="mx-auto max-w-6xl">
-            <div className="text-center">
-              <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-                {query.trim()
-                  ? `Results for "${query.trim()}"`
-                  : "Search Results"}
-              </h1>
-              <p className="mt-2 text-sm font-semibold text-foreground/70">
-                Clean, readable OSINT results. Refine your query and re-run as
-                needed.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-border bg-card/80 p-3 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
-                <Input
-                  placeholder="Enter an email, phone, IP, domain, keyword…"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") onSearch();
-                  }}
-                />
-              </div>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm text-foreground/60">
-                  Remaining:{" "}
-                  <span className="font-semibold text-amber-600 dark:text-amber-400">
-                    {remaining}
+          <div className="mx-auto max-w-7xl">
+            <div className="rounded-3xl border border-border/70 bg-card/80 p-6 md:p-8 shadow-xl shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
+              <div className="flex flex-col items-center text-center gap-3">
+                <h1 className="text-3xl md:text-5xl font-black tracking-tight">
+                  OSINT Results
+                </h1>
+                <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-foreground/70">
+                  {query.trim() && (
+                    <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1">
+                      <span className="text-foreground/60">Query:</span>
+                      <span className="font-semibold">{query.trim()}</span>
+                    </span>
+                  )}
+                  <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1">
+                    <span className="text-foreground/60">Total</span>
+                    <span className="font-extrabold text-brand-600 dark:text-brand-300">
+                      {normalized?.recordCount ?? 0}
+                    </span>
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1">
+                    <span className="text-foreground/60">Fields</span>
+                    <span className="font-semibold">{normalized?.fieldCount ?? 0}</span>
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    onClick={onSearch}
-                    disabled={loading}
-                    className="h-10"
-                  >
+
+                <div className="mt-4 grid w-full gap-3 md:grid-cols-[1fr_auto]">
+                  <div className="rounded-2xl border border-border bg-card/80 p-2 pr-3 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 focus-within:ring-brand-500/30">
+                    <Input
+                      placeholder="Enter an email, phone, IP, domain, keyword…"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") onSearch();
+                      }}
+                    />
+                  </div>
+                  <Button onClick={onSearch} disabled={loading} className="h-11 md:h-full">
                     {loading ? "Searching…" : "Search"}
                   </Button>
                 </div>
+
+                <div className="mt-1 text-xs text-foreground/60">
+                  Remaining searches:
+                  <span className="ml-2 rounded-full bg-amber-500/10 px-2 py-0.5 font-bold text-amber-600 dark:text-amber-300">
+                    {remaining}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8 space-y-6 rounded-3xl border border-border/70 bg-card/70 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-3">
-                  <SummaryPill
-                    label="Total results"
-                    value={normalized?.recordCount ?? 0}
-                  />
-                  <SummaryPill
-                    label="Fields"
-                    value={normalized?.fieldCount ?? 0}
-                  />
-                </div>
-                {hasResults && (
-                  <div className="text-xs font-medium uppercase tracking-wide text-foreground/60">
-                    Results captured from OSINT provider
-                  </div>
-                )}
-              </div>
-
+            <div className="mt-8 space-y-6">
               {normalized ? (
                 normalized.records.length ? (
                   <ResultsList

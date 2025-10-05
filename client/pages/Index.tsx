@@ -31,7 +31,7 @@ export default function Index() {
     setLoading(true);
     try {
       const url = `/osintinforesults?q=${encodeURIComponent(q)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      navigate(url);
     } finally {
       setLoading(false);
     }
@@ -44,6 +44,7 @@ export default function Index() {
         <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" />
         <div className="pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[120px]" />
         <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl sm:block" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-600/20 via-background/0 to-background/30" />
         <div className="container mx-auto">
           <div className="mx-auto max-w-3xl text-center">
             <h1>
@@ -94,13 +95,13 @@ export default function Index() {
 
       <section className="container mx-auto pb-24">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-brand-300">
+          <p className="text-xs font-bold uppercase tracking-[0.4em] text-brand-300">
             Capabilities
           </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
             Intelligence built for rapid response
           </h2>
-          <p className="mt-3 text-base text-foreground/70">
+          <p className="mt-3 text-base font-semibold text-foreground/80">
             Blend real-time monitoring with verified breach data to keep your
             team ahead of emerging threats.
           </p>

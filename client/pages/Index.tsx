@@ -64,7 +64,7 @@ export default function Index() {
             </p>
             <div className="mt-10 grid gap-4">
               <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl shadow-cyan-500/20 ring-1 ring-cyan-500/25 backdrop-blur-2xl transition dark:border-white/10 dark:bg-white/5">
-                <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.18),transparent_60%)]" />
+                <div className="pointer-events-none absolute inset-0 -z-10 hidden md:block bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.12),transparent_60%)]" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}

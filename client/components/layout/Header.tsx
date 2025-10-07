@@ -56,7 +56,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:inline-flex"><ThemeToggle /></div>
+          <div className="hidden sm:inline-flex">
+            <ThemeToggle />
+          </div>
 
           {user ? (
             <div className="flex items-center gap-3">
@@ -115,7 +117,11 @@ export function Header() {
               </DropdownMenu>
             </div>
           ) : (
-            <Button onClick={() => navigate("/auth")} title="Sign in" className="px-2 sm:px-4">
+            <Button
+              onClick={() => navigate("/auth")}
+              title="Sign in"
+              className="px-2 sm:px-4"
+            >
               <LogIn />
               <span className="hidden sm:inline">Sign in</span>
             </Button>

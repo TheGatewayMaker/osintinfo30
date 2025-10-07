@@ -215,7 +215,6 @@ export default function OsintInfoResults() {
     };
   }, [initialQ, refreshToken, authLoading, user, profile]);
 
-
   const trimmedQuery = query.trim();
 
   const handleDownload = () => {
@@ -258,7 +257,8 @@ export default function OsintInfoResults() {
             </h1>
 
             <p className="mt-2 text-sm text-foreground/90">
-              Clean, readable cards with key details highlighted. Use the home page to run a new search.
+              Clean, readable cards with key details highlighted. Use the home
+              page to run a new search.
             </p>
 
             {/* Download Button */}
@@ -271,7 +271,6 @@ export default function OsintInfoResults() {
                 Download Results
               </Button>
             </div>
-
           </header>
 
           {/* Results Section */}

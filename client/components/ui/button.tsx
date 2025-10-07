@@ -13,7 +13,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: `${gradientInteractive} shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/45`,
-        hero: `${gradientInteractive} shadow-xl shadow-emerald-500/35 hover:shadow-emerald-500/55 tracking-wide`,
+        hero: `${gradientInteractive} shadow-xl shadow-emerald-500/35 hover:shadow-emerald-500/55`,
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

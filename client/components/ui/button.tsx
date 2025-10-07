@@ -12,8 +12,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: `${gradientInteractive} shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/45`,
-        hero: `${gradientInteractive} shadow-xl shadow-emerald-500/35 hover:shadow-emerald-500/55`,
+        default: `${gradientInteractive} shadow-[0_18px_26px_-20px_rgba(15,23,42,0.68)] hover:shadow-[0_22px_34px_-22px_rgba(15,23,42,0.75)]`,
+        hero: `${gradientInteractive} shadow-[0_22px_34px_-18px_rgba(15,23,42,0.7)] hover:shadow-[0_26px_46px_-24px_rgba(15,23,42,0.78)]`,
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

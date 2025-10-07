@@ -34,8 +34,8 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-3 font-black text-2xl">
           <img
-            src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
-            alt="Osint Info logo"
+            src="https://i.ibb.co/27yVz2jK/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
+            alt="Osint Leak logo"
             className="h-10 w-10 rounded-lg"
           />
           <span className="leading-none">Osint Info</span>

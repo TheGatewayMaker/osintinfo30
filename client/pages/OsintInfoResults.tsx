@@ -98,16 +98,17 @@ function formatResultsText(
 }
 
 export default function OsintInfoResults() {
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const initialQ = params.get("q") ?? "";
-  const rid = params.get("rid");
   const [query, setQuery] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
-  const [handoffChecked, setHandoffChecked] = useState(false);
   const { user, profile, loading: authLoading } = useAuth();
+  const lastFetchedQueryRef = useRef<string | null>(null);
+  const lastChargedQueryRef = useRef<string | null>(null);
+  const lastTrackedQueryRef = useRef<string | null>(null);
 
   useEffect(() => {
     setQuery(initialQ);

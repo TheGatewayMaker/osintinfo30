@@ -50,7 +50,7 @@ export default function AuthPage() {
               <div className="grid gap-3">
                 <Button
                   variant="secondary"
-                  className="w-full bg-white text-black hover:opacity-90 border border-border dark:bg-white dark:text-black flex items-center justify-center gap-2 h-11 rounded-xl"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background text-foreground hover:bg-background/80 dark:bg-card dark:text-foreground"
                   onClick={handleGoogle}
                   disabled={loading}
                 >

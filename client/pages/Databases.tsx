@@ -112,7 +112,7 @@ function DatabaseCard({ item }: CardProps) {
         ref={ref}
         onPointerMove={handlePointerMove}
         onPointerEnter={handlePointerMove}
-        className="relative h-full overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm transition-[transform,box-shadow] duration-100 ease-out will-change-transform hover:shadow-md"
+        className="interactive-glass relative h-full rounded-3xl border border-white/20 p-5 shadow-[0_36px_80px_-60px_rgba(6,182,212,0.68)] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_30px_72px_-58px_rgba(6,182,212,0.72)] dark:border-white/10"
         style={{
           transform:
             "perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(var(--tz,0px))",

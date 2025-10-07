@@ -71,13 +71,8 @@ export function Header() {
                       aria-hidden
                       className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_65%)] opacity-80"
                     />
-                    <span className="relative z-10 inline-flex items-center gap-3">
-                      <span className="truncate text-xs font-black uppercase tracking-[0.35em] text-amber-200">
-                        Balance
-                      </span>
-                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200/50 bg-amber-400/15 px-2.5 py-0.5 text-sm font-black leading-none text-amber-100 shadow-[0_6px_12px_-8px_rgba(15,23,42,0.6)]">
-                        {computeRemaining(profile)}
-                      </span>
+                    <span className="relative z-10 text-sm font-semibold uppercase tracking-[0.18em] text-amber-100">
+                      Balance: {computeRemaining(profile)}
                     </span>
                   </button>
                 </DropdownMenuTrigger>

@@ -87,6 +87,7 @@ function FeatureCard({ feature }: FeatureCardProps) {
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse") return;
     pointerRef.current = { x: event.clientX, y: event.clientY };
     if (frameRef.current === null) {
       frameRef.current = requestAnimationFrame(updateTransform);

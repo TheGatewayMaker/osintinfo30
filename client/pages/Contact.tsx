@@ -29,6 +29,12 @@ export default function Contact() {
           </Button>
         </div>
 
+        <div className="mt-4 text-center">
+          <span className="inline-block rounded-full bg-secondary px-3 py-1 text-sm font-bold text-secondary-foreground">
+            Or
+          </span>
+        </div>
+
         <form
           action="https://formspree.io/f/movkllyk"
           method="POST"

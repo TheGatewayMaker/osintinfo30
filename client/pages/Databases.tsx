@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import Layout from "@/components/layout/Layout";
 
 const RECENT_BREACHES = [
@@ -68,61 +70,83 @@ export default function Databases() {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {RECENT_BREACHES.map((item) => (
-            <article
-              key={item.name}
-              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/90 p-5 shadow-lg shadow-brand-500/10 transition-all duration-200 ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform motion-safe:transform-gpu hover:-translate-y-1 hover:shadow-brand-500/20"
-            >
-              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(600px_300px_at_50%_-120px,theme(colors.cyan.500/0.14),transparent_60%)]" />
-              <header className="flex items-center justify-between">
-                <h3 className="text-xl font-extrabold tracking-tight text-foreground">
-                  {item.name}
-                </h3>
-                <span
-                  style={{
-                    display: "block",
-                    backgroundColor: "rgba(144, 19, 254, 0.23)",
-                    borderRadius: "9999px",
-                    boxShadow:
-                      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(80, 37, 187, 0.4) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
-                    color: "rgba(255, 255, 255, 1)",
-                    fontSize: "10.4px",
-                    fontWeight: 600,
-                    letterSpacing: "0.26px",
-                    lineHeight: "15.6px",
-                    textDecoration: "rgb(15, 12, 39)",
-                    textTransform: "uppercase",
-                    padding: "4px 12px",
-                  }}
-                >
-                  {item.size}
-                </span>
-              </header>
-              <p className="mt-1 text-sm text-foreground/70">{item.scope}</p>
-
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-border/60 bg-background/80 p-3 text-sm font-semibold text-foreground">
-                  <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
-                    Database Type
-                  </span>
-                  <span className="mt-1 block">{item.type}</span>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-background/80 p-3 text-sm font-semibold text-foreground">
-                  <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
-                    Size
-                  </span>
-                  <span className="mt-1 block">{item.size}</span>
-                </div>
-              </div>
-
-              <p className="mt-4 text-sm leading-relaxed text-foreground/80">
-                {item.description}
-              </p>
-
-              <div className="mt-5 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 transition-transform duration-500 group-hover:scale-x-100" />
-            </article>
+            <DatabaseCard key={item.name} item={item} />
           ))}
         </div>
       </section>
     </Layout>
+  );
+}
+
+type Item = (typeof RECENT_BREACHES)[number];
+
+type CardProps = { item: Item };
+
+function DatabaseCard({ item }: CardProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const rx = ((y - r.height / 2) / (r.height / 2)) * -6;
+    const ry = ((x - r.width / 2) / (r.width / 2)) * 6;
+    el.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+    el.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+    el.style.setProperty("--tz", "18px");
+  };
+
+  const reset = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+    el.style.setProperty("--tz", "0px");
+  };
+
+  return (
+    <div className="group relative" onPointerLeave={reset}>
+      <article
+        ref={ref}
+        onPointerMove={handlePointerMove}
+        onPointerEnter={handlePointerMove}
+        className="relative h-full overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm transition-[transform,box-shadow] duration-100 ease-out will-change-transform hover:shadow-md"
+        style={{
+          transform:
+            "perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(var(--tz,0px))",
+        }}
+      >
+        <header className="flex items-center justify-between">
+          <h3 className="text-xl font-extrabold tracking-tight text-foreground">
+            {item.name}
+          </h3>
+          <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-secondary-foreground">
+            {item.size}
+          </span>
+        </header>
+        <p className="mt-1 text-sm text-foreground/70">{item.scope}</p>
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-border bg-background/90 p-3 text-sm font-semibold text-foreground">
+            <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+              Database Type
+            </span>
+            <span className="mt-1 block">{item.type}</span>
+          </div>
+          <div className="rounded-2xl border border-border bg-background/90 p-3 text-sm font-semibold text-foreground">
+            <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+              Size
+            </span>
+            <span className="mt-1 block">{item.size}</span>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm leading-relaxed text-foreground/85">
+          {item.description}
+        </p>
+      </article>
+    </div>
   );
 }

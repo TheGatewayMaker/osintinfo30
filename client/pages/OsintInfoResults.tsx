@@ -3,7 +3,6 @@ import Layout from "@/components/layout/Layout";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ResultsList } from "@/components/results/ResultsList";
 import { Loader2 } from "lucide-react";
 import { performSearch } from "@/lib/search";
@@ -216,23 +215,6 @@ export default function OsintInfoResults() {
     };
   }, [initialQ, refreshToken, authLoading, user, profile]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) {
-      return;
-    }
-
-    if (trimmed === initialQ.trim()) {
-      activeFetchQueryRef.current = null;
-      lastCompletedQueryRef.current = null;
-      lastChargedQueryRef.current = null;
-      lastTrackedQueryRef.current = null;
-    }
-
-    setParams({ q: trimmed, refresh: Date.now().toString() });
-  }
-
   const trimmedQuery = query.trim();
 
   const handleDownload = () => {
@@ -275,8 +257,8 @@ export default function OsintInfoResults() {
             </h1>
 
             <p className="mt-2 text-sm text-foreground/90">
-              Clean, readable cards with key details highlighted. Refine your
-              search below.
+              Clean, readable cards with key details highlighted. Use the home
+              page to run a new search.
             </p>
 
             {/* Download Button */}
@@ -288,22 +270,6 @@ export default function OsintInfoResults() {
               >
                 Download Results
               </Button>
-            </div>
-
-            {/* Search Bar */}
-            <div className="mt-6">
-              <form onSubmit={handleSubmit} className="flex flex-col">
-                <Input
-                  aria-label="Search query"
-                  placeholder="Enter an email, phone, IP, domain, or keyword"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="h-12 rounded-xl border border-border bg-background px-4 text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
-                />
-              </form>
-              <p className="mt-2 text-xs font-semibold text-foreground">
-                Press Enter to run a search with your updated query.
-              </p>
             </div>
           </header>
 

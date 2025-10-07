@@ -91,11 +91,11 @@ function DatabaseCard({ item }: CardProps) {
     const r = el.getBoundingClientRect();
     const x = e.clientX - r.left;
     const y = e.clientY - r.top;
-    const rx = ((y - r.height / 2) / (r.height / 2)) * -6;
-    const ry = ((x - r.width / 2) / (r.width / 2)) * 6;
+    const rx = ((y - r.height / 2) / (r.height / 2)) * -3;
+    const ry = ((x - r.width / 2) / (r.width / 2)) * 3;
     el.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
     el.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
-    el.style.setProperty("--tz", "18px");
+    el.style.setProperty("--tz", "10px");
   };
 
   const reset = () => {

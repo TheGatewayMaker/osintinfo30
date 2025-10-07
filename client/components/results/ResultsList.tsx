@@ -109,8 +109,8 @@ function ResultCard({
       : undefined;
 
   return (
-    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:border-brand-400/60 hover:shadow-brand-500/25">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.18),transparent_60%)] opacity-70" />
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/96 p-6 shadow-[0_18px_34px_-22px_rgba(15,23,42,0.55)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-border/70 hover:shadow-[0_22px_45px_-26px_rgba(15,23,42,0.68)] dark:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.7)] dark:hover:shadow-[0_22px_48px_-28px_rgba(0,0,0,0.78)]">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.12),transparent_65%)] opacity-75" />
       <header className="flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-foreground/60">
         <span className="inline-flex items-center gap-2">
           <span className="rounded-full bg-brand-500/15 px-3 py-1 text-brand-200">
@@ -204,11 +204,11 @@ function InfoTile({
 }) {
   const displayValue = value?.toString().trim();
   const baseValueClass =
-    "text-sm font-semibold leading-5 text-foreground break-words";
+    "text-base font-semibold leading-6 text-foreground break-words";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-background/80 p-4 shadow-inner shadow-black/5 transition-colors duration-300 group-hover:border-brand-500/40">
-      <div className="flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-background/92 p-4 shadow-inner shadow-black/10 backdrop-blur-lg transition-colors duration-300 group-hover:border-border/60">
+      <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.32em] text-foreground/70">
         {icon}
         <span>{label}</span>
       </div>
@@ -219,7 +219,7 @@ function InfoTile({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-semibold leading-5 text-brand-100 underline-offset-4 transition-colors hover:text-brand-50 hover:underline break-words"
+              className="text-base font-semibold leading-6 text-amber-300 underline-offset-4 transition-colors hover:text-amber-200 hover:underline break-words"
             >
               {displayValue}
             </a>
@@ -229,7 +229,7 @@ function InfoTile({
             </span>
           )
         ) : (
-          <span className="text-sm font-medium text-foreground/45">
+          <span className="text-base font-medium text-foreground/65">
             {fallback}
           </span>
         )}
@@ -240,9 +240,9 @@ function InfoTile({
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-border/50 bg-background/70 px-3 py-1 text-xs font-semibold text-foreground/70 shadow-inner shadow-black/5">
-      <span className="text-foreground/50">{label}:</span>
-      <span className="break-words text-foreground/80">{value}</span>
+    <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs font-semibold text-foreground/85 shadow-inner shadow-black/10">
+      <span className="text-foreground/65">{label}:</span>
+      <span className="break-words text-foreground">{value}</span>
     </div>
   );
 }
@@ -253,15 +253,15 @@ function FieldList({ fields }: { fields: ResultField[] }) {
   }
 
   return (
-    <dl className="divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/50 bg-background/80 shadow-inner shadow-black/5">
+    <dl className="divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/60 bg-background/92 shadow-inner shadow-black/10 backdrop-blur-lg">
       {fields.map((field) => {
         const label = field.label?.trim() || formatLabel(field.key);
         return (
           <div key={field.key} className="space-y-1 px-5 py-4">
-            <dt className="text-sm font-bold text-foreground md:text-base">
+            <dt className="text-base font-black tracking-tight text-foreground md:text-lg">
               {label}
             </dt>
-            <dd className="min-w-0 break-words text-sm font-medium leading-6 text-foreground md:text-base">
+            <dd className="min-w-0 break-words text-sm font-medium leading-6 text-foreground/90 md:text-base md:leading-7">
               <ValueRenderer value={field.value} />
             </dd>
           </div>
@@ -311,7 +311,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             {primitives.map((primitive, index) => (
               <span
                 key={`${primitive}-${index}`}
-                className="inline-flex items-center rounded-full border border-border/50 bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-200"
+                className="inline-flex items-center rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs font-semibold text-foreground/90 shadow-[0_6px_12px_-8px_rgba(15,23,42,0.45)]"
               >
                 {String(primitive)}
               </span>
@@ -323,9 +323,9 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             {objects.map((objectValue, index) => (
               <div
                 key={index}
-                className="rounded-2xl border border-border/60 bg-background/80 p-4"
+                className="rounded-2xl border border-border/60 bg-background/92 p-4 backdrop-blur-lg"
               >
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground/50">
+                <div className="mb-2 text-xs font-extrabold uppercase tracking-[0.32em] text-foreground/70">
                   Item {index + 1}
                 </div>
                 <ObjectRenderer obj={objectValue} />
@@ -357,12 +357,12 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
       {entries.map(([key, val]) => (
         <div
           key={key}
-          className="space-y-1 rounded-xl bg-background/70 px-3 py-2"
+          className="space-y-1 rounded-xl bg-background/90 px-3 py-2 backdrop-blur-lg"
         >
-          <dt className="text-sm font-bold text-foreground md:text-base">
+          <dt className="text-base font-semibold text-foreground md:text-lg">
             {formatLabel(key)}
           </dt>
-          <dd className="text-sm font-medium text-foreground/90 md:text-base">
+          <dd className="text-sm font-medium text-foreground/90 md:text-base md:leading-7">
             <ValueRenderer value={val} />
           </dd>
         </div>

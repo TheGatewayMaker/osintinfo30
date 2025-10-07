@@ -64,18 +64,18 @@ export function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="relative hidden overflow-hidden sm:inline-flex items-center rounded-full px-4 py-1.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-transform duration-300 [background-size:220%_220%] bg-[linear-gradient(115deg,#4ade80_0%,#06b6d4_50%,#38bdf8_100%)] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="relative hidden overflow-hidden sm:inline-flex items-center rounded-full border border-white/10 bg-background/75 px-4 py-1.5 text-sm font-semibold text-amber-300 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.72)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-white/15 dark:bg-background/60"
                     title="Searches remaining"
                   >
                     <span
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.45),transparent_55%)] opacity-70"
+                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_65%)] opacity-80"
                     />
                     <span className="relative z-10 inline-flex items-center gap-3">
-                      <span className="truncate text-xs font-black uppercase tracking-[0.35em]">
+                      <span className="truncate text-xs font-black uppercase tracking-[0.35em] text-amber-200">
                         Balance
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/25 px-2.5 py-0.5 text-sm font-black leading-none">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200/50 bg-amber-400/15 px-2.5 py-0.5 text-sm font-black leading-none text-amber-100 shadow-[0_6px_12px_-8px_rgba(15,23,42,0.6)]">
                         {computeRemaining(profile)}
                       </span>
                     </span>

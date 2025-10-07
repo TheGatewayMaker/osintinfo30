@@ -5,15 +5,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const gradientInteractive =
-  "text-white [background-size:220%_220%] bg-[linear-gradient(115deg,#4ade80_0%,#06b6d4_50%,#38bdf8_100%)] hover:bg-[linear-gradient(115deg,#38bdf8_0%,#06b6d4_50%,#4ade80_100%)] animate-gradient-x transform-gpu transition-transform duration-300 hover:-translate-y-0.5";
+  "text-white [background-size:260%_260%] bg-[linear-gradient(115deg,#4ade80_0%,#06b6d4_50%,#38bdf8_100%)] hover:bg-[linear-gradient(115deg,#38bdf8_0%,#06b6d4_50%,#4ade80_100%)] motion-safe:animation-[gradient-x_8s_linear_infinite] motion-reduce:animation-none transform-gpu transition-transform duration-300 hover:-translate-y-0.5";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: `${gradientInteractive} shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/45`,
-        hero: `${gradientInteractive} shadow-xl shadow-emerald-500/35 hover:shadow-emerald-500/55`,
+        default: `${gradientInteractive} shadow-[0_18px_26px_-20px_rgba(15,23,42,0.68)] hover:shadow-[0_22px_34px_-22px_rgba(15,23,42,0.75)]`,
+        hero: `${gradientInteractive} shadow-[0_22px_34px_-18px_rgba(15,23,42,0.7)] hover:shadow-[0_26px_46px_-24px_rgba(15,23,42,0.78)]`,
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

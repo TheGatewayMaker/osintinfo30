@@ -58,7 +58,10 @@ export function ResultsList({
   const total = totalCount ?? records.length;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div
+      className="grid gap-6 sm:gap-7 xl:gap-8 justify-items-stretch"
+      style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}
+    >
       {records.map((record, index) => (
         <ResultCard
           key={record.id || `record-${index}`}
@@ -106,7 +109,7 @@ function ResultCard({
       : undefined;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-brand-500/20">
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:border-brand-400/60 hover:shadow-brand-500/25">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.18),transparent_60%)] opacity-70" />
       <header className="flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-foreground/60">
         <span className="inline-flex items-center gap-2">
@@ -189,7 +192,7 @@ function InfoTile({
   value,
   icon,
   href,
-  fallback = "—",
+  fallback = "��",
   valueClassName,
 }: {
   label: string;

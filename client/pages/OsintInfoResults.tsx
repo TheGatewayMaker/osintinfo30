@@ -42,16 +42,14 @@ function formatResultsText(
   normalized: NormalizedSearchResults,
 ) {
   const lines: string[] = [];
+  const now = new Date().toISOString();
   const stringify = (val: any, depth = 0): string => {
     if (val == null) return "";
-    if (
-      typeof val === "string" ||
-      typeof val === "number" ||
-      typeof val === "boolean"
-    ) {
+    if (typeof val === "string" || typeof val === "number" || typeof val === "boolean") {
       return String(val);
     }
     if (Array.isArray(val)) {
+      // Join simple items with comma + space; nested items expanded via recursion
       return val
         .map((v) => stringify(v, depth + 1))
         .filter(Boolean)
@@ -63,17 +61,20 @@ function formatResultsText(
         const s = stringify(v, depth + 1);
         if (s) parts.push(`${k}: ${s}`);
       }
-      return parts.join(", ");
+      // Use semicolons to better separate nested pairs
+      return parts.join("; ");
     }
     return String(val);
   };
 
   lines.push(`${site} for "${query}"`);
+  lines.push(`Generated: ${now}`);
   lines.push("");
   if (normalized.records.length === 0) {
     lines.push("No results found.");
   } else {
     lines.push(`Results (${normalized.records.length})`);
+    lines.push("==================================================");
     normalized.records.forEach((rec, idx) => {
       const title = rec.title?.trim() || `Record ${idx + 1}`;
       lines.push("");
@@ -85,6 +86,8 @@ function formatResultsText(
         const value = stringify(field.value).trim();
         if (value) lines.push(`- ${field.label}: ${value}`);
       }
+      lines.push("");
+      lines.push("--------------------------------------------------");
     });
   }
   lines.push("");

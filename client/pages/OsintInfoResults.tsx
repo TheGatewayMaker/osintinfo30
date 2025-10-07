@@ -1,10 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ResultsList } from "@/components/results/ResultsList";
+import { Loader2 } from "lucide-react";
 import { performSearch } from "@/lib/search";
 import {
   computeRemaining,
@@ -33,23 +34,6 @@ async function postSearchTrack(
     });
   } catch (e) {
     console.warn("Search tracking failed", e);
-  }
-}
-
-function readHandoffFromStorage(
-  id: string | null,
-): { query: string; normalized: NormalizedSearchResults } | null {
-  if (!id) return null;
-  try {
-    const raw = localStorage.getItem(`osint:results:${id}`);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as {
-      query: string;
-      normalized: NormalizedSearchResults;
-    };
-    return { query: parsed.query, normalized: parsed.normalized };
-  } catch {
-    return null;
   }
 }
 
@@ -114,51 +98,39 @@ function formatResultsText(
 }
 
 export default function OsintInfoResults() {
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const initialQ = params.get("q") ?? "";
-  const rid = params.get("rid");
+  const refreshToken = params.get("refresh") ?? "";
   const [query, setQuery] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
-  const [handoffChecked, setHandoffChecked] = useState(false);
   const { user, profile, loading: authLoading } = useAuth();
+  const activeFetchQueryRef = useRef<string | null>(null);
+  const lastCompletedQueryRef = useRef<string | null>(null);
+  const lastChargedQueryRef = useRef<string | null>(null);
+  const lastTrackedQueryRef = useRef<string | null>(null);
 
   useEffect(() => {
     setQuery(initialQ);
   }, [initialQ]);
 
   useEffect(() => {
-    if (handoffChecked) return;
-
-    const handoff = readHandoffFromStorage(rid);
-    if (handoff) {
-      setQuery(handoff.query);
-      setNormalized(handoff.normalized);
-      setHandoffChecked(true);
+    const trimmed = initialQ.trim();
+    if (!trimmed) {
+      setNormalized(null);
+      activeFetchQueryRef.current = null;
+      lastCompletedQueryRef.current = null;
+      lastChargedQueryRef.current = null;
+      lastTrackedQueryRef.current = null;
       return;
     }
 
-    if (!initialQ.trim()) {
-      setHandoffChecked(true);
+    if (authLoading) {
       return;
     }
 
-    if (authLoading || !user) {
-      return;
-    }
-
-    setHandoffChecked(true);
-    void onSearch(initialQ);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, handoffChecked, initialQ, rid, user]);
-
-  async function onSearch(explicit?: string) {
-    const trimmed = (explicit ?? query).trim();
-    if (!trimmed) return;
-
-    if (authLoading) return;
     if (!user) {
       toast.error("Please sign in to search.");
       return;
@@ -172,45 +144,93 @@ export default function OsintInfoResults() {
       }
     }
 
+    if (
+      activeFetchQueryRef.current === trimmed ||
+      lastCompletedQueryRef.current === trimmed
+    ) {
+      return;
+    }
+
+    let cancelled = false;
+    activeFetchQueryRef.current = trimmed;
     setLoading(true);
-    try {
-      const { normalized: freshNormalized } = await performSearch(trimmed);
-      setNormalized(freshNormalized);
+    setNormalized(null);
 
-      void postSearchTrack(
-        user.email,
-        trimmed,
-        freshNormalized.hasMeaningfulData,
-      );
+    (async () => {
+      try {
+        const { normalized: freshNormalized } = await performSearch(trimmed);
+        if (cancelled) return;
+        setNormalized(freshNormalized);
+        lastCompletedQueryRef.current = trimmed;
 
-      if (freshNormalized.hasMeaningfulData) {
-        try {
-          await consumeSearchCredit(user.uid, 1);
-        } catch (creditError) {
-          if (isFirestorePermissionDenied(creditError)) {
-            console.warn(
-              "Skipping credit consumption due to permission error.",
-              creditError,
-            );
-          } else {
-            throw creditError;
+        if (lastTrackedQueryRef.current !== trimmed) {
+          lastTrackedQueryRef.current = trimmed;
+          void postSearchTrack(
+            user.email,
+            trimmed,
+            freshNormalized.hasMeaningfulData,
+          );
+        }
+
+        if (
+          freshNormalized.hasMeaningfulData &&
+          lastChargedQueryRef.current !== trimmed
+        ) {
+          try {
+            await consumeSearchCredit(user.uid, 1);
+            lastChargedQueryRef.current = trimmed;
+          } catch (creditError) {
+            if (isFirestorePermissionDenied(creditError)) {
+              console.warn(
+                "Skipping credit consumption due to permission error.",
+                creditError,
+              );
+            } else {
+              throw creditError;
+            }
           }
         }
+      } catch (error) {
+        if (cancelled) return;
+        if (activeFetchQueryRef.current === trimmed) {
+          activeFetchQueryRef.current = null;
+        }
+        lastCompletedQueryRef.current = null;
+        const message =
+          error instanceof Error && error.message
+            ? error.message
+            : "Search error.";
+        toast.error(message);
+      } finally {
+        if (!cancelled) {
+          if (activeFetchQueryRef.current === trimmed) {
+            activeFetchQueryRef.current = null;
+          }
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : "Search error.";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialQ, refreshToken, authLoading, user, profile]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    void onSearch();
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    if (trimmed === initialQ.trim()) {
+      activeFetchQueryRef.current = null;
+      lastCompletedQueryRef.current = null;
+      lastChargedQueryRef.current = null;
+      lastTrackedQueryRef.current = null;
+    }
+
+    setParams({ q: trimmed, refresh: Date.now().toString() });
   }
 
   const trimmedQuery = query.trim();
@@ -294,7 +314,14 @@ export default function OsintInfoResults() {
 
           {/* Results Section */}
           <div className="mt-12">
-            {normalized ? (
+            {loading ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-brand-500/40 bg-brand-500/10 p-8 text-center shadow-lg shadow-brand-500/10">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-brand-500" />
+                <p className="mt-4 text-sm font-semibold text-foreground">
+                  Fetching fresh results…
+                </p>
+              </div>
+            ) : normalized ? (
               normalized.records.length ? (
                 <ResultsList
                   records={normalized.records}
@@ -302,15 +329,17 @@ export default function OsintInfoResults() {
                 />
               ) : (
                 <div className="mx-auto max-w-md rounded-2xl border border-dashed border-brand-500/40 bg-brand-500/10 p-8 text-center">
-                  <p className="text-base font-semibold">No results found.</p>
-                  <p className="mt-1 text-sm text-foreground/60">
+                  <p className="text-base font-semibold text-foreground">
+                    No results found.
+                  </p>
+                  <p className="mt-1 text-sm text-foreground/80">
                     Try a different query or broaden your terms.
                   </p>
                 </div>
               )
             ) : (
               <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
-                <p className="text-base font-semibold">
+                <p className="text-base font-semibold text-foreground">
                   Results will appear here after you run a search.
                 </p>
               </div>

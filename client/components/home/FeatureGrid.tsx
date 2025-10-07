@@ -72,12 +72,12 @@ function FeatureCard({ feature }: FeatureCardProps) {
     const inputX = pointer.x - rect.left;
     const inputY = pointer.y - rect.top;
 
-    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -10;
-    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 10;
+    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -4;
+    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 4;
 
     element.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
     element.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    element.style.setProperty("--tz", "24px");
+    element.style.setProperty("--tz", "12px");
 
     frameRef.current = null;
   };
@@ -110,9 +110,8 @@ function FeatureCard({ feature }: FeatureCardProps) {
         onPointerMove={handlePointerMove}
         onPointerEnter={(event) => handlePointerMove(event)}
         className={cn(
-          "relative h-full overflow-hidden rounded-3xl border border-border bg-card px-7 py-8 text-left",
-          "shadow-sm transition-[transform,box-shadow] duration-100 ease-out will-change-transform",
-          "hover:shadow-md",
+          "interactive-glass relative h-full rounded-3xl px-7 py-8 text-left",
+          "border border-white/20 shadow-[0_36px_80px_-60px_rgba(6,182,212,0.7)] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_30px_72px_-58px_rgba(6,182,212,0.72)] dark:border-white/10",
         )}
         style={
           {

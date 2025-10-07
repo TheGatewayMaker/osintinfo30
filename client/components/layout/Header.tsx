@@ -31,14 +31,14 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
-      <div className="container mx-auto flex h-16 items-center justify-between">
+      <div className="container px-4 sm:px-8 mx-auto flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-3 font-black text-2xl">
           <img
             src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
             alt="Osint Info logo"
             className="h-10 w-10 rounded-lg"
           />
-          <span className="leading-none">Osint Info</span>
+          <span className="hidden sm:inline leading-none">Osint Info</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -56,7 +56,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggle />
+          <div className="shrink-0"><ThemeToggle /></div>
 
           {user ? (
             <div className="flex items-center gap-3">
@@ -120,9 +120,9 @@ export function Header() {
               </DropdownMenu>
             </div>
           ) : (
-            <Button onClick={() => navigate("/auth")} title="Sign in">
+            <Button onClick={() => navigate("/auth")} title="Sign in" className="px-3 sm:px-4">
               <LogIn />
-              <span className="inline">Sign in</span>
+              <span className="hidden sm:inline">Sign in</span>
             </Button>
           )}
 
@@ -130,6 +130,7 @@ export function Header() {
             className="md:hidden ml-2 inline-flex items-center justify-center rounded-md p-2 transition-colors hover:bg-accent"
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle navigation"
+            aria-expanded={open}
           >
             <svg
               className="h-6 w-6"

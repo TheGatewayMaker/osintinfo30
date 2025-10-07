@@ -115,35 +115,17 @@ export default function OsintInfoResults() {
   }, [initialQ]);
 
   useEffect(() => {
-    if (handoffChecked) return;
-
-    const handoff = readHandoffFromStorage(rid);
-    if (handoff) {
-      setQuery(handoff.query);
-      setNormalized(handoff.normalized);
-      setHandoffChecked(true);
+    const trimmed = initialQ.trim();
+    if (!trimmed) {
+      setNormalized(null);
+      lastFetchedQueryRef.current = null;
       return;
     }
 
-    if (!initialQ.trim()) {
-      setHandoffChecked(true);
+    if (authLoading) {
       return;
     }
 
-    if (authLoading || !user) {
-      return;
-    }
-
-    setHandoffChecked(true);
-    void onSearch(initialQ);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, handoffChecked, initialQ, rid, user]);
-
-  async function onSearch(explicit?: string) {
-    const trimmed = (explicit ?? query).trim();
-    if (!trimmed) return;
-
-    if (authLoading) return;
     if (!user) {
       toast.error("Please sign in to search.");
       return;
@@ -157,41 +139,67 @@ export default function OsintInfoResults() {
       }
     }
 
+    if (lastFetchedQueryRef.current === trimmed && normalized) {
+      return;
+    }
+
+    let cancelled = false;
+    lastFetchedQueryRef.current = trimmed;
     setLoading(true);
-    try {
-      const { normalized: freshNormalized } = await performSearch(trimmed);
-      setNormalized(freshNormalized);
+    setNormalized(null);
 
-      void postSearchTrack(
-        user.email,
-        trimmed,
-        freshNormalized.hasMeaningfulData,
-      );
+    (async () => {
+      try {
+        const { normalized: freshNormalized } = await performSearch(trimmed);
+        if (cancelled) return;
+        setNormalized(freshNormalized);
 
-      if (freshNormalized.hasMeaningfulData) {
-        try {
-          await consumeSearchCredit(user.uid, 1);
-        } catch (creditError) {
-          if (isFirestorePermissionDenied(creditError)) {
-            console.warn(
-              "Skipping credit consumption due to permission error.",
-              creditError,
-            );
-          } else {
-            throw creditError;
+        if (lastTrackedQueryRef.current !== trimmed) {
+          lastTrackedQueryRef.current = trimmed;
+          void postSearchTrack(
+            user.email,
+            trimmed,
+            freshNormalized.hasMeaningfulData,
+          );
+        }
+
+        if (
+          freshNormalized.hasMeaningfulData &&
+          lastChargedQueryRef.current !== trimmed
+        ) {
+          try {
+            await consumeSearchCredit(user.uid, 1);
+            lastChargedQueryRef.current = trimmed;
+          } catch (creditError) {
+            if (isFirestorePermissionDenied(creditError)) {
+              console.warn(
+                "Skipping credit consumption due to permission error.",
+                creditError,
+              );
+            } else {
+              throw creditError;
+            }
           }
         }
+      } catch (error) {
+        if (cancelled) return;
+        lastFetchedQueryRef.current = null;
+        const message =
+          error instanceof Error && error.message
+            ? error.message
+            : "Search error.";
+        toast.error(message);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? error.message
-          : "Search error.";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialQ, authLoading, user, profile, normalized]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

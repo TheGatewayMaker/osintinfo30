@@ -45,7 +45,9 @@ export default function AuthPage() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card/80 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur p-6">
-              {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
+              {error && (
+                <p className="mb-4 text-sm text-destructive">{error}</p>
+              )}
 
               <div className="grid gap-3">
                 <Button

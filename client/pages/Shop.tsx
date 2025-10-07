@@ -101,7 +101,7 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
             className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-150 group-hover:opacity-100"
             style={{
               background:
-                "radial-gradient(220px 160px at var(--px, -100px) var(--py, -100px), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 65%)",
+                "radial-gradient(140px 100px at var(--px, -100px) var(--py, -100px), rgba(56, 189, 248, 0.22), rgba(56, 189, 248, 0) 60%)",
               mixBlendMode: "screen",
             }}
           />

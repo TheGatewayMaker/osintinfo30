@@ -59,15 +59,49 @@ function formatResultsText(
   normalized: NormalizedSearchResults,
 ) {
   const lines: string[] = [];
+  const stringify = (val: any, depth = 0): string => {
+    if (val == null) return "";
+    if (
+      typeof val === "string" ||
+      typeof val === "number" ||
+      typeof val === "boolean"
+    ) {
+      return String(val);
+    }
+    if (Array.isArray(val)) {
+      return val
+        .map((v) => stringify(v, depth + 1))
+        .filter(Boolean)
+        .join(", ");
+    }
+    if (typeof val === "object") {
+      const parts: string[] = [];
+      for (const [k, v] of Object.entries(val)) {
+        const s = stringify(v, depth + 1);
+        if (s) parts.push(`${k}: ${s}`);
+      }
+      return parts.join(", ");
+    }
+    return String(val);
+  };
+
   lines.push(`${site} for "${query}"`);
   lines.push("");
   if (normalized.records.length === 0) {
     lines.push("No results found.");
   } else {
-    lines.push("Results");
+    lines.push(`Results (${normalized.records.length})`);
     normalized.records.forEach((rec, idx) => {
       const title = rec.title?.trim() || `Record ${idx + 1}`;
-      lines.push(`- ${title}`);
+      lines.push("");
+      lines.push(`${idx + 1}. ${title}`);
+      if (rec.contextLabel && rec.contextLabel !== title) {
+        lines.push(`Context: ${rec.contextLabel}`);
+      }
+      for (const field of rec.fields) {
+        const value = stringify(field.value).trim();
+        if (value) lines.push(`- ${field.label}: ${value}`);
+      }
     });
   }
   lines.push("");
@@ -133,16 +167,18 @@ export default function OsintInfoResults() {
         freshNormalized.hasMeaningfulData,
       );
 
-      try {
-        await consumeSearchCredit(user.uid, 1);
-      } catch (creditError) {
-        if (isFirestorePermissionDenied(creditError)) {
-          console.warn(
-            "Skipping credit consumption due to permission error.",
-            creditError,
-          );
-        } else {
-          throw creditError;
+      if (freshNormalized.hasMeaningfulData) {
+        try {
+          await consumeSearchCredit(user.uid, 1);
+        } catch (creditError) {
+          if (isFirestorePermissionDenied(creditError)) {
+            console.warn(
+              "Skipping credit consumption due to permission error.",
+              creditError,
+            );
+          } else {
+            throw creditError;
+          }
         }
       }
     } catch (error) {

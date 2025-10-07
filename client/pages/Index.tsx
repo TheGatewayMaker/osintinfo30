@@ -59,11 +59,13 @@ export default function Index() {
       const { data, normalized } = await performSearch(q);
       const { id } = saveResultsToStorage(q, data, normalized);
 
-      try {
-        await consumeSearchCredit(user.uid, 1);
-      } catch (creditError) {
-        if (!isFirestorePermissionDenied(creditError)) {
-          console.warn("Credit consumption failed", creditError);
+      if (normalized.hasMeaningfulData) {
+        try {
+          await consumeSearchCredit(user.uid, 1);
+        } catch (creditError) {
+          if (!isFirestorePermissionDenied(creditError)) {
+            console.warn("Credit consumption failed", creditError);
+          }
         }
       }
 

@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ResultsList } from "@/components/results/ResultsList";
+import { Loader2 } from "lucide-react";
 import { performSearch } from "@/lib/search";
 import {
   computeRemaining,

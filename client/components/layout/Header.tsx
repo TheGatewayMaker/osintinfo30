@@ -66,7 +66,7 @@ export function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="relative inline-flex overflow-hidden items-center rounded-full border border-brand-700/50 bg-brand-800/20 px-3 py-1 text-xs font-semibold text-primary-foreground shadow-[0_12px_22px_-18px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-brand-400/40 dark:bg-brand-200/15 dark:text-foreground"
+                    className="relative inline-flex overflow-hidden items-center rounded-full border border-brand-700/50 bg-brand-800/20 px-3 py-1 text-xs font-semibold text-primary-foreground shadow-[0_12px_22px_-18px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-brand-600/40 dark:bg-brand-500/15 dark:text-foreground"
                     title="Searches remaining"
                   >
                     <span

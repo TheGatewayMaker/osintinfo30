@@ -6,7 +6,25 @@ import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text"
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { computeRemaining } from "@/lib/user";
+import { computeRemaining, consumeSearchCredit, isFirestorePermissionDenied } from "@/lib/user";
+import { performSearch } from "@/lib/search";
+
+function saveResultsToStorage(query: string, payload: unknown, normalized: unknown) {
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const key = `osint:results:${id}`;
+  const value = {
+    query,
+    data: payload,
+    normalized,
+    createdAt: new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore storage errors
+  }
+  return { id, key };
+}
 
 export default function Index() {
   const [query, setQuery] = useState("");
@@ -30,8 +48,22 @@ export default function Index() {
 
     setLoading(true);
     try {
-      const url = `/osintinforesults?q=${encodeURIComponent(q)}`;
-      navigate(url);
+      const { data, normalized } = await performSearch(q);
+      const { id } = saveResultsToStorage(q, data, normalized);
+
+      try {
+        await consumeSearchCredit(user.uid, 1);
+      } catch (creditError) {
+        if (!isFirestorePermissionDenied(creditError)) {
+          console.warn("Credit consumption failed", creditError);
+        }
+      }
+
+      const url = `/osintinforesults?q=${encodeURIComponent(q)}&rid=${encodeURIComponent(id)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (e: any) {
+      const message = e?.message || "Search error.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -66,8 +98,8 @@ export default function Index() {
               usernames, IPs, or domains.
             </p>
             <div className="mt-10 grid gap-4">
-              <div className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-3 shadow-2xl shadow-brand-500/25 ring-1 ring-brand-500/25 backdrop-blur-2xl transition focus-within:border-white/40 focus-within:ring-brand-400/40 dark:border-white/10 dark:bg-white/5">
-                <div className="pointer-events-none absolute -top-16 right-0 h-40 w-40 rounded-full bg-white/20 opacity-0 blur-3xl transition-opacity duration-300 group-focus-within:opacity-80 group-hover:opacity-80 dark:bg-white/10" />
+              <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl shadow-cyan-500/20 ring-1 ring-cyan-500/25 backdrop-blur-2xl transition dark:border-white/10 dark:bg-white/5">
+                <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.18),transparent_60%)]" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -75,13 +107,14 @@ export default function Index() {
                     if (e.key === "Enter") onSearch();
                   }}
                   placeholder="Enter an email, phone, IP, domain, keyword…"
-                  className="h-11 w-full rounded-xl bg-transparent px-4 text-base outline-none md:h-12"
+                  className="h-14 w-full rounded-2xl bg-transparent px-4 text-base outline-none placeholder:text-foreground/50"
                 />
               </div>
               <Button
+                variant="hero"
                 onClick={onSearch}
                 disabled={loading}
-                className="h-12 transform-gpu rounded-xl text-base transition duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.025]"
+                className="h-12 rounded-2xl text-base shadow-xl hover:scale-[1.03]"
               >
                 {loading ? "Searching…" : "Search"}
               </Button>

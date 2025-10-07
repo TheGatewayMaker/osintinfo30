@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { computeRemaining } from "@/lib/user";
+import { cn } from "@/lib/utils";
 import { LogIn } from "lucide-react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -41,13 +42,18 @@ export function Header() {
           <span className="leading-none">Osint Info</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden items-center gap-4 md:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `relative text-sm font-semibold tracking-tight transition-all ${isActive ? "text-foreground" : "text-foreground/70"} hover:text-foreground after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-amber-400/70 after:transition-transform hover:after:scale-x-100`
+                cn(
+                  "interactive-glass inline-flex items-center rounded-full px-4 py-1.5 text-sm font-semibold tracking-tight text-foreground/75 shadow-[0_14px_32px_-28px_rgba(6,182,212,0.85)] transition-[color,shadow] duration-300 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  isActive
+                    ? "text-foreground shadow-[0_18px_42px_-26px_rgba(6,182,212,0.9)]"
+                    : "hover:shadow-[0_18px_40px_-30px_rgba(6,182,212,0.8)]",
+                )
               }
             >
               {item.label}
@@ -156,7 +162,11 @@ export function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className={`rounded px-3 py-2 hover:bg-accent ${location.pathname === item.to ? "bg-accent" : ""}`}
+                className={cn(
+                  "interactive-glass rounded-xl px-3 py-2 text-sm font-semibold tracking-tight text-foreground/75 shadow-[0_10px_30px_-30px_rgba(6,182,212,0.75)] transition-[color,shadow] duration-300 hover:text-foreground",
+                  location.pathname === item.to &&
+                    "text-foreground shadow-[0_16px_40px_-28px_rgba(6,182,212,0.85)]",
+                )}
               >
                 {item.label}
               </Link>

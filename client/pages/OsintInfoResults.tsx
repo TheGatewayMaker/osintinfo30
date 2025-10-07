@@ -106,7 +106,8 @@ export default function OsintInfoResults() {
     null,
   );
   const { user, profile, loading: authLoading } = useAuth();
-  const lastFetchedQueryRef = useRef<string | null>(null);
+  const activeFetchQueryRef = useRef<string | null>(null);
+  const lastCompletedQueryRef = useRef<string | null>(null);
   const lastChargedQueryRef = useRef<string | null>(null);
   const lastTrackedQueryRef = useRef<string | null>(null);
 

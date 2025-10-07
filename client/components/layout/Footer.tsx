@@ -4,8 +4,8 @@ export function Footer() {
       <div className="container mx-auto py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-foreground/70 text-center">
         <div className="flex items-center gap-2 font-semibold">
           <img
-            src="https://i.ibb.co/KjddQYWn/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
-            alt="Osint Info logo"
+            src="https://i.ibb.co/27yVz2jK/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
+            alt="Osint Leak logo"
             className="h-5 w-5 rounded-lg"
           />
           <span>Osint Info</span>

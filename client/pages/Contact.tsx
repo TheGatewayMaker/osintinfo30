@@ -36,7 +36,7 @@ export default function Contact() {
         </div>
 
         <form
-          action="https://formspree.io/f/movkllyk"
+          action="https://formspree.io/f/mqaydagp"
           method="POST"
           className="mt-8 mx-auto grid max-w-2xl gap-6 rounded-2xl border border-border bg-card/80 p-6 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur"
         >

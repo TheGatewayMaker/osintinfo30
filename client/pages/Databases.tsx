@@ -77,7 +77,7 @@ export default function Databases() {
                 <h3 className="text-xl font-extrabold tracking-tight text-foreground">
                   {item.name}
                 </h3>
-                <span className="rounded-full bg-brand-600/30 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-brand-50 ring-1 ring-brand-500/40">
+                <span style={{display: 'block', backgroundColor: 'rgba(144, 19, 254, 0.23)', borderRadius: '9999px', boxShadow: 'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(80, 37, 187, 0.4) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px', color: 'rgba(255, 255, 255, 1)', fontSize: '10.4px', fontWeight: 600, letterSpacing: '0.26px', lineHeight: '15.6px', textDecoration: 'rgb(15, 12, 39)', textTransform: 'uppercase', padding: '4px 12px'}}>
                   {item.size}
                 </span>
               </header>

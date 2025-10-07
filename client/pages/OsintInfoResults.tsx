@@ -225,27 +225,35 @@ export default function OsintInfoResults() {
   return (
     <Layout>
       <section className="relative isolate overflow-hidden py-10 md:py-14">
+        {/* Background gradient */}
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/12),transparent_60%)]" />
-        <div className="container mx-auto max-w-6xl">
+
+        {/* Main container */}
+        <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+          {/* Header and search section */}
           <header className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
               {trimmedQuery
                 ? `Osint Info Results for "${trimmedQuery}"`
                 : "Osint Info Results"}
             </h1>
+
             <p className="mt-2 text-sm text-foreground/70">
-              Clean, readable cards with key details highlighted. Refine your
-              search below.
+              Clean, readable cards with key details highlighted. Refine your search below.
             </p>
+
+            {/* Download Button */}
             <div className="mt-5 flex items-center justify-center gap-3">
               <Button
                 variant="hero"
                 onClick={handleDownload}
-                className="h-10 rounded-xl px-5"
+                className="h-10 rounded-xl px-5 transition-all hover:scale-105 hover:shadow-lg"
               >
                 Download Results
               </Button>
             </div>
+
+            {/* Search Bar */}
             <form
               onSubmit={handleSubmit}
               className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -255,19 +263,20 @@ export default function OsintInfoResults() {
                 placeholder="Enter an email, phone, IP, domain, or keyword"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-12 flex-1 rounded-xl"
+                className="h-12 flex-1 rounded-xl border border-border/50 bg-background/70 px-4 text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
               />
               <Button
                 type="submit"
                 disabled={loading}
-                className="h-12 rounded-xl px-6"
+                className="h-12 rounded-xl px-6 transition-all hover:scale-105 hover:shadow-md"
               >
                 {loading ? "Searching…" : "Search"}
               </Button>
             </form>
           </header>
 
-          <div className="mt-10">
+          {/* Results Section */}
+          <div className="mt-12">
             {normalized ? (
               normalized.records.length ? (
                 <ResultsList

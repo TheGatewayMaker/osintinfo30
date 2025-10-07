@@ -61,11 +61,18 @@ function formatResultsText(
   const lines: string[] = [];
   const stringify = (val: any, depth = 0): string => {
     if (val == null) return "";
-    if (typeof val === "string" || typeof val === "number" || typeof val === "boolean") {
+    if (
+      typeof val === "string" ||
+      typeof val === "number" ||
+      typeof val === "boolean"
+    ) {
       return String(val);
     }
     if (Array.isArray(val)) {
-      return val.map((v) => stringify(v, depth + 1)).filter(Boolean).join(", ");
+      return val
+        .map((v) => stringify(v, depth + 1))
+        .filter(Boolean)
+        .join(", ");
     }
     if (typeof val === "object") {
       const parts: string[] = [];

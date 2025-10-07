@@ -212,7 +212,7 @@ export default function OsintInfoResults() {
     return () => {
       cancelled = true;
     };
-  }, [initialQ, authLoading, user, profile]);
+  }, [initialQ, refreshToken, authLoading, user, profile]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

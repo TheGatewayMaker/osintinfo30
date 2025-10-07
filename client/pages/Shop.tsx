@@ -65,12 +65,12 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
     const inputX = event.clientX - rect.left;
     const inputY = event.clientY - rect.top;
 
-    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -8;
-    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 8;
+    const rotateX = ((inputY - rect.height / 2) / (rect.height / 2)) * -4;
+    const rotateY = ((inputX - rect.width / 2) / (rect.width / 2)) * 4;
 
     element.style.setProperty("--rx", `${rotateX.toFixed(2)}deg`);
     element.style.setProperty("--ry", `${rotateY.toFixed(2)}deg`);
-    element.style.setProperty("--tz", "20px");
+    element.style.setProperty("--tz", "12px");
     element.style.setProperty("--px", `${inputX}px`);
     element.style.setProperty("--py", `${inputY}px`);
   };

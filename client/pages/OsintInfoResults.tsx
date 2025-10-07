@@ -122,6 +122,8 @@ export default function OsintInfoResults() {
       setNormalized(null);
       activeFetchQueryRef.current = null;
       lastCompletedQueryRef.current = null;
+      lastChargedQueryRef.current = null;
+      lastTrackedQueryRef.current = null;
       return;
     }
 

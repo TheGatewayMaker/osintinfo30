@@ -11,6 +11,8 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/20 hover:from-brand-600 hover:to-brand-800 hover:shadow-brand-500/30 transform-gpu transition-transform hover:-translate-y-0.5",
+        hero:
+          "text-white shadow-lg shadow-cyan-500/20 [background-size:200%_200%] bg-[linear-gradient(110deg,#4ade80,45%,#06b6d4)] hover:bg-[linear-gradient(110deg,#38bdf8,45%,#10b981)] animate-gradient-x transform-gpu transition-transform hover:-translate-y-0.5",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

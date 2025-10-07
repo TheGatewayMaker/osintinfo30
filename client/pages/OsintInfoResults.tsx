@@ -216,7 +216,19 @@ export default function OsintInfoResults() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    void onSearch();
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    if (trimmed === initialQ.trim()) {
+      activeFetchQueryRef.current = null;
+      lastCompletedQueryRef.current = null;
+      lastChargedQueryRef.current = null;
+      lastTrackedQueryRef.current = null;
+    }
+
+    setParams({ q: trimmed, refresh: Date.now().toString() });
   }
 
   const trimmedQuery = query.trim();

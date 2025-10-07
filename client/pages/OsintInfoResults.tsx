@@ -122,6 +122,7 @@ export default function OsintInfoResults() {
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
+  const [handoffChecked, setHandoffChecked] = useState(false);
   const { user, profile, loading: authLoading } = useAuth();
 
   useEffect(() => {
@@ -129,16 +130,29 @@ export default function OsintInfoResults() {
   }, [initialQ]);
 
   useEffect(() => {
+    if (handoffChecked) return;
+
     const handoff = readHandoffFromStorage(rid);
     if (handoff) {
       setQuery(handoff.query);
       setNormalized(handoff.normalized);
+      setHandoffChecked(true);
       return;
     }
-    if (!initialQ.trim()) return;
+
+    if (!initialQ.trim()) {
+      setHandoffChecked(true);
+      return;
+    }
+
+    if (authLoading || !user) {
+      return;
+    }
+
+    setHandoffChecked(true);
     void onSearch(initialQ);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQ, rid]);
+  }, [authLoading, handoffChecked, initialQ, rid, user]);
 
   async function onSearch(explicit?: string) {
     const trimmed = (explicit ?? query).trim();
@@ -150,10 +164,12 @@ export default function OsintInfoResults() {
       return;
     }
 
-    const remaining = computeRemaining(profile);
-    if (!Number.isFinite(remaining) || remaining <= 0) {
-      toast.error("No searches remaining. Please purchase more.");
-      return;
+    if (profile) {
+      const remaining = computeRemaining(profile);
+      if (!Number.isFinite(remaining) || remaining <= 0) {
+        toast.error("No searches remaining. Please purchase more.");
+        return;
+      }
     }
 
     setLoading(true);

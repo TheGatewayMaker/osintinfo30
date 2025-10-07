@@ -110,9 +110,10 @@ function FeatureCard({ feature }: FeatureCardProps) {
         onPointerMove={handlePointerMove}
         onPointerEnter={(event) => handlePointerMove(event)}
         className={cn(
-          "relative h-full overflow-hidden rounded-3xl border border-border bg-card px-7 py-8 text-left",
-          "shadow-sm transition-[transform,box-shadow] duration-100 ease-out will-change-transform",
-          "hover:shadow-md",
+          "relative h-full overflow-hidden rounded-3xl border border-white/15 bg-white/10 px-7 py-8 text-left backdrop-blur-2xl",
+          "shadow-[0_18px_36px_-24px_rgba(15,23,42,0.6)] transition-[transform,box-shadow] duration-150 ease-out will-change-transform",
+          "before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/35 before:via-white/10 before:to-transparent before:opacity-70",
+          "hover:shadow-[0_22px_48px_-28px_rgba(15,23,42,0.7)] dark:border-white/10 dark:bg-white/5 dark:before:from-white/15",
         )}
         style={
           {

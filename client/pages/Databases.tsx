@@ -1,141 +1,109 @@
 import Layout from "@/components/layout/Layout";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  consumeSearchCredit,
-  computeRemaining,
-  isFirestorePermissionDenied,
-} from "@/lib/user";
-import { toast } from "sonner";
+
+const RECENT_BREACHES = [
+  {
+    name: "NordCom Telecom",
+    scope: "Telecom • EU",
+    type: "Customer Database",
+    size: "3.7M records",
+    description:
+      "Email, phone, hashed passwords, partial billing data exposed in recent dump.",
+  },
+  {
+    name: "SkyCourier",
+    scope: "Logistics • US",
+    type: "User Accounts",
+    size: "1.2M records",
+    description:
+      "Usernames, emails, delivery addresses and order metadata were leaked.",
+  },
+  {
+    name: "PayXchange",
+    scope: "Fintech • Global",
+    type: "Auth Table",
+    size: "680K records",
+    description:
+      "Credential combos and API keys surfaced from third‑party integrator breach.",
+  },
+  {
+    name: "EduPortal",
+    scope: "Education • UK",
+    type: "Student Directory",
+    size: "950K records",
+    description:
+      "Names, emails and enrollment info disclosed via misconfigured backup.",
+  },
+  {
+    name: "CityCare",
+    scope: "Healthcare • AU",
+    type: "Patient Contacts",
+    size: "420K records",
+    description:
+      "Contact details and appointment notes scraped from vendor portal.",
+  },
+  {
+    name: "Shopora",
+    scope: "Retail • CA",
+    type: "Marketing DB",
+    size: "2.3M records",
+    description:
+      "Email lists and campaign metrics leaked from email automation provider.",
+  },
+];
 
 export default function Databases() {
-  const [params] = useSearchParams();
-  const initialQ = params.get("q") ?? "";
-  const [query, setQuery] = useState(initialQ);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
-  const { user, profile } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setQuery(initialQ);
-  }, [initialQ]);
-
-  useEffect(() => {
-    if (initialQ.trim()) {
-      void onSearch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQ]);
-
-  const remaining = computeRemaining(profile);
-
-  async function onSearch() {
-    if (!query.trim()) return;
-    if (!user) {
-      toast.error("Please sign in to search.");
-      setTimeout(() => navigate("/auth"), 2000);
-      return;
-    }
-    if (!Number.isFinite(remaining) || remaining <= 0) {
-      toast.error("No searches remaining. Please purchase more.");
-      return;
-    }
-
-    setLoading(true);
-    setResult(null);
-    try {
-      const r = await fetch(
-        `/api/search?q=${encodeURIComponent(query.trim())}`,
-        {
-          method: "GET",
-        },
-      );
-      const contentType = r.headers.get("content-type") || "";
-      if (!r.ok) {
-        const text = await r.text();
-        toast.error(text || `Search failed (${r.status}).`);
-        return;
-      }
-      let data: any = null;
-      if (contentType.includes("application/json")) {
-        data = await r.json();
-      } else {
-        data = await r.text();
-      }
-      setResult(data);
-
-      try {
-        await consumeSearchCredit(user.uid, 1);
-      } catch (creditError) {
-        if (isFirestorePermissionDenied(creditError)) {
-          console.warn(
-            "Skipping credit consumption due to permission error.",
-            creditError,
-          );
-        } else {
-          throw creditError;
-        }
-      }
-    } catch (e: any) {
-      toast.error(e?.message || "Search error.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <Layout>
-      <section className="container mx-auto py-8">
+      <section className="container mx-auto py-10">
         <div className="text-center">
           <h1 className="text-3xl font-black">Databases</h1>
           <p className="mt-2 text-foreground/80">
-            Search leaked data sources and Dark Web datasets in real time.
+            Recently breached sources and exposed datasets.
           </p>
           <p className="mt-2 text-sm text-foreground/70 max-w-3xl mx-auto">
-            Monitor dumps, marketplaces, and breach chatter for exposed emails,
-            phone numbers, usernames, IPs, and domains linked to your assets.
+            Explore a snapshot of notable, recently discussed breaches. Data shown here is illustrative to protect sources.
           </p>
         </div>
 
-        <div className="mt-6 mx-auto max-w-3xl grid gap-3">
-          <div className="rounded-2xl border border-border bg-card/80 p-3 shadow-xl shadow-brand-500/20 ring-1 ring-brand-500/20 backdrop-blur">
-            <Input
-              placeholder="Enter an email, phone, IP, domain, keyword…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") onSearch();
-              }}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-foreground/60">
-              Remaining: <span className="font-semibold">{remaining}</span>
-            </div>
-            <Button onClick={onSearch} disabled={loading} className="h-10">
-              {loading ? "Searching…" : "Search"}
-            </Button>
-          </div>
-        </div>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {RECENT_BREACHES.map((item) => (
+            <article
+              key={item.name}
+              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/90 p-5 shadow-lg shadow-brand-500/10 transition-transform duration-300 ease-out transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-brand-500/20"
+            >
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(600px_300px_at_50%_-120px,theme(colors.cyan.500/0.14),transparent_60%)]" />
+              <header className="flex items-center justify-between">
+                <h3 className="text-xl font-extrabold tracking-tight text-foreground">
+                  {item.name}
+                </h3>
+                <span className="rounded-full bg-brand-500/15 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-brand-200">
+                  {item.size}
+                </span>
+              </header>
+              <p className="mt-1 text-sm text-foreground/70">{item.scope}</p>
 
-        <div className="mt-8">
-          {result == null ? (
-            <div className="text-center text-sm text-foreground/60">
-              Results will appear here.
-            </div>
-          ) : typeof result === "string" ? (
-            <pre className="overflow-auto rounded-xl border border-border bg-card/80 p-4 text-left whitespace-pre-wrap">
-              {result}
-            </pre>
-          ) : (
-            <pre className="overflow-auto rounded-xl border border-border bg-card/80 p-4 text-left">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          )}
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-border/60 bg-background/80 p-3 text-sm font-semibold text-foreground">
+                  <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+                    Database Type
+                  </span>
+                  <span className="mt-1 block">{item.type}</span>
+                </div>
+                <div className="rounded-2xl border border-border/60 bg-background/80 p-3 text-sm font-semibold text-foreground">
+                  <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
+                    Size
+                  </span>
+                  <span className="mt-1 block">{item.size}</span>
+                </div>
+              </div>
+
+              <p className="mt-4 text-sm leading-relaxed text-foreground/80">
+                {item.description}
+              </p>
+
+              <div className="mt-5 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 transition-transform duration-500 group-hover:scale-x-100" />
+            </article>
+          ))}
         </div>
       </section>
     </Layout>

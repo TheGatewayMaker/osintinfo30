@@ -24,7 +24,7 @@ export function AnimatedGradientText({
   return (
     <span
       className={cn(
-        "inline-block bg-clip-text text-transparent bg-no-repeat animate-gradient-x",
+        "inline-block bg-clip-text text-transparent bg-no-repeat animate-gradient-x motion-reduce:animate-none will-change-[background-position]",
         className,
       )}
       style={style}

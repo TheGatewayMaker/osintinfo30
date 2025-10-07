@@ -129,7 +129,7 @@ function DatabaseCard({ item }: CardProps) {
         <p className="mt-1 text-sm text-foreground/70">{item.scope}</p>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-border bg-background/90 p-3 text-sm font-semibold text-foreground">
+          <div className="interactive-glass rounded-2xl border border-white/15 p-3 text-sm font-semibold text-foreground dark:border-white/20">
             <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-foreground/50">
               Database Type
             </span>

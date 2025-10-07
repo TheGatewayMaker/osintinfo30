@@ -15,7 +15,6 @@ import Shop from "./pages/Shop";
 import AuthPage from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import SearchResults from "./pages/SearchResults";
 import OsintInfoResults from "./pages/OsintInfoResults";
 import Purchase from "./pages/Purchase";
 import { AuthProvider } from "@/context/AuthContext";
@@ -33,7 +32,6 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/databases" element={<Databases />} />
-            <Route path="/search" element={<SearchResults />} />
             <Route path="/osintinforesults" element={<OsintInfoResults />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/shop" element={<Shop />} />

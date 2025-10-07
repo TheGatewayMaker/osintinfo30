@@ -4,33 +4,27 @@ export default function About() {
   const features = [
     {
       title: "Real-Time Dark Web Monitoring",
-      desc:
-        "Track leaks across Tor, I2P, paste sites, and breach sources in near real time to spot risks early.",
+      desc: "Track leaks across Tor, I2P, paste sites, and breach sources in near real time to spot risks early.",
     },
     {
       title: "Weekly New Database Updates",
-      desc:
-        "Fresh breach databases and dumps ingested weekly with normalization and de-duplication for clean search.",
+      desc: "Fresh breach databases and dumps ingested weekly with normalization and de-duplication for clean search.",
     },
     {
       title: "Monitoring Marketplaces and Forums",
-      desc:
-        "Coverage across top marketplaces, carding shops, and underground forums for mentions of your assets.",
+      desc: "Coverage across top marketplaces, carding shops, and underground forums for mentions of your assets.",
     },
     {
       title: "Monitoring Telegram Logs Marketplace",
-      desc:
-        "Continuously scan Telegram channels, groups, and log marketplaces for compromised data and chatter.",
+      desc: "Continuously scan Telegram channels, groups, and log marketplaces for compromised data and chatter.",
     },
     {
       title: "Credential Exposure Detection",
-      desc:
-        "Identify exposed emails, phone numbers, usernames, IPs, and tokens tied to your company and domains.",
+      desc: "Identify exposed emails, phone numbers, usernames, IPs, and tokens tied to your company and domains.",
     },
     {
       title: "Actionable Alerts & Reporting",
-      desc:
-        "Custom alerts, weekly digests, and exportable reports keep security, fraud, and compliance teams aligned.",
+      desc: "Custom alerts, weekly digests, and exportable reports keep security, fraud, and compliance teams aligned.",
     },
   ] as const;
   return (

@@ -4,18 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+const gradientInteractive =
+  "text-white [background-size:220%_220%] bg-[linear-gradient(115deg,#4ade80_0%,#06b6d4_50%,#38bdf8_100%)] hover:bg-[linear-gradient(115deg,#38bdf8_0%,#06b6d4_50%,#4ade80_100%)] animate-gradient-x transform-gpu transition-transform duration-300 hover:-translate-y-0.5";
+
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:
-          "bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/20 hover:from-brand-600 hover:to-brand-800 hover:shadow-brand-500/30 transform-gpu transition-transform hover:-translate-y-0.5",
-        hero: "text-white shadow-lg shadow-cyan-500/20 [background-size:200%_200%] bg-[linear-gradient(110deg,#4ade80,45%,#06b6d4)] hover:bg-[linear-gradient(110deg,#38bdf8,45%,#10b981)] animate-gradient-x transform-gpu transition-transform hover:-translate-y-0.5",
+        default: `${gradientInteractive} shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/45`,
+        hero: `${gradientInteractive} shadow-xl shadow-emerald-500/35 hover:shadow-emerald-500/55 tracking-wide`,
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-transparent bg-background/80 text-foreground hover:bg-background/60 hover:text-foreground/90",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

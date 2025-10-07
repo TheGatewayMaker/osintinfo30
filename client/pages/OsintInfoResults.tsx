@@ -42,6 +42,7 @@ function formatResultsText(
   normalized: NormalizedSearchResults,
 ) {
   const lines: string[] = [];
+  const now = new Date().toISOString();
   const stringify = (val: any, depth = 0): string => {
     if (val == null) return "";
     if (
@@ -52,6 +53,7 @@ function formatResultsText(
       return String(val);
     }
     if (Array.isArray(val)) {
+      // Join simple items with comma + space; nested items expanded via recursion
       return val
         .map((v) => stringify(v, depth + 1))
         .filter(Boolean)
@@ -63,17 +65,20 @@ function formatResultsText(
         const s = stringify(v, depth + 1);
         if (s) parts.push(`${k}: ${s}`);
       }
-      return parts.join(", ");
+      // Use semicolons to better separate nested pairs
+      return parts.join("; ");
     }
     return String(val);
   };
 
   lines.push(`${site} for "${query}"`);
+  lines.push(`Generated: ${now}`);
   lines.push("");
   if (normalized.records.length === 0) {
     lines.push("No results found.");
   } else {
     lines.push(`Results (${normalized.records.length})`);
+    lines.push("==================================================");
     normalized.records.forEach((rec, idx) => {
       const title = rec.title?.trim() || `Record ${idx + 1}`;
       lines.push("");
@@ -85,6 +90,8 @@ function formatResultsText(
         const value = stringify(field.value).trim();
         if (value) lines.push(`- ${field.label}: ${value}`);
       }
+      lines.push("");
+      lines.push("--------------------------------------------------");
     });
   }
   lines.push("");
@@ -275,7 +282,35 @@ export default function OsintInfoResults() {
 
           {/* Results Section */}
           <div className="mt-12">
-            {loading ? (
+            {!user && trimmedQuery ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
+                <p className="text-base font-semibold text-foreground">
+                  Please sign in to view results.
+                </p>
+                <p className="mt-1 text-sm text-foreground/80">
+                  Sign in and run your search again.
+                </p>
+                <div className="mt-4 flex justify-center">
+                  <Button onClick={() => (window.location.href = "/auth")}>
+                    Sign in
+                  </Button>
+                </div>
+              </div>
+            ) : profile && computeRemaining(profile) <= 0 ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-amber-400/40 bg-amber-500/10 p-8 text-center">
+                <p className="text-base font-semibold text-foreground">
+                  No searches remaining.
+                </p>
+                <p className="mt-1 text-sm text-foreground/80">
+                  Purchase more to view results.
+                </p>
+                <div className="mt-4 flex justify-center">
+                  <Button onClick={() => (window.location.href = "/shop")}>
+                    Go to Shop
+                  </Button>
+                </div>
+              </div>
+            ) : loading ? (
               <div className="mx-auto max-w-md rounded-2xl border border-brand-500/40 bg-brand-500/10 p-8 text-center shadow-lg shadow-brand-500/10">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-brand-500" />
                 <p className="mt-4 text-sm font-semibold text-foreground">

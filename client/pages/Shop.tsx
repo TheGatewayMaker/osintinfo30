@@ -95,13 +95,13 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
             "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
         }}
       >
-        <div className="pointer-events-none absolute inset-x-4 -bottom-5 h-16 translate-y-4 rounded-full bg-slate-900/30 blur-xl transition-all duration-200 group-hover:translate-y-0.5 dark:bg-black/45" />
+        <div className="pointer-events-none absolute inset-x-6 -bottom-4 h-12 translate-y-3 rounded-full bg-slate-900/25 blur-lg transition-all duration-200 group-hover:translate-y-0.5 dark:bg-black/40" />
         <Card className="relative h-full overflow-hidden rounded-2xl border border-white/12 bg-white/10 px-2 pb-6 pt-4 shadow-[0_18px_36px_-24px_rgba(15,23,42,0.6)] backdrop-blur-2xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 hover:shadow-[0_22px_48px_-28px_rgba(15,23,42,0.72)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.82)] dark:hover:shadow-[0_24px_50px_-32px_rgba(0,0,0,0.88)]">
           <div
             className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-150 group-hover:opacity-100"
             style={{
               background:
-                "radial-gradient(140px 100px at var(--px, -100px) var(--py, -100px), rgba(56, 189, 248, 0.22), rgba(56, 189, 248, 0) 60%)",
+                "radial-gradient(100px 70px at var(--px, -100px) var(--py, -100px), rgba(6, 182, 212, 0.18), rgba(6, 182, 212, 0) 60%)",
               mixBlendMode: "screen",
             }}
           />

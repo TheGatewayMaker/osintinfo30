@@ -30,7 +30,9 @@ export default function Index() {
     }
 
     setLoading(true);
-    navigate(`/osintinforesults?q=${encodeURIComponent(q)}&refresh=${Date.now()}`);
+    navigate(
+      `/osintinforesults?q=${encodeURIComponent(q)}&refresh=${Date.now()}`,
+    );
   }
 
   return (

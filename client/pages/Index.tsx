@@ -6,10 +6,18 @@ import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text"
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { computeRemaining, consumeSearchCredit, isFirestorePermissionDenied } from "@/lib/user";
+import {
+  computeRemaining,
+  consumeSearchCredit,
+  isFirestorePermissionDenied,
+} from "@/lib/user";
 import { performSearch } from "@/lib/search";
 
-function saveResultsToStorage(query: string, payload: unknown, normalized: unknown) {
+function saveResultsToStorage(
+  query: string,
+  payload: unknown,
+  normalized: unknown,
+) {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const key = `osint:results:${id}`;
   const value = {

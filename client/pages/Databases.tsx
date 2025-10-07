@@ -61,7 +61,8 @@ export default function Databases() {
             Recently breached sources and exposed datasets.
           </p>
           <p className="mt-2 text-sm text-foreground/70 max-w-3xl mx-auto">
-            Explore a snapshot of notable, recently discussed breaches. Data shown here is illustrative to protect sources.
+            Explore a snapshot of notable, recently discussed breaches. Data
+            shown here is illustrative to protect sources.
           </p>
         </div>
 

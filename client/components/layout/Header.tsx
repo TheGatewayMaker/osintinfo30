@@ -31,14 +31,14 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b border-border">
-      <div className="container mx-auto flex h-16 items-center justify-between">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-2">
         <Link to="/" className="flex items-center gap-3 font-black text-2xl">
           <img
             src="https://i.ibb.co/27yVz2jK/osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak-osintleak.png"
             alt="Osint Leak logo"
             className="h-10 w-10 rounded-lg"
           />
-          <span className="leading-none">Osint Info</span>
+          <span className="hidden sm:inline leading-none">Osint Info</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -56,7 +56,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggle />
+          <div className="hidden sm:inline-flex"><ThemeToggle /></div>
 
           {user ? (
             <div className="flex items-center gap-3">
@@ -115,9 +115,9 @@ export function Header() {
               </DropdownMenu>
             </div>
           ) : (
-            <Button onClick={() => navigate("/auth")} title="Sign in">
+            <Button onClick={() => navigate("/auth")} title="Sign in" className="px-2 sm:px-4">
               <LogIn />
-              <span className="inline">Sign in</span>
+              <span className="hidden sm:inline">Sign in</span>
             </Button>
           )}
 

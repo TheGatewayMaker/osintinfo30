@@ -58,16 +58,18 @@ export function ResultsList({
   const total = totalCount ?? records.length;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {records.map((record, index) => (
-        <ResultCard
-          key={record.id || `record-${index}`}
-          record={record}
-          order={index + 1}
-          totalCount={total}
-          defaultExpanded={index === 0}
-        />
-      ))}
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {records.map((record, index) => (
+          <ResultCard
+            key={record.id || `record-${index}`}
+            record={record}
+            order={index + 1}
+            totalCount={total}
+            defaultExpanded={index === 0}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -100,6 +102,7 @@ function ResultCard({
   const nicknameDisplay = nickname ?? displayTitle;
   const urlHref = createHref(url);
   const fieldCount = record.fields.length;
+
   const showSummary =
     contextSummary && contextSummary !== infoLeakDetails
       ? contextSummary
@@ -108,6 +111,7 @@ function ResultCard({
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/95 p-6 shadow-lg shadow-brand-500/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-brand-500/20">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.18),transparent_60%)] opacity-70" />
+
       <header className="flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-foreground/60">
         <span className="inline-flex items-center gap-2">
           <span className="rounded-full bg-brand-500/15 px-3 py-1 text-brand-200">
@@ -122,6 +126,7 @@ function ResultCard({
       <h3 className="mt-5 text-2xl font-bold tracking-tight text-foreground">
         {displayTitle}
       </h3>
+
       {showSummary && (
         <p className="mt-2 text-sm leading-relaxed text-foreground/65">
           {showSummary}
@@ -297,8 +302,10 @@ function ValueRenderer({ value }: { value: ResultValue }) {
         typeof item === "number" ||
         typeof item === "boolean",
     ) as Array<string | number | boolean>;
+
     const objects = items.filter(
-      (item) => item && typeof item === "object" && !Array.isArray(item),
+      (item) =>
+        item && typeof item === "object" && !Array.isArray(item),
     ) as Array<Record<string, ResultValue>>;
 
     return (
@@ -315,6 +322,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             ))}
           </div>
         )}
+
         {objects.length > 0 && (
           <div className="space-y-4">
             {objects.map((objectValue, index) => (
@@ -345,6 +353,7 @@ function ObjectRenderer({ obj }: { obj: Record<string, ResultValue> }) {
   const entries = Object.entries(obj).filter(([, val]) =>
     hasMeaningfulValue(val),
   );
+
   if (!entries.length) {
     return <span className="text-foreground/50">Not provided</span>;
   }
@@ -372,14 +381,18 @@ function createHref(raw?: string | null) {
   if (!raw) return undefined;
   const trimmed = raw.trim();
   if (!trimmed) return undefined;
+
   if (/^(https?|ftp|mailto):\/\//i.test(trimmed)) {
     return trimmed;
   }
+
   if (trimmed.startsWith("www.")) {
     return `https://${trimmed}`;
   }
+
   if (!/\s/.test(trimmed) && trimmed.includes(".")) {
     return `https://${trimmed}`;
   }
+
   return undefined;
 }

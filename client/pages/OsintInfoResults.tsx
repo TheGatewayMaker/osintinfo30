@@ -275,34 +275,35 @@ export default function OsintInfoResults() {
 
           {/* Results Section */}
           <div className="mt-12">
-            {loading ? (
+            {!user && trimmedQuery ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
+                <p className="text-base font-semibold text-foreground">Please sign in to view results.</p>
+                <p className="mt-1 text-sm text-foreground/80">Sign in and run your search again.</p>
+                <div className="mt-4 flex justify-center"><Button onClick={() => (window.location.href = "/auth")}>Sign in</Button></div>
+              </div>
+            ) : profile && computeRemaining(profile) <= 0 ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-amber-400/40 bg-amber-500/10 p-8 text-center">
+                <p className="text-base font-semibold text-foreground">No searches remaining.</p>
+                <p className="mt-1 text-sm text-foreground/80">Purchase more to view results.</p>
+                <div className="mt-4 flex justify-center"><Button onClick={() => (window.location.href = "/shop")}>Go to Shop</Button></div>
+              </div>
+            ) : loading ? (
               <div className="mx-auto max-w-md rounded-2xl border border-brand-500/40 bg-brand-500/10 p-8 text-center shadow-lg shadow-brand-500/10">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-brand-500" />
-                <p className="mt-4 text-sm font-semibold text-foreground">
-                  Fetching fresh results…
-                </p>
+                <p className="mt-4 text-sm font-semibold text-foreground">Fetching fresh results…</p>
               </div>
             ) : normalized ? (
               normalized.records.length ? (
-                <ResultsList
-                  records={normalized.records}
-                  totalCount={normalized.recordCount}
-                />
+                <ResultsList records={normalized.records} totalCount={normalized.recordCount} />
               ) : (
                 <div className="mx-auto max-w-md rounded-2xl border border-dashed border-brand-500/40 bg-brand-500/10 p-8 text-center">
-                  <p className="text-base font-semibold text-foreground">
-                    No results found.
-                  </p>
-                  <p className="mt-1 text-sm text-foreground">
-                    Try a different query or broaden your terms.
-                  </p>
+                  <p className="text-base font-semibold text-foreground">No results found.</p>
+                  <p className="mt-1 text-sm text-foreground">Try a different query or broaden your terms.</p>
                 </div>
               )
             ) : (
               <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
-                <p className="text-base font-semibold text-foreground">
-                  Results will appear here after you run a search.
-                </p>
+                <p className="text-base font-semibold text-foreground">Results will appear here after you run a search.</p>
               </div>
             )}
           </div>

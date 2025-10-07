@@ -70,14 +70,14 @@ export default function Databases() {
           {RECENT_BREACHES.map((item) => (
             <article
               key={item.name}
-              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/90 p-5 shadow-lg shadow-brand-500/10 transition-transform duration-300 ease-out transform-gpu hover:-translate-y-1 hover:scale-[1.02] hover:shadow-brand-500/20"
+              className="group relative overflow-hidden rounded-3xl border border-border/60 bg-background/90 p-5 shadow-lg shadow-brand-500/10 transition-all duration-200 ease-[cubic-bezier(.2,.8,.2,1)] will-change-transform motion-safe:transform-gpu hover:-translate-y-1 hover:shadow-brand-500/20"
             >
               <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(600px_300px_at_50%_-120px,theme(colors.cyan.500/0.14),transparent_60%)]" />
               <header className="flex items-center justify-between">
                 <h3 className="text-xl font-extrabold tracking-tight text-foreground">
                   {item.name}
                 </h3>
-                <span className="rounded-full bg-brand-500/15 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-brand-200">
+                <span className="rounded-full bg-brand-600/30 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-brand-50 ring-1 ring-brand-500/40">
                   {item.size}
                 </span>
               </header>

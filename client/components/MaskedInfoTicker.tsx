@@ -73,7 +73,7 @@ export default function MaskedInfoTicker({
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
             className="absolute inset-0 flex items-center justify-center text-[13px] md:text-sm font-semibold tracking-wide text-brand-700 dark:text-brand-300"
           >
-            <span className="[text-shadow:0_6px_16px_rgba(79,70,229,0.25)]">
+            <span className="[text-shadow:0_6px_16px_rgba(0,0,0,0.25)]">
               {list[index]}
             </span>
           </motion.div>

@@ -45,8 +45,8 @@ export function FeatureGrid() {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {features.map((feature) => (
-        <FeatureCard key={feature.title} feature={feature} />)
-      )}
+        <FeatureCard key={feature.title} feature={feature} />
+      ))}
     </div>
   );
 }

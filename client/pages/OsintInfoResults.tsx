@@ -274,7 +274,7 @@ export default function OsintInfoResults() {
                 : "Osint Info Results"}
             </h1>
 
-            <p className="mt-2 text-sm text-foreground/70">
+            <p className="mt-2 text-sm text-foreground/90">
               Clean, readable cards with key details highlighted. Refine your
               search below.
             </p>
@@ -291,25 +291,20 @@ export default function OsintInfoResults() {
             </div>
 
             {/* Search Bar */}
-            <form
-              onSubmit={handleSubmit}
-              className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
-            >
-              <Input
-                aria-label="Search query"
-                placeholder="Enter an email, phone, IP, domain, or keyword"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="h-12 flex-1 rounded-xl border border-border/50 bg-background/70 px-4 text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
-              />
-              <Button
-                type="submit"
-                disabled={loading}
-                className="h-12 rounded-xl px-6 transition-all hover:scale-105 hover:shadow-md"
-              >
-                {loading ? "Searching…" : "Search"}
-              </Button>
-            </form>
+            <div className="mt-6">
+              <form onSubmit={handleSubmit} className="flex flex-col">
+                <Input
+                  aria-label="Search query"
+                  placeholder="Enter an email, phone, IP, domain, or keyword"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="h-12 rounded-xl border border-border bg-background px-4 text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                />
+              </form>
+              <p className="mt-2 text-xs font-semibold text-foreground">
+                Press Enter to run a search with your updated query.
+              </p>
+            </div>
           </header>
 
           {/* Results Section */}
@@ -332,7 +327,7 @@ export default function OsintInfoResults() {
                   <p className="text-base font-semibold text-foreground">
                     No results found.
                   </p>
-                  <p className="mt-1 text-sm text-foreground/80">
+                  <p className="mt-1 text-sm text-foreground">
                     Try a different query or broaden your terms.
                   </p>
                 </div>

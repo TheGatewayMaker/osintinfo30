@@ -255,7 +255,8 @@ export default function OsintInfoResults() {
             </h1>
 
             <p className="mt-2 text-sm text-foreground/70">
-              Clean, readable cards with key details highlighted. Refine your search below.
+              Clean, readable cards with key details highlighted. Refine your
+              search below.
             </p>
 
             {/* Download Button */}

@@ -6,33 +6,7 @@ import { AnimatedGradientText } from "@/registry/magicui/animated-gradient-text"
 import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
-import {
-  computeRemaining,
-  consumeSearchCredit,
-  isFirestorePermissionDenied,
-} from "@/lib/user";
-import { performSearch } from "@/lib/search";
-
-function saveResultsToStorage(
-  query: string,
-  payload: unknown,
-  normalized: unknown,
-) {
-  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const key = `osint:results:${id}`;
-  const value = {
-    query,
-    data: payload,
-    normalized,
-    createdAt: new Date().toISOString(),
-  };
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // ignore storage errors
-  }
-  return { id, key };
-}
+import { computeRemaining } from "@/lib/user";
 
 export default function Index() {
   const [query, setQuery] = useState("");
@@ -55,28 +29,7 @@ export default function Index() {
     }
 
     setLoading(true);
-    try {
-      const { data, normalized } = await performSearch(q);
-      const { id } = saveResultsToStorage(q, data, normalized);
-
-      if (normalized.hasMeaningfulData) {
-        try {
-          await consumeSearchCredit(user.uid, 1);
-        } catch (creditError) {
-          if (!isFirestorePermissionDenied(creditError)) {
-            console.warn("Credit consumption failed", creditError);
-          }
-        }
-      }
-
-      const url = `/osintinforesults?q=${encodeURIComponent(q)}&rid=${encodeURIComponent(id)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-    } catch (e: any) {
-      const message = e?.message || "Search error.";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
+    navigate(`/osintinforesults?q=${encodeURIComponent(q)}`);
   }
 
   return (

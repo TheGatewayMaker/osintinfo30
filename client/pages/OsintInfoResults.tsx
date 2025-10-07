@@ -37,23 +37,6 @@ async function postSearchTrack(
   }
 }
 
-function readHandoffFromStorage(
-  id: string | null,
-): { query: string; normalized: NormalizedSearchResults } | null {
-  if (!id) return null;
-  try {
-    const raw = localStorage.getItem(`osint:results:${id}`);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as {
-      query: string;
-      normalized: NormalizedSearchResults;
-    };
-    return { query: parsed.query, normalized: parsed.normalized };
-  } catch {
-    return null;
-  }
-}
-
 function formatResultsText(
   site: string,
   query: string,

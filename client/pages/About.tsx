@@ -1,6 +1,38 @@
 import Layout from "@/components/layout/Layout";
 
 export default function About() {
+  const features = [
+    {
+      title: "Real-Time Dark Web Monitoring",
+      desc:
+        "Track leaks across Tor, I2P, paste sites, and breach sources in near real time to spot risks early.",
+    },
+    {
+      title: "Weekly New Database Updates",
+      desc:
+        "Fresh breach databases and dumps ingested weekly with normalization and de-duplication for clean search.",
+    },
+    {
+      title: "Monitoring Marketplaces and Forums",
+      desc:
+        "Coverage across top marketplaces, carding shops, and underground forums for mentions of your assets.",
+    },
+    {
+      title: "Monitoring Telegram Logs Marketplace",
+      desc:
+        "Continuously scan Telegram channels, groups, and log marketplaces for compromised data and chatter.",
+    },
+    {
+      title: "Credential Exposure Detection",
+      desc:
+        "Identify exposed emails, phone numbers, usernames, IPs, and tokens tied to your company and domains.",
+    },
+    {
+      title: "Actionable Alerts & Reporting",
+      desc:
+        "Custom alerts, weekly digests, and exportable reports keep security, fraud, and compliance teams aligned.",
+    },
+  ] as const;
   return (
     <Layout>
       <section className="container mx-auto py-12">
@@ -15,22 +47,16 @@ export default function About() {
           </p>
         </div>
 
-        <div className="mx-auto mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-card/80 p-6 shadow-lg">
-            <h2 className="text-xl font-semibold">Dark Web Monitoring</h2>
-            <p className="mt-2 text-foreground/80">
-              We continuously track marketplaces, forums, and data dumps to
-              surface leaked credentials, emails, phone numbers, IPs, and
-              domains tied to your organization.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border bg-card/80 p-6 shadow-lg">
-            <h2 className="text-xl font-semibold">Actionable Alerts</h2>
-            <p className="mt-2 text-foreground/80">
-              Custom alerts and integrations notify the right teams instantly
-              with context to take action—no noisy feeds, just verified signals.
-            </p>
-          </div>
+        <div className="mx-auto mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f) => (
+            <div
+              key={f.title}
+              className="rounded-2xl border border-border bg-card/80 p-6 shadow-lg"
+            >
+              <h2 className="text-xl font-semibold">{f.title}</h2>
+              <p className="mt-2 text-foreground/80">{f.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
     </Layout>

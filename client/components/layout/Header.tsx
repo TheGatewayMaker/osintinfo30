@@ -74,7 +74,8 @@ export function Header() {
                       className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,99,0.32),transparent_70%)] opacity-80"
                     />
                     <span className="relative z-10 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-amber-50">
-                      <span className="hidden sm:inline">Balance:</span> {computeRemaining(profile)}
+                      <span className="hidden sm:inline">Balance:</span>{" "}
+                      {computeRemaining(profile)}
                     </span>
                   </button>
                 </DropdownMenuTrigger>

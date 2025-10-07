@@ -68,7 +68,9 @@ export default function Index() {
                 <div className="pointer-events-none absolute inset-0 -z-10 hidden md:block bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.12),transparent_60%)]" />
                 <input
                   value={query}
-                  onChange={(e) => startTransition(() => setQuery(e.target.value))}
+                  onChange={(e) =>
+                    startTransition(() => setQuery(e.target.value))
+                  }
                   onKeyDown={(e) => {
                     if (e.key === "Enter") onSearch();
                   }}

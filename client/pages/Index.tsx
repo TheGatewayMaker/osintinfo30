@@ -83,8 +83,8 @@ export default function Index() {
     <Layout>
       <section className="relative flex items-center justify-center overflow-hidden py-24 md:py-36">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/12),transparent_55%)]" />
-        <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[120px]" />
+        <div className="hidden sm:block pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" />
+        <div className="hidden sm:block pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[120px]" />
         <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl sm:block" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-600/20 via-background/0 to-background/30" />
         <div className="container mx-auto">
@@ -108,7 +108,7 @@ export default function Index() {
               usernames, IPs, or domains.
             </p>
             <div className="mt-10 grid gap-4">
-              <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl shadow-cyan-500/20 ring-1 ring-cyan-500/25 backdrop-blur-2xl transition dark:border-white/10 dark:bg-white/5">
+              <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl shadow-cyan-500/20 ring-1 ring-cyan-500/25 backdrop-blur-md md:backdrop-blur-2xl transition dark:border-white/10 dark:bg-white/5">
                 <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.18),transparent_60%)]" />
                 <input
                   value={query}
@@ -124,7 +124,7 @@ export default function Index() {
                 variant="hero"
                 onClick={onSearch}
                 disabled={loading}
-                className="h-12 rounded-2xl text-base shadow-xl hover:scale-[1.03]"
+                className="h-12 rounded-2xl text-base shadow-xl hover:scale-[1.03] motion-reduce:transform-none motion-reduce:animate-none"
               >
                 {loading ? "Searching…" : "Search"}
               </Button>

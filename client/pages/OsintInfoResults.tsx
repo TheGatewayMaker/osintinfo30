@@ -1,20 +1,17 @@
 import { FormEvent, useEffect, useState } from "react";
 import Layout from "@/components/layout/Layout";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ResultsList } from "@/components/results/ResultsList";
-import { performSearch, type SearchResult } from "@/lib/search";
+import { performSearch } from "@/lib/search";
 import {
   computeRemaining,
   consumeSearchCredit,
   isFirestorePermissionDenied,
 } from "@/lib/user";
-import {
-  normalizeSearchResults,
-  type NormalizedSearchResults,
-} from "@/lib/search-normalize";
+import { type NormalizedSearchResults } from "@/lib/search-normalize";
 import { toast } from "sonner";
 
 async function postSearchTrack(
@@ -35,32 +32,79 @@ async function postSearchTrack(
       body: JSON.stringify(payload),
     });
   } catch (e) {
-    // Swallow errors so UX is not affected
     console.warn("Search tracking failed", e);
   }
+}
+
+function readHandoffFromStorage(
+  id: string | null,
+): { query: string; normalized: NormalizedSearchResults } | null {
+  if (!id) return null;
+  try {
+    const raw = localStorage.getItem(`osint:results:${id}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as {
+      query: string;
+      normalized: NormalizedSearchResults;
+    };
+    return { query: parsed.query, normalized: parsed.normalized };
+  } catch {
+    return null;
+  }
+}
+
+function formatResultsText(
+  site: string,
+  query: string,
+  normalized: NormalizedSearchResults,
+) {
+  const lines: string[] = [];
+  lines.push(`${site} for "${query}"`);
+  lines.push("");
+  if (normalized.records.length === 0) {
+    lines.push("No results found.");
+  } else {
+    lines.push("Results");
+    normalized.records.forEach((rec, idx) => {
+      const title = rec.title?.trim() || `Record ${idx + 1}`;
+      lines.push(`- ${title}`);
+    });
+  }
+  lines.push("");
+  lines.push(
+    "Need Help regarding anything? Contact us now at Telegram @Osint_Info_supportbot",
+  );
+  lines.push("");
+  lines.push("Thankyou for using our service!");
+  return lines.join("\n");
 }
 
 export default function OsintInfoResults() {
   const [params] = useSearchParams();
   const initialQ = params.get("q") ?? "";
+  const rid = params.get("rid");
   const [query, setQuery] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(
     null,
   );
   const { user, profile, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setQuery(initialQ);
   }, [initialQ]);
 
   useEffect(() => {
+    const handoff = readHandoffFromStorage(rid);
+    if (handoff) {
+      setQuery(handoff.query);
+      setNormalized(handoff.normalized);
+      return;
+    }
     if (!initialQ.trim()) return;
-    // Run search on mount for provided query
     void onSearch(initialQ);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQ]);
+  }, [initialQ, rid]);
 
   async function onSearch(explicit?: string) {
     const trimmed = (explicit ?? query).trim();
@@ -80,11 +124,9 @@ export default function OsintInfoResults() {
 
     setLoading(true);
     try {
-      const { data, normalized: freshNormalized } =
-        await performSearch(trimmed);
+      const { normalized: freshNormalized } = await performSearch(trimmed);
       setNormalized(freshNormalized);
 
-      // Track to Discord webhook (backend endpoint)
       void postSearchTrack(
         user.email,
         trimmed,
@@ -120,7 +162,29 @@ export default function OsintInfoResults() {
   }
 
   const trimmedQuery = query.trim();
-  const hasResults = normalized?.hasMeaningfulData ?? false;
+
+  const handleDownload = () => {
+    if (!normalized) return;
+    const site = "Osint Info Results";
+    const content = formatResultsText(
+      site,
+      trimmedQuery || "Query",
+      normalized,
+    );
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const slug = (trimmedQuery || "query")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    a.href = url;
+    a.download = `osint-info-results-${slug || "query"}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <Layout>
@@ -130,13 +194,22 @@ export default function OsintInfoResults() {
           <header className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
               {trimmedQuery
-                ? `Results for "${trimmedQuery}"`
-                : "Search results"}
+                ? `Osint Info Results for "${trimmedQuery}"`
+                : "Osint Info Results"}
             </h1>
             <p className="mt-2 text-sm text-foreground/70">
               Clean, readable cards with key details highlighted. Refine your
               search below.
             </p>
+            <div className="mt-5 flex items-center justify-center gap-3">
+              <Button
+                variant="hero"
+                onClick={handleDownload}
+                className="h-10 rounded-xl px-5"
+              >
+                Download Results
+              </Button>
+            </div>
             <form
               onSubmit={handleSubmit}
               className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"

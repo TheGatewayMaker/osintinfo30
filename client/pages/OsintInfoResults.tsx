@@ -100,6 +100,7 @@ function formatResultsText(
 export default function OsintInfoResults() {
   const [params, setParams] = useSearchParams();
   const initialQ = params.get("q") ?? "";
+  const refreshToken = params.get("refresh") ?? "";
   const [query, setQuery] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [normalized, setNormalized] = useState<NormalizedSearchResults | null>(

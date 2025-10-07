@@ -64,14 +64,14 @@ export function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="relative hidden overflow-hidden sm:inline-flex items-center rounded-full border border-white/10 bg-background/75 px-4 py-1.5 text-sm font-semibold text-amber-300 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.72)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-white/15 dark:bg-background/60"
+                    className="relative hidden overflow-hidden sm:inline-flex items-center rounded-full border border-amber-400/50 bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-100 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.72)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-amber-300/40 dark:bg-amber-500/15"
                     title="Searches remaining"
                   >
                     <span
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_65%)] opacity-80"
+                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,99,0.32),transparent_70%)] opacity-80"
                     />
-                    <span className="relative z-10 text-sm font-semibold uppercase tracking-[0.18em] text-amber-100">
+                    <span className="relative z-10 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-amber-50">
                       Balance: {computeRemaining(profile)}
                     </span>
                   </button>

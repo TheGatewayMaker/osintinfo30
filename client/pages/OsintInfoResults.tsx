@@ -312,7 +312,14 @@ export default function OsintInfoResults() {
 
           {/* Results Section */}
           <div className="mt-12">
-            {normalized ? (
+            {loading ? (
+              <div className="mx-auto max-w-md rounded-2xl border border-brand-500/40 bg-brand-500/10 p-8 text-center shadow-lg shadow-brand-500/10">
+                <Loader2 className="mx-auto h-8 w-8 animate-spin text-brand-500" />
+                <p className="mt-4 text-sm font-semibold text-foreground">
+                  Fetching fresh results…
+                </p>
+              </div>
+            ) : normalized ? (
               normalized.records.length ? (
                 <ResultsList
                   records={normalized.records}
@@ -320,15 +327,17 @@ export default function OsintInfoResults() {
                 />
               ) : (
                 <div className="mx-auto max-w-md rounded-2xl border border-dashed border-brand-500/40 bg-brand-500/10 p-8 text-center">
-                  <p className="text-base font-semibold">No results found.</p>
-                  <p className="mt-1 text-sm text-foreground/60">
+                  <p className="text-base font-semibold text-foreground">
+                    No results found.
+                  </p>
+                  <p className="mt-1 text-sm text-foreground/80">
                     Try a different query or broaden your terms.
                   </p>
                 </div>
               )
             ) : (
               <div className="mx-auto max-w-md rounded-2xl border border-dashed border-border/60 bg-background/70 p-8 text-center">
-                <p className="text-base font-semibold">
+                <p className="text-base font-semibold text-foreground">
                   Results will appear here after you run a search.
                 </p>
               </div>

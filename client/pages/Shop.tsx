@@ -95,13 +95,13 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
             "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px))",
         }}
       >
-        <div className="pointer-events-none absolute inset-x-6 -bottom-4 h-12 translate-y-3 rounded-full bg-slate-900/25 blur-lg transition-all duration-200 group-hover:translate-y-0.5 dark:bg-black/40" />
-        <Card className="relative h-full overflow-hidden rounded-2xl border border-white/12 bg-white/10 px-2 pb-6 pt-4 shadow-[0_18px_36px_-24px_rgba(15,23,42,0.6)] backdrop-blur-2xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 hover:shadow-[0_22px_48px_-28px_rgba(15,23,42,0.72)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.82)] dark:hover:shadow-[0_24px_50px_-32px_rgba(0,0,0,0.88)]">
+        <div className="pointer-events-none absolute inset-x-6 -bottom-4 h-12 translate-y-3 rounded-full bg-brand-900/25 blur-lg transition-all duration-200 group-hover:translate-y-0.5 dark:bg-brand-300/30" />
+        <Card className="relative h-full overflow-hidden rounded-2xl border border-border/70 bg-card/85 px-2 pb-6 pt-4 shadow-[0_18px_36px_-24px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition-[box-shadow,transform] duration-150 group-hover:-translate-y-0.5 hover:shadow-[0_22px_48px_-28px_rgba(0,0,0,0.62)] dark:border-border/60 dark:bg-card/65 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.7)] dark:hover:shadow-[0_24px_50px_-32px_rgba(0,0,0,0.8)]">
           <div
             className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-150 group-hover:opacity-100"
             style={{
               background:
-                "radial-gradient(100px 70px at var(--px, -100px) var(--py, -100px), rgba(6, 182, 212, 0.18), rgba(6, 182, 212, 0) 60%)",
+                "radial-gradient(100px 70px at var(--px, -100px) var(--py, -100px), rgba(64,64,64,0.22), rgba(64,64,64,0) 60%)",
               mixBlendMode: "screen",
             }}
           />
@@ -110,7 +110,7 @@ function PlanCard({ plan, onEmail }: PlanCardProps) {
               <span className="text-4xl font-extrabold text-foreground">
                 {plan.searches}
               </span>{" "}
-              <span className="align-super text-xs font-semibold uppercase tracking-[0.5em] text-amber-400">
+              <span className="align-super text-xs font-semibold uppercase tracking-[0.5em] text-brand-600">
                 searches
               </span>
             </CardTitle>

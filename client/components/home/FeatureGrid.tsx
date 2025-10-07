@@ -110,10 +110,10 @@ function FeatureCard({ feature }: FeatureCardProps) {
         onPointerMove={handlePointerMove}
         onPointerEnter={(event) => handlePointerMove(event)}
         className={cn(
-          "relative h-full overflow-hidden rounded-3xl border border-white/15 bg-white/10 px-7 py-8 text-left backdrop-blur-2xl",
-          "shadow-[0_18px_36px_-24px_rgba(15,23,42,0.6)] transition-[transform,box-shadow] duration-150 ease-out will-change-transform",
-          "before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/35 before:via-white/10 before:to-transparent before:opacity-70",
-          "hover:shadow-[0_22px_48px_-28px_rgba(15,23,42,0.7)] dark:border-white/10 dark:bg-white/5 dark:before:from-white/15 dark:shadow-[0_18px_38px_-26px_rgba(0,0,0,0.75)] dark:hover:shadow-[0_22px_50px_-30px_rgba(0,0,0,0.82)]",
+          "relative h-full overflow-hidden rounded-3xl border border-border/70 bg-card/80 px-7 py-8 text-left backdrop-blur-2xl",
+          "shadow-[0_18px_36px_-24px_rgba(0,0,0,0.35)] transition-[transform,box-shadow] duration-150 ease-out will-change-transform",
+          "before:pointer-events-none before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-foreground/10 before:via-foreground/5 before:to-transparent before:opacity-70",
+          "hover:shadow-[0_22px_48px_-28px_rgba(0,0,0,0.5)] dark:border-border/50 dark:bg-card/60 dark:before:from-foreground/15 dark:shadow-[0_18px_38px_-26px_rgba(0,0,0,0.58)] dark:hover:shadow-[0_22px_50px_-30px_rgba(0,0,0,0.7)]",
         )}
         style={
           {

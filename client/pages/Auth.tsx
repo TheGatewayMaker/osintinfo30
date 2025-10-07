@@ -45,12 +45,14 @@ export default function AuthPage() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card/80 shadow-lg shadow-brand-500/10 ring-1 ring-brand-500/10 backdrop-blur p-6">
-              {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+              {error && (
+                <p className="mb-4 text-sm text-destructive">{error}</p>
+              )}
 
               <div className="grid gap-3">
                 <Button
                   variant="secondary"
-                  className="w-full bg-white text-black hover:opacity-90 border border-border dark:bg-white dark:text-black flex items-center justify-center gap-2 h-11 rounded-xl"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background text-foreground hover:bg-background/80 dark:bg-card dark:text-foreground"
                   onClick={handleGoogle}
                   disabled={loading}
                 >

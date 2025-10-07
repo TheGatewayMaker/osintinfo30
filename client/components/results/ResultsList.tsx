@@ -109,7 +109,7 @@ function ResultCard({
       : undefined;
 
   return (
-    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/96 p-6 shadow-[0_18px_34px_-22px_rgba(15,23,42,0.55)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-border/70 hover:shadow-[0_22px_45px_-26px_rgba(15,23,42,0.68)] dark:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.7)] dark:hover:shadow-[0_22px_48px_-28px_rgba(0,0,0,0.78)]">
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[26px] border border-border/60 bg-background/96 p-6 shadow-[0_18px_34px_-22px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-border/70 hover:shadow-[0_22px_45px_-26px_rgba(0,0,0,0.6)] dark:shadow-[0_18px_36px_-24px_rgba(0,0,0,0.62)] dark:hover:shadow-[0_22px_48px_-28px_rgba(0,0,0,0.75)]">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,theme(colors.brand.500/0.12),transparent_65%)] opacity-75" />
       <header className="flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-foreground/60">
         <span className="inline-flex items-center gap-2">
@@ -219,7 +219,7 @@ function InfoTile({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-base font-semibold leading-6 text-amber-300 underline-offset-4 transition-colors hover:text-amber-200 hover:underline break-words"
+              className="break-words text-base font-semibold leading-6 text-brand-800 underline underline-offset-4 transition-colors hover:text-brand-900"
             >
               {displayValue}
             </a>
@@ -311,7 +311,7 @@ function ValueRenderer({ value }: { value: ResultValue }) {
             {primitives.map((primitive, index) => (
               <span
                 key={`${primitive}-${index}`}
-                className="inline-flex items-center rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs font-semibold text-foreground/90 shadow-[0_6px_12px_-8px_rgba(15,23,42,0.45)]"
+                className="inline-flex items-center rounded-full border border-border/60 bg-background/90 px-3 py-1 text-xs font-semibold text-foreground/90 shadow-[0_6px_12px_-8px_rgba(0,0,0,0.45)]"
               >
                 {String(primitive)}
               </span>

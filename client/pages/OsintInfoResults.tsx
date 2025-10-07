@@ -297,7 +297,7 @@ export default function OsintInfoResults() {
                 </div>
               </div>
             ) : profile && computeRemaining(profile) <= 0 ? (
-              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-amber-400/40 bg-amber-500/10 p-8 text-center">
+              <div className="mx-auto max-w-md rounded-2xl border border-dashed border-brand-700/40 bg-brand-900/10 p-8 text-center">
                 <p className="text-base font-semibold text-foreground">
                   No searches remaining.
                 </p>

@@ -45,7 +45,7 @@ export default function About() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="relative overflow-hidden rounded-2xl border border-white/12 bg-white/10 p-6 shadow-[0_18px_36px_-24px_rgba(15,23,42,0.6)] backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/30 before:via-white/10 before:to-transparent before:opacity-70 dark:border-white/10 dark:bg-white/5 dark:before:from-white/15 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.8)]"
+              className="relative overflow-hidden rounded-2xl border border-border/70 bg-card/80 p-6 shadow-[0_18px_36px_-24px_rgba(0,0,0,0.4)] backdrop-blur-2xl before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-foreground/10 before:via-foreground/5 before:to-transparent before:opacity-70 dark:border-border/60 dark:bg-card/60 dark:before:from-foreground/15 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.7)]"
             >
               <h2 className="text-xl font-semibold">{f.title}</h2>
               <p className="mt-2 text-foreground/80">{f.desc}</p>

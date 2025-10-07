@@ -47,7 +47,7 @@ export function Header() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `relative text-sm font-semibold tracking-tight transition-all ${isActive ? "text-foreground" : "text-foreground/70"} hover:text-foreground after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-amber-400/70 after:transition-transform hover:after:scale-x-100`
+                `relative text-sm font-semibold tracking-tight transition-all ${isActive ? "text-foreground" : "text-foreground/70"} hover:text-foreground after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-foreground/40 after:transition-transform hover:after:scale-x-100`
               }
             >
               {item.label}
@@ -66,14 +66,14 @@ export function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="relative inline-flex overflow-hidden items-center rounded-full border border-amber-400/50 bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-100 shadow-[0_12px_22px_-18px_rgba(15,23,42,0.72)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-amber-300/40 dark:bg-amber-500/15"
+                    className="relative inline-flex overflow-hidden items-center rounded-full border border-brand-700/50 bg-brand-800/20 px-3 py-1 text-xs font-semibold text-primary-foreground shadow-[0_12px_22px_-18px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-brand-600/40 dark:bg-brand-500/15 dark:text-foreground"
                     title="Searches remaining"
                   >
                     <span
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,99,0.32),transparent_70%)] opacity-80"
+                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--brand-600)/0.35),transparent_70%)] opacity-80"
                     />
-                    <span className="relative z-10 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-amber-50">
+                    <span className="relative z-10 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-primary-foreground">
                       <span className="hidden sm:inline">Balance:</span>{" "}
                       {computeRemaining(profile)}
                     </span>

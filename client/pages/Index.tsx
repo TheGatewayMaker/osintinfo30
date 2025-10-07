@@ -38,18 +38,18 @@ export default function Index() {
   return (
     <Layout>
       <section className="relative flex items-center justify-center overflow-hidden py-24 md:py-36">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/12),transparent_55%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,theme(colors.brand.500/14),transparent_55%)]" />
         <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/25 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[120px]" />
-        <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-cyan-400/20 blur-3xl sm:block" />
+        <div className="pointer-events-none absolute bottom-8 right-10 -z-10 h-64 w-64 rounded-full bg-brand-700/20 blur-[120px]" />
+        <div className="pointer-events-none absolute top-16 left-10 -z-10 hidden h-56 w-56 rounded-full bg-brand-300/25 blur-3xl sm:block" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand-600/20 via-background/0 to-background/30" />
         <div className="container mx-auto">
           <div className="mx-auto max-w-3xl text-center">
             <h1>
               <AnimatedGradientText
                 speed={2}
-                colorFrom="#4ade80"
-                colorTo="#06b6d4"
+                colorFrom="#a3a3a3"
+                colorTo="#0a0a0a"
                 className="text-4xl font-black tracking-tight md:text-6xl"
               >
                 Check if your data has been leaked
@@ -64,8 +64,8 @@ export default function Index() {
               usernames, IPs, or domains.
             </p>
             <div className="mt-10 grid gap-4">
-              <div className="group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl shadow-cyan-500/20 ring-1 ring-cyan-500/25 backdrop-blur-2xl transition dark:border-white/10 dark:bg-white/5">
-                <div className="pointer-events-none absolute inset-0 -z-10 hidden md:block bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.emerald.400/0.12),transparent_60%)]" />
+              <div className="group relative overflow-hidden rounded-3xl border border-border/80 bg-card/90 p-2 shadow-[0_24px_48px_-28px_rgba(0,0,0,0.5)] ring-1 ring-brand-800/25 backdrop-blur-2xl transition dark:border-border/60 dark:bg-card/70">
+                <div className="pointer-events-none absolute inset-0 -z-10 hidden md:block bg-[radial-gradient(1200px_600px_at_50%_-200px,theme(colors.brand.500/0.16),transparent_60%)]" />
                 <input
                   value={query}
                   onChange={(e) =>

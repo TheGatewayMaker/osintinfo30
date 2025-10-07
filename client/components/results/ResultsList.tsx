@@ -58,7 +58,7 @@ export function ResultsList({
   const total = totalCount ?? records.length;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {records.map((record, index) => (
         <ResultCard
           key={record.id || `record-${index}`}

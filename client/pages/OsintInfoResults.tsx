@@ -119,7 +119,8 @@ export default function OsintInfoResults() {
     const trimmed = initialQ.trim();
     if (!trimmed) {
       setNormalized(null);
-      lastFetchedQueryRef.current = null;
+      activeFetchQueryRef.current = null;
+      lastCompletedQueryRef.current = null;
       return;
     }
 
@@ -140,12 +141,15 @@ export default function OsintInfoResults() {
       }
     }
 
-    if (lastFetchedQueryRef.current === trimmed && normalized) {
+    if (
+      activeFetchQueryRef.current === trimmed ||
+      lastCompletedQueryRef.current === trimmed
+    ) {
       return;
     }
 
     let cancelled = false;
-    lastFetchedQueryRef.current = trimmed;
+    activeFetchQueryRef.current = trimmed;
     setLoading(true);
     setNormalized(null);
 
@@ -154,6 +158,7 @@ export default function OsintInfoResults() {
         const { normalized: freshNormalized } = await performSearch(trimmed);
         if (cancelled) return;
         setNormalized(freshNormalized);
+        lastCompletedQueryRef.current = trimmed;
 
         if (lastTrackedQueryRef.current !== trimmed) {
           lastTrackedQueryRef.current = trimmed;
@@ -184,7 +189,10 @@ export default function OsintInfoResults() {
         }
       } catch (error) {
         if (cancelled) return;
-        lastFetchedQueryRef.current = null;
+        if (activeFetchQueryRef.current === trimmed) {
+          activeFetchQueryRef.current = null;
+        }
+        lastCompletedQueryRef.current = null;
         const message =
           error instanceof Error && error.message
             ? error.message
@@ -192,6 +200,9 @@ export default function OsintInfoResults() {
         toast.error(message);
       } finally {
         if (!cancelled) {
+          if (activeFetchQueryRef.current === trimmed) {
+            activeFetchQueryRef.current = null;
+          }
           setLoading(false);
         }
       }
@@ -200,7 +211,7 @@ export default function OsintInfoResults() {
     return () => {
       cancelled = true;
     };
-  }, [initialQ, authLoading, user, profile, normalized]);
+  }, [initialQ, authLoading, user, profile]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
